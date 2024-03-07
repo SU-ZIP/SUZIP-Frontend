@@ -1,0 +1,40 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: never;
+}
+
+@font-face {
+  font-family: "MonumentExtended";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./MonumentExtended-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "MonumentExtended";
+  font-style: normal;
+  font-weight: bold;
+  src: url("./MonumentExtended-Ultrabold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PPMonumentExtended";
+  font-style: normal;
+  font-weight: light;
+  src: url("./PPMonumentExtended-Light.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PPMonumentExtended";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./PPMonumentExtended-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PPMonumentExtended";
+  font-style: normal;
+  font-weight: bold;
+  src: url("./PPMonumentExtended-Black.otf") format("opentype");
+}
