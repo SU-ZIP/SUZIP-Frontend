@@ -12,7 +12,6 @@ const ModalContainer = styled.div`
 `;
 
 const MenuContainer = styled.div`
-  width: 100vw;
   display: flex;
   flex-direction: column;
   margin-left: 15vw;
@@ -28,7 +27,6 @@ const PagingMenu = styled.div`
 `;
 
 const IndexItem = styled(Link)`
-  width: 100%;
   text-decoration: none;
   font-family: "PPMonumentExtended";
   font-size: 3.2rem;
@@ -54,7 +52,11 @@ const CloseBTN = styled.img`
   background: transparent;
   text-align: center;
   align-items: center;
-  margin-left: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 10vh;
+  margin-right: 10vw;
   margin-bottom: 3vh;
 `;
 
@@ -78,8 +80,8 @@ function Modal() {
 
   return (
     <ModalContainer>
+      <CloseBTN src={closeButton} />
       <MenuContainer>
-        <CloseBTN src={closeButton} />
         <IndexMenu>
           <IndexItem to="/">Home</IndexItem>
           <IndexItem to="/about">About</IndexItem>
