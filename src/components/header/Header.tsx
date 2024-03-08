@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/sz.png";
 import MenuIcon from "../../assets/images/menu.png";
+import IndexPage from "../../pages/IndexPage";
 
 const HeaderContainer = styled.div`
   height: 10vh;
@@ -24,6 +25,7 @@ const LogoImg = styled.img`
 const Menu = styled.img`
   width: 3vw;
   height: auto;
+  cursor: pointer;
 `;
 
 const HorizontalLine = styled.div`
@@ -33,15 +35,21 @@ const HorizontalLine = styled.div`
 `;
 
 function Header() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <HeaderContainer>
       <IconsContainer>
         <Link to="/">
           <LogoImg src={Logo} />
         </Link>
-        <Link to="/index">
-          <Menu src={MenuIcon} />
-        </Link>
+        <Menu
+          src={MenuIcon}
+          onClick={() => {
+            setModalOpen(true);
+          }}
+        />
+        {modalOpen && <IndexPage onClose={() => setModalOpen(false)} />}
       </IconsContainer>
       <HorizontalLine />
     </HeaderContainer>
