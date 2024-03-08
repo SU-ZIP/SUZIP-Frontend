@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import closeButton from "../assets/images/close.png";
@@ -15,12 +15,13 @@ const ModalOverlay = styled.div`
   align-items: center;
 `;
 
-const ModalContainer = styled.div`
+const ModalContainer = styled.div<{ backgroundColor: string }>`
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background: ${({ backgroundColor }) => backgroundColor};
+  transition: background 3s ease-in-out;
 `;
 
 const MenuContainer = styled.div`
@@ -77,23 +78,35 @@ interface IndexPageProps {
   onClose: () => void;
 }
 
-//function Modal({
-//  onClickToggleModal,
-//  children,
-//}: PropsWithChildren<ModalDefaultType>)
-
 function IndexPage({ onClose }: IndexPageProps) {
-  function changeColors() {
-    const color1 = `linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)`;
-    const color2 = `linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)`;
-    const color3 = `linear-gradient(120deg, #f6d365 0%, #fda085 100%)`;
-    const color4 = `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`;
-    const color5 = `linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)`;
-  }
+  const [backgroundColor, setBackgroundColor] = useState("");
+
+  useEffect(() => {
+    const colors = [
+      "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+      "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+      "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
+    ];
+
+    setBackgroundColor(colors[0]);
+
+    let currentIndex = 1;
+
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        setBackgroundColor(colors[currentIndex]);
+        currentIndex = (currentIndex + 1) % colors.length;
+      }
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <ModalOverlay>
-      <ModalContainer>
+      <ModalContainer backgroundColor={backgroundColor}>
         <CloseBTN src={closeButton} onClick={onClose} />
         <MenuContainer>
           <IndexMenu>
