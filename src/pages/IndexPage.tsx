@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import closeButton from "../assets/images/close.png";
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ModalContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -58,10 +70,11 @@ const CloseBTN = styled.img`
   margin-top: 10vh;
   margin-right: 10vw;
   margin-bottom: 3vh;
+  cursor: pointer;
 `;
 
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
+interface IndexPageProps {
+  onClose: () => void;
 }
 
 //function Modal({
@@ -69,7 +82,7 @@ interface ModalDefaultType {
 //  children,
 //}: PropsWithChildren<ModalDefaultType>)
 
-function IndexPage() {
+function IndexPage({ onClose }: IndexPageProps) {
   function changeColors() {
     const color1 = `linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)`;
     const color2 = `linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)`;
@@ -79,22 +92,24 @@ function IndexPage() {
   }
 
   return (
-    <ModalContainer>
-      <CloseBTN src={closeButton} />
-      <MenuContainer>
-        <IndexMenu>
-          <IndexItem to="/">Home</IndexItem>
-          <IndexItem to="/about">About</IndexItem>
-          <IndexItem to="/archives">Archives</IndexItem>
-          <IndexItem to="/services">Services</IndexItem>
-          <IndexItem to="/my">My</IndexItem>
-        </IndexMenu>
-        <PagingMenu>
-          <PagingItem to="/login">LOGIN</PagingItem>
-          <PagingItem to="/signup">SIGN UP</PagingItem>
-        </PagingMenu>
-      </MenuContainer>
-    </ModalContainer>
+    <ModalOverlay>
+      <ModalContainer>
+        <CloseBTN src={closeButton} onClick={onClose} />
+        <MenuContainer>
+          <IndexMenu>
+            <IndexItem to="/">Home</IndexItem>
+            <IndexItem to="/about">About</IndexItem>
+            <IndexItem to="/archives">Archives</IndexItem>
+            <IndexItem to="/services">Services</IndexItem>
+            <IndexItem to="/my">My</IndexItem>
+          </IndexMenu>
+          <PagingMenu>
+            <PagingItem to="/login">LOGIN</PagingItem>
+            <PagingItem to="/signup">SIGN UP</PagingItem>
+          </PagingMenu>
+        </MenuContainer>
+      </ModalContainer>
+    </ModalOverlay>
   );
 }
 
