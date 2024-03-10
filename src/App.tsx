@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 
@@ -15,6 +16,14 @@ function App() {
             element={
               <>
                 <Header /> <HomePage />
+              </>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <>
+                <Header /> <AboutPage />
               </>
             }
           />

@@ -110,15 +110,29 @@ function IndexPage({ onClose }: IndexPageProps) {
         <CloseBTN src={closeButton} onClick={onClose} />
         <MenuContainer>
           <IndexMenu>
-            <IndexItem to="/">Home</IndexItem>
-            <IndexItem to="/about">About</IndexItem>
-            <IndexItem to="/archives">Archives</IndexItem>
-            <IndexItem to="/services">Services</IndexItem>
-            <IndexItem to="/my">My</IndexItem>
+            <IndexItem to="/" onClick={onClose}>
+              Home
+            </IndexItem>
+            <IndexItem to="/about" onClick={onClose}>
+              About
+            </IndexItem>
+            <IndexItem to="/archives" onClick={onClose}>
+              Archives
+            </IndexItem>
+            <IndexItem to="/services" onClick={onClose}>
+              Services
+            </IndexItem>
+            <IndexItem to="/my" onClick={onClose}>
+              My
+            </IndexItem>
           </IndexMenu>
           <PagingMenu>
-            <PagingItem to="/login">LOGIN</PagingItem>
-            <PagingItem to="/signup">SIGN UP</PagingItem>
+            <PagingItem to="/login" onClick={onClose}>
+              LOGIN
+            </PagingItem>
+            <PagingItem to="/signup" onClick={onClose}>
+              SIGN UP
+            </PagingItem>
           </PagingMenu>
         </MenuContainer>
       </ModalContainer>

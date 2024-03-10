@@ -18,12 +18,12 @@ const IconsContainer = styled.div`
 `;
 
 const LogoImg = styled.img`
-  width: 4.5vw;
+  width: 3.5vw;
   height: auto;
 `;
 
 const Menu = styled.img`
-  width: 3vw;
+  width: 2vw;
   height: auto;
   cursor: pointer;
 `;
