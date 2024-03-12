@@ -1,14 +1,27 @@
-import React, { PropsWithChildren } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import closeButton from "../assets/images/close.png";
 
-const ModalContainer = styled.div`
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContainer = styled.div<{ backgroundColor: string }>`
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background: ${({ backgroundColor }) => backgroundColor};
+  transition: background 3s ease-in-out;
 `;
 
 const MenuContainer = styled.div`
@@ -58,43 +71,72 @@ const CloseBTN = styled.img`
   margin-top: 10vh;
   margin-right: 10vw;
   margin-bottom: 3vh;
+  cursor: pointer;
 `;
 
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
+interface IndexPageProps {
+  onClose: () => void;
 }
 
-//function Modal({
-//  onClickToggleModal,
-//  children,
-//}: PropsWithChildren<ModalDefaultType>)
+function IndexPage({ onClose }: IndexPageProps) {
+  const [backgroundColor, setBackgroundColor] = useState("");
 
-function IndexPage() {
-  function changeColors() {
-    const color1 = `linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)`;
-    const color2 = `linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)`;
-    const color3 = `linear-gradient(120deg, #f6d365 0%, #fda085 100%)`;
-    const color4 = `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`;
-    const color5 = `linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)`;
-  }
+  useEffect(() => {
+    const colors = [
+      "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+      "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+      "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
+    ];
+
+    setBackgroundColor(colors[0]);
+
+    let currentIndex = 1;
+
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        setBackgroundColor(colors[currentIndex]);
+        currentIndex = (currentIndex + 1) % colors.length;
+      }
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <ModalContainer>
-      <CloseBTN src={closeButton} />
-      <MenuContainer>
-        <IndexMenu>
-          <IndexItem to="/">Home</IndexItem>
-          <IndexItem to="/about">About</IndexItem>
-          <IndexItem to="/archives">Archives</IndexItem>
-          <IndexItem to="/services">Services</IndexItem>
-          <IndexItem to="/my">My</IndexItem>
-        </IndexMenu>
-        <PagingMenu>
-          <PagingItem to="/login">LOGIN</PagingItem>
-          <PagingItem to="/signup">SIGN UP</PagingItem>
-        </PagingMenu>
-      </MenuContainer>
-    </ModalContainer>
+    <ModalOverlay>
+      <ModalContainer backgroundColor={backgroundColor}>
+        <CloseBTN src={closeButton} onClick={onClose} />
+        <MenuContainer>
+          <IndexMenu>
+            <IndexItem to="/" onClick={onClose}>
+              Home
+            </IndexItem>
+            <IndexItem to="/about" onClick={onClose}>
+              About
+            </IndexItem>
+            <IndexItem to="/archives" onClick={onClose}>
+              Archives
+            </IndexItem>
+            <IndexItem to="/services" onClick={onClose}>
+              Services
+            </IndexItem>
+            <IndexItem to="/my" onClick={onClose}>
+              My
+            </IndexItem>
+          </IndexMenu>
+          <PagingMenu>
+            <PagingItem to="/login" onClick={onClose}>
+              LOGIN
+            </PagingItem>
+            <PagingItem to="/signup" onClick={onClose}>
+              SIGN UP
+            </PagingItem>
+          </PagingMenu>
+        </MenuContainer>
+      </ModalContainer>
+    </ModalOverlay>
   );
 }
 
