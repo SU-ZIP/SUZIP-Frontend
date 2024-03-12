@@ -8,7 +8,7 @@ const ButtonContainer = styled(Link)`
   border: 1px solid #333333;
   border-radius: 5vw;
   padding: 0.7vh 0 0.7vh 0;
-  margin: 2vw;
+  margin: 1vw;
   text-decoration: none;
 
   display: flex;
