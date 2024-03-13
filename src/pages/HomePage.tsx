@@ -11,10 +11,10 @@ const Container = styled.div``;
 const Title = styled.h1`
   font-family: 'PPMonumentExtended', sans-serif;
   font-size: 41px;
-  display: flex;
-  align-items: center;
-  margin-left: 13rem;
-  color: #333333;
+  display: block;
+  margin-bottom: 2.5vh;
+  margin-left: 10vw;
+  width: fit-content;
 `;
 
 const CalendarTable = styled.table`
@@ -35,6 +35,7 @@ const DateContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
+  transition: transform 0.3s ease-in-out; // 여기에 트랜지션 추가
 `;
 
 const Tooltip = styled.span`
@@ -64,6 +65,14 @@ const AddButton = styled.img`
   cursor: pointer;
 `;
 
+const CalendarDayWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease-in-out; // 부드러운 변화를 위한 transition 추가
+  background-color: transparent; 
+`;
+
 const CalendarDay = styled.td`
   font-family: 'PPMonumentExtended', sans-serif;
   cursor: pointer;
@@ -71,10 +80,17 @@ const CalendarDay = styled.td`
   color: #4B4B4B;
   padding: 20px 0 100px 0;
   vertical-align: top;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, margin-left 0.3s;
   &:hover {
     background-color: #F6F6F6;
+    margin-left: 10px; /* 좌측으로 이동 */
+    transform: scale(0.95);
     border-radius: 10px;
+    padding: 20px 0 100px 0;
+    & > ${DateContainer} { // DateContainer에 대한 변화를 지정합니다.
+      transform: translateX(10px); // Y축으로 조금 위로 이동하게 합니다.
+    }
+
   }
   &:hover ${AddButton} {
     opacity: 1;
@@ -108,11 +124,7 @@ const TodayMove = styled.img`
   height: 31px;
 `;
 
-const CalendarDayWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
+
 
 const gradients = [
   'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
@@ -131,7 +143,6 @@ interface CalendarDayProps {
 
 const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  // 상태에서 setGradient를 제거합니다.
   const [gradient] = useState<string>(getRandomGradient());
   
   return (
@@ -146,8 +157,8 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick 
           src={addImg}
           alt="Add"
           onClick={(e: React.MouseEvent<HTMLImageElement>) => {
-            e.stopPropagation(); // CalendarDay의 onClick 이벤트가 함께 발생하지 않도록 방지합니다.
-            window.location.href = '/WritePage'; // Write Page로 리디렉션합니다.
+            e.stopPropagation();
+            window.location.href = '/write';
           }}
         />
       </CalendarDayWrapper>

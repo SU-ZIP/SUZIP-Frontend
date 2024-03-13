@@ -5,6 +5,9 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import ArchivePage from "./pages/ArchivePage";
+import WritePage from "./pages/WritePage";
+
 
 function App() {
   return (
@@ -40,6 +43,22 @@ function App() {
             element={
               <>
                 <Header /> <SignUpPage />
+              </>
+            }
+          />
+          <Route
+            path="/archives"
+            element={
+              <>
+                <Header /> <ArchivePage />
+              </>
+            }
+          />
+          <Route
+            path="/write"
+            element={
+              <>
+                <Header /> <WritePage />
               </>
             }
           />
