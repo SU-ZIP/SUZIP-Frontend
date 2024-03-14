@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 import prevMoveImg from '../assets/images/prevmove.png';
 import nextMoveImg from '../assets/images/nextmove.png';
 import todayMoveImg from '../assets/images/todaymove.png';
 import addImg from '../assets/images/add.png';
+
+import WriteModal from '../components/modal/WriteModal';
 
 const Container = styled.div``;
 
@@ -139,9 +142,10 @@ const getRandomGradient = () => gradients[Math.floor(Math.random() * gradients.l
 interface CalendarDayProps {
   day: number;
   handleDayClick: (day: number) => void;
+  openModal: () => void; // Add this line
 }
 
-const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick }) => {
+const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick, openModal }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [gradient] = useState<string>(getRandomGradient());
   
@@ -157,8 +161,8 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick 
           src={addImg}
           alt="Add"
           onClick={(e: React.MouseEvent<HTMLImageElement>) => {
-            e.stopPropagation();
-            window.location.href = '/write';
+            e.stopPropagation(); 
+            openModal(); 
           }}
         />
       </CalendarDayWrapper>
@@ -171,7 +175,8 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({ day, handleDayClick 
 const generateCalendarDates = (
   year: number,
   month: number,
-  handleDayClick: (day: number) => void
+  handleDayClick: (day: number) => void,
+  openModal: () => void
 ): JSX.Element[] => {
   const dates: JSX.Element[] = [];
   const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -183,7 +188,14 @@ const generateCalendarDates = (
   }
 
   for (let i = 1; i <= numDaysInMonth; i++) {
-    dayCells.push(<CalendarDayComponent key={`day-${i}`} day={i} handleDayClick={handleDayClick} />);
+    dayCells.push(
+      <CalendarDayComponent 
+        key={`day-${i}`} 
+        day={i} 
+        handleDayClick={handleDayClick}
+        openModal={openModal} // openModal 함수를 CalendarDayComponent에 전달합니다.
+      />
+    );
   }
 
   while (dayCells.length < 7 * Math.ceil((firstDayOfMonth + numDaysInMonth) / 7)) {
@@ -202,6 +214,9 @@ const HomePage: React.FC = () => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate(); 
+
   const handleDayClick = (day: number) => {
     console.log(`Clicked on day: ${day}`);
   };
@@ -218,7 +233,17 @@ const HomePage: React.FC = () => {
     setCurrentDate(new Date());
   };
 
-  const dates = generateCalendarDates(currentYear, currentMonth, handleDayClick);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const redirectToWritePage = () => {
+    navigate('/write'); // '/write' 경로로 이동합니다.
+  };
+
+
+
+  const dates = generateCalendarDates(currentYear, currentMonth, handleDayClick, openModal);
 
   return (
     <Container>
@@ -238,6 +263,11 @@ const HomePage: React.FC = () => {
         </thead>
         <tbody>{dates}</tbody>
       </CalendarTable>
+      <WriteModal 
+      isOpen={isModalOpen} 
+      onClose={() => setIsModalOpen(false)} 
+      onConfirm={redirectToWritePage}
+    />
     </Container>
   );
 };
