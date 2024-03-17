@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import CloseIcon from '../../assets/images/close2.png'; // Close 버튼 아이콘 경로
-
+import { useNavigate } from 'react-router-dom';
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -24,7 +24,7 @@ const ModalContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center; // 자식 요소들을 중앙으로 정렬
+  align-items: center;
 `;
 
 const ModalTitle = styled.div`
@@ -36,10 +36,9 @@ const ModalTitle = styled.div`
   font-size: 20px;
 `;
 
-// 버튼 컨테이너 스타일
 const ModalButtons = styled.div`
   display: flex;
-  justify-content: center; // 버튼을 중앙 정렬로 변경
+  justify-content: center;
   margin-top: 100px;
   gap: 15px;
 `;
@@ -55,47 +54,50 @@ const Button = styled.button`
   height: 40px;
 `;
 
-const CancelButton = styled(Button)``;
+const NoButton = styled(Button)``;
 
-const ConfirmButton = styled(Button)`
+const YesButton = styled(Button)`
   color: white;
   background-color: #333333;
 `;
 
-// 닫기 버튼 스타일
 const CloseButton = styled.button`
   position: absolute;
   top: 15px;
   right: 15px;
-  background: url(${CloseIcon}) no-repeat center/cover; // 배경 사이즈 cover로 조정
+  background: url(${CloseIcon}) no-repeat center/cover;
   border: none;
-  width: 14px; // 아이콘 크기 조정
-  height: 14px; // 아이콘 크기 조정
+  width: 14px;
+  height: 14px;
   cursor: pointer;
 `;
 
-// 모달 프로퍼티 인터페이스
-interface WriteModalProps {
+interface SaveModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
-const WriteModal: React.FC<WriteModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+   const handleConfirm = () => {
+    navigate('/analyze');
+  };
+
   if (!isOpen) return null;
 
   return (
     <ModalBackground>
       <ModalContainer>
         <CloseButton onClick={onClose} />
-        <ModalTitle>일기를 작성하시겠어요?</ModalTitle>
+        <ModalTitle>일기를 저장 및 분석하시겠습니까?</ModalTitle>
         <ModalButtons>
-          <CancelButton onClick={onClose}>취소</CancelButton>
-          <ConfirmButton onClick={onConfirm}>작성</ConfirmButton>
+          <NoButton onClick={onClose}>아니오</NoButton>
+          <YesButton onClick={handleConfirm}>네</YesButton>
         </ModalButtons>
       </ModalContainer>
     </ModalBackground>
   );
 };
 
-export default WriteModal;
+export default SaveModal;

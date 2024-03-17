@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 
 import PhotoImg from '../assets/images/photo.png';
 
+import SaveModal from '../components/modal/SaveModal';
+
 const PageContainer = styled.div`
   font-family: 'Pretendard';
   display: flex;
@@ -39,7 +41,7 @@ const TitleInput = styled.input`
   font-weight: 600;
   font-size: 48px;
   color: #333333;
-  outline: none; /* 클릭 시 파란색 테두리 제거 */
+  outline: none;
   ::placeholder {
     color: #E1E1E0;
   }
@@ -48,8 +50,8 @@ const TitleInput = styled.input`
 const SaveButtonContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end; // 오른쪽 정렬
-  margin-bottom: 12px; // Date 정보와의 간격
+  justify-content: flex-end; 
+  margin-bottom: 12px;
 `;
 
 const SaveButton = styled.button`
@@ -57,21 +59,21 @@ const SaveButton = styled.button`
   height: 37px;
   font-family: "Pretendard";
   font-weight: 500;
-  background-color: #333333; // 녹색 배경
-  color: white; // 흰색 글씨
+  background-color: #333333; 
+  color: white;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  border-radius: 4px; // 버튼 모서리 둥글게
+  border-radius: 4px;
 
   &:hover {
-    background-color: #484848; // 호버 시 색상 변경
+    background-color: #484848;
   }
 `;
 
 
 const ButtonContainer = styled.div`
-  align-self: flex-end; // 오른쪽 정렬
+  align-self: flex-end; 
   margin-bottom: 12px;
 `;
 
@@ -83,7 +85,7 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 500; // 글씨 두께 조정
+  font-weight: 500; 
   color: #838383;
 
   &:hover {
@@ -95,9 +97,9 @@ const Button = styled.button`
 
 const ContentTextarea = styled.textarea`
   font-family: "Pretendard";
-  outline: none; /* 클릭 시 파란색 테두리 제거 */
+  outline: none; 
   width: 100%;
-  height: 150px;
+  height: 800px;
   padding: 8px;
   border: none;
   margin-top: -10px;
@@ -120,6 +122,7 @@ export default function WritePage() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [date, setDate] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const today = new Date();
@@ -154,9 +157,12 @@ export default function WritePage() {
   };
 
   const handleSaveClick = () => {
-    console.log("저장하기 클릭됨");
+    setIsModalOpen(true); // Open the modal when the button is clicked
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Function to close the modal
+  };
   return (
     <PageContainer>
       <SaveButtonContainer>
@@ -194,6 +200,7 @@ export default function WritePage() {
           placeholder="내용을 입력하세요"
         />
       )}
+      <SaveModal isOpen={isModalOpen} onClose={handleCloseModal} /> 
     </PageContainer>
   );
 }

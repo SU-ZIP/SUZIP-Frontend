@@ -7,7 +7,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ArchivePage from "./pages/ArchivePage";
 import WritePage from "./pages/WritePage";
-
+import AnalyzePage from "./pages/AnalyzePage";
 
 function App() {
   return (
@@ -59,6 +59,14 @@ function App() {
             element={
               <>
                 <Header /> <WritePage />
+              </>
+            }
+          />
+          <Route
+            path="/analyze"
+            element={
+              <>
+                <Header /> <AnalyzePage />
               </>
             }
           />
