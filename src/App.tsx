@@ -8,6 +8,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ArchivePage from "./pages/ArchivePage";
 import WritePage from "./pages/WritePage";
 import AnalyzePage from "./pages/AnalyzePage";
+import DiaryPage from "./pages/DiaryPage";
 
 function App() {
   return (
@@ -67,6 +68,14 @@ function App() {
             element={
               <>
                 <Header /> <AnalyzePage />
+              </>
+            }
+          />
+          <Route
+            path="/diary"
+            element={
+              <>
+                <Header /> <DiaryPage />
               </>
             }
           />

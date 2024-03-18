@@ -1,0 +1,76 @@
+{
+    "DiaryList": [
+      {
+        "id": 1,
+        "title": "이건 일기예요 1",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 2,
+        "title": "이건 일기예요 2",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 3,
+        "title": "이건 일기예요 3",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 4,
+        "title": "이건 일기예요 1",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 5,
+        "title": "이건 일기예요 4",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 6,
+        "title": "이건 일기예요 5",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 7,
+        "title": "이건 일기예요 6",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 8,
+        "title": "이건 일기예요 7",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      },
+      {
+        "id": 9,
+        "title": "이건 일기예요 8",
+        "content": "이거는 일기내용",
+        "image": "",
+        "createdAt": "2024. 03. 18",
+        "updatedAt": ""
+      }
+    ]
+  }
