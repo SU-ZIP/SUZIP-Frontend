@@ -3,12 +3,14 @@ import styled from "styled-components";
 
 import SearchImg from "../assets/images/search.png"; 
 import diaryData from '../data/Diary.json';
+import Pagination from "../assets/pagination/Pagination";
 
 const PageContainer = styled.div`
   font-family: "Pretendard";
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 80px;
 `;
 
 const Header = styled.div`
@@ -179,6 +181,8 @@ const DiaryPage: React.FC = () => {
   const [sortedDiaries, setSortedDiaries] = useState(diaryData.DiaryList);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredDiaries, setFilteredDiaries] = useState(diaryData.DiaryList); 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     let sortedAndFiltered = [...diaryData.DiaryList]
@@ -197,7 +201,11 @@ const DiaryPage: React.FC = () => {
     setFilteredDiaries(sortedAndFiltered);
   }, [sortOrder, searchQuery]);
 
+  const lastDiaryIndex = currentPage * itemsPerPage;
+  const firstDiaryIndex = lastDiaryIndex - itemsPerPage;
+  const currentDiaries = filteredDiaries.slice(firstDiaryIndex, lastDiaryIndex);
 
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleDropdownItemClick = (order: string) => {
     setSortOrder(order);
@@ -227,7 +235,7 @@ const DiaryPage: React.FC = () => {
       </Header>
       <Divider />
       <DiaryEntriesContainer>
-        {filteredDiaries.map((entry, index) => (
+        {currentDiaries.map((entry, index) => (
           <React.Fragment key={entry.id}>
             <DiaryEntry>
               <DiaryTextContainer>
@@ -241,9 +249,13 @@ const DiaryPage: React.FC = () => {
           </React.Fragment>
         ))}
       </DiaryEntriesContainer>
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={Math.ceil(filteredDiaries.length / itemsPerPage)}
+        onPageChange={paginate}
+      />
     </PageContainer>
   );
 };
-
 
 export default DiaryPage;
