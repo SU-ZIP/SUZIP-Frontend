@@ -101,7 +101,7 @@ const SearchBar = styled.input`
   background-image: url(${SearchImg}); 
   background-position: 10px center;
   background-repeat: no-repeat;
-  background-size: 13px 13px;
+  background-size: 13px 13px;ƒ
   border-radius: 5px;
   border: none; 
   outline: none;
@@ -178,7 +178,6 @@ const DiaryImage = styled.img`
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [sortedDiaries, setSortedDiaries] = useState(diaryData.DiaryList);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredDiaries, setFilteredDiaries] = useState(diaryData.DiaryList); 
   const [currentPage, setCurrentPage] = useState<number>(1);

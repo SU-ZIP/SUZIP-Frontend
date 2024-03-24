@@ -9,6 +9,7 @@ import ArchivePage from "./pages/ArchivePage";
 import WritePage from "./pages/WritePage";
 import AnalyzePage from "./pages/AnalyzePage";
 import DiaryPage from "./pages/DiaryPage";
+import DiaryViewPage from "./pages/DiaryViewPage";
 
 function App() {
   return (
@@ -76,6 +77,14 @@ function App() {
             element={
               <>
                 <Header /> <DiaryPage />
+              </>
+            }
+          />
+          <Route
+            path="/diaryView"
+            element={
+              <>
+                <Header /> <DiaryViewPage />
               </>
             }
           />
