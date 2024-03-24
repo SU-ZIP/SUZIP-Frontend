@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Pagination from "../assets/pagination/Pagination";
+import ScrapData from '../data/ScrapItems.json'; 
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -94,20 +95,7 @@ interface ScrapItem {
   imageUrl: string;
 }
 
-const scrapItems: ScrapItem[] = [
-  { id: 1, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+1' },
-  { id: 2, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+2' },
-  { id: 3, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+3' },
-  { id: 4, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+4' },
-  { id: 5, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+5' },
-  { id: 6, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+6' },
-  { id: 7, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+7' },
-  { id: 8, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+8' },
-  { id: 9, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+9' },
-  { id: 10, category: 'Book', imageUrl: 'https://via.placeholder.com/150?text=Book+Cover+9' },
-  { id: 11, category: 'Movie', imageUrl: 'https://via.placeholder.com/150?text=Movie+Poster+1' },
-  { id: 12, category: 'Music', imageUrl: 'https://via.placeholder.com/150?text=Music+Poster+1' },
-];
+
 
 const categories = ['Book', 'Movie', 'Music'];
 
@@ -117,7 +105,7 @@ const ScrapPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Book');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const filteredItems = scrapItems.filter(item => item.category === selectedCategory);
+  const filteredItems = ScrapData.ScrapItems.filter(item => item.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
@@ -156,11 +144,11 @@ const ScrapPage: React.FC = () => {
         <Grid>
         {currentItems.map((item) => (
             <Item key={item.id}>
-            <Image 
-                src={item.imageUrl} 
-                alt={`${item.category} cover`} 
-                category={item.category} 
-            />
+                <Image 
+                    src={item.imageUrl} 
+                    alt={`${item.category} cover`} 
+                    category={item.category as 'Book' | 'Movie' | 'Music'} // 타입 단언 추가
+                />
             </Item>
         ))}
         </Grid>

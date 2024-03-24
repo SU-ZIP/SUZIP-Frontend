@@ -1,0 +1,65 @@
+{
+    "ScrapItems": [
+      {
+        "id": 1,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+1"
+      },
+      {
+        "id": 2,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+2"
+      },
+      {
+        "id": 3,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+3"
+      },
+      {
+        "id": 4,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+4"
+      },
+      {
+        "id": 5,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+5"
+      },
+      {
+        "id": 6,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+6"
+      },
+      {
+        "id": 7,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+7"
+      },
+      {
+        "id": 8,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+8"
+      },
+      {
+        "id": 9,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+9"
+      },
+      {
+        "id": 10,
+        "category": "Book",
+        "imageUrl": "https://via.placeholder.com/150?text=Book+Cover+10"
+      },
+      {
+        "id": 11,
+        "category": "Movie",
+        "imageUrl": "https://via.placeholder.com/150?text=Movie+Poster+11"
+      },
+      {
+        "id": 12,
+        "category": "Music",
+        "imageUrl": "https://via.placeholder.com/150?text=Music+Poster+12"
+      }
+    ]
+  }
+  
