@@ -10,6 +10,7 @@ import WritePage from "./pages/WritePage";
 import AnalyzePage from "./pages/AnalyzePage";
 import DiaryPage from "./pages/DiaryPage";
 import DiaryViewPage from "./pages/DiaryViewPage";
+import DeleteAccount from "./pages/DeleteAccount";
 
 function App() {
   return (
@@ -85,6 +86,14 @@ function App() {
             element={
               <>
                 <Header /> <DiaryViewPage />
+              </>
+            }
+          />
+          <Route
+            path="/deleteAccount"
+            element={
+              <>
+               <DeleteAccount />
               </>
             }
           />
