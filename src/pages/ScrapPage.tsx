@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Pagination from "../assets/pagination/Pagination";
-import ScrapData from '../data/ScrapItems.json'; 
+import ScrapDataJson from '../data/ScrapItems.json';
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -86,19 +86,32 @@ const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
       default: return '280px'; 
     }
   }};
-  object-fit: cover; // 이미지 비율을 유지하면서 컨테이너에 맞춤
+  object-fit: cover;
 `;
 
 interface ScrapItem {
-  id: number;
-  category: 'Book' | 'Movie' | 'Music';
-  imageUrl: string;
+    id: number;
+    category: 'Book' | 'Movie' | 'Music';
+    imageUrl: string;
+  }
+  
+interface ScrapData {
+ScrapItems: ScrapItem[];
 }
-
-
+  
+function convertToScrapData(data: any): ScrapData {
+return {
+    ScrapItems: data.ScrapItems.map((item: any) => ({
+    id: item.id,
+    category: item.category as 'Book' | 'Movie' | 'Music',
+    imageUrl: item.imageUrl
+    }))
+};
+}
+  
 
 const categories = ['Book', 'Movie', 'Music'];
-
+const ScrapData: ScrapData = convertToScrapData(ScrapDataJson);
 const itemsPerPage = 9;
 
 const ScrapPage: React.FC = () => {
@@ -117,6 +130,7 @@ const ScrapPage: React.FC = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
 
 
   return (
