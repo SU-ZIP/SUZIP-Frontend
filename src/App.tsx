@@ -11,6 +11,7 @@ import AnalyzePage from "./pages/AnalyzePage";
 import DiaryPage from "./pages/DiaryPage";
 import DiaryViewPage from "./pages/DiaryViewPage";
 import DeleteAccount from "./pages/DeleteAccount";
+import ScrapPage from "./pages/ScrapPage";
 
 function App() {
   return (
@@ -94,6 +95,14 @@ function App() {
             element={
               <>
                <DeleteAccount />
+              </>
+            }
+          />
+          <Route
+            path="/scrapPage"
+            element={
+              <>
+                <Header /> <ScrapPage />
               </>
             }
           />
