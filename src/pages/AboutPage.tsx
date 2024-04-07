@@ -7,6 +7,7 @@ import GetStarted_Black from "../assets/buttons/GetStarted_Black";
 import GetStarted_White from "../assets/buttons/GetStarted_White";
 import AnalyzeDescription from "../components/about/AnalyzeDescription";
 import CalendarDescription from "../components/about/CalendarDescription";
+import Slider2 from "../components/about/Slider2";
 
 const AboutPageContainer = styled.div`
   display: flex;
@@ -53,7 +54,7 @@ const SignUpLink = styled(Link)`
 const VerticalLine = styled.div`
   width: 0.1vw;
   height: 25vh;
-  border-left: 0.15vw solid #535353;
+  border-left: 0.1vw solid #535353;
   margin: 4vh 0;
 `;
 
@@ -66,6 +67,7 @@ export default function AboutPage() {
       <RecordDescription />
       <AnalyzeDescription />
       <CalendarDescription />
+      <Slider2 /> 
       <TypoContainer>
         <BoldTypo>It's time to</BoldTypo>
         <BoldTypo>SUZIP.</BoldTypo>
