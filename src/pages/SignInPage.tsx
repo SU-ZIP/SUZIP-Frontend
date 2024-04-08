@@ -31,7 +31,7 @@ const ButtonsContainer = styled.div`
 const TitleText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 1.7rem;
-  font-weight: light;
+  font-weight: 100;
   display: block;
   margin-bottom: 2.5vh;
   width: fit-content;
