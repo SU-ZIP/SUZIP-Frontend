@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
 const TypoContainer = styled.div`
   display: flex;
@@ -12,13 +12,13 @@ const TypoContainer = styled.div`
 const LineText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 6.5rem;
-  font-weight: normal;
+  font-weight: 200;
   position: relative;
   padding: 0 100px; // 양쪽 선을 위한 공간 확보
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -38,13 +38,13 @@ const LineText = styled.div`
 const ThinText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 5rem;
-  font-weight: light;
+  font-weight: 100;
 `;
 
 const AnimatedTextContainer = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 6.3rem;
-  font-weight: normal;
+  font-weight: 200;
   position: relative;
   display: flex;
   justify-content: center;
@@ -58,14 +58,15 @@ const AnimatedText = styled.span`
 const FixedBrackets = styled.span`
   font-family: "PPMonumentExtended";
   font-size: 6.3rem;
-  font-weight: normal;
+  font-weight: 200;
 `;
 
-const words = ['minds', 'memories', 'emotions'];
-const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&*()-+=<>';
+const words = ["minds", "memories", "emotions"];
+const randomChars =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&*()-+=<>";
 
 const TitleTypo: React.FC = () => {
-  const [currentWord, setCurrentWord] = useState('');
+  const [currentWord, setCurrentWord] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
@@ -75,8 +76,10 @@ const TitleTypo: React.FC = () => {
     if (isTransitioning) {
       intervalId = setInterval(() => {
         const randomWord = Array.from({ length: words[wordIndex].length })
-          .map(() => randomChars.charAt(Math.floor(Math.random() * randomChars.length)))
-          .join('');
+          .map(() =>
+            randomChars.charAt(Math.floor(Math.random() * randomChars.length))
+          )
+          .join("");
         setCurrentWord(randomWord);
       }, 50);
 
@@ -104,15 +107,15 @@ const TitleTypo: React.FC = () => {
 
   return (
     <TypoContainer>
-    <LineText>Su.Zip</LineText>
-    <ThinText>your</ThinText>
-    <AnimatedTextContainer>
-      <FixedBrackets>(ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ</FixedBrackets>
-      <AnimatedText>{currentWord}</AnimatedText>
-      <FixedBrackets>)</FixedBrackets>
-    </AnimatedTextContainer>
-  </TypoContainer>
+      <LineText>Su.Zip</LineText>
+      <ThinText>your</ThinText>
+      <AnimatedTextContainer>
+        <FixedBrackets>(ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ</FixedBrackets>
+        <AnimatedText>{currentWord}</AnimatedText>
+        <FixedBrackets>)</FixedBrackets>
+      </AnimatedTextContainer>
+    </TypoContainer>
   );
-}
+};
 
 export default TitleTypo;

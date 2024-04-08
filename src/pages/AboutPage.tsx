@@ -29,7 +29,7 @@ const TypoContainer = styled.div`
 const BoldTypo = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 4rem;
-  font-weight: normal;
+  font-weight: 200;
   color: #333333;
   line-height: 1.2;
 `;
@@ -67,7 +67,7 @@ export default function AboutPage() {
       <RecordDescription />
       <AnalyzeDescription />
       <CalendarDescription />
-      <Slider2 /> 
+      <Slider2 />
       <TypoContainer>
         <BoldTypo>It's time to</BoldTypo>
         <BoldTypo>SUZIP.</BoldTypo>

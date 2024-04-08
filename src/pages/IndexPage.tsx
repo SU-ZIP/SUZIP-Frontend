@@ -43,7 +43,7 @@ const IndexItem = styled(Link)`
   text-decoration: none;
   font-family: "PPMonumentExtended";
   font-size: 3.2rem;
-  font-weight: light;
+  font-weight: 100;
   color: #ffffff;
   margin: 2vh;
   display: block;
@@ -53,7 +53,7 @@ const PagingItem = styled(Link)`
   text-decoration: none;
   font-family: "PPMonumentExtended";
   font-size: 1.5rem;
-  font-weight: light;
+  font-weight: 100;
   color: #ffffff;
   margin: 3vh 2vw 0 2vh;
   white-space: nowrap;
