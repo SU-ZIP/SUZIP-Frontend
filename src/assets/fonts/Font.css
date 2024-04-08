@@ -21,21 +21,21 @@
 @font-face {
   font-family: "PPMonumentExtended";
   font-style: normal;
-  font-weight: light;
+  font-weight: 100;
   src: url("./PPMonumentExtended-Light.otf") format("opentype");
 }
 
 @font-face {
   font-family: "PPMonumentExtended";
   font-style: normal;
-  font-weight: normal;
+  font-weight: 200;
   src: url("./PPMonumentExtended-Regular.otf") format("opentype");
 }
 
 @font-face {
   font-family: "PPMonumentExtended";
   font-style: normal;
-  font-weight: bold;
+  font-weight: 300;
   src: url("./PPMonumentExtended-Black.otf") format("opentype");
 }
 

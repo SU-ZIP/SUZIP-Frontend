@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import SearchImg from "../assets/images/search.png"; 
-import diaryData from '../data/Diary.json';
+import SearchImg from "../assets/images/search.png";
+import diaryData from "../data/Diary.json";
 import Pagination from "../assets/pagination/Pagination";
 
 const PageContainer = styled.div`
@@ -21,8 +21,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'PPMonumentExtended', sans-serif;
-  font-weight: normal;
+  font-family: "PPMonumentExtended", sans-serif;
+  font-weight: 200;
   font-size: 32px;
   color: #333333;
 `;
@@ -39,10 +39,10 @@ const DropdownButton = styled.div`
   background-color: #fff;
   color: #535353;
   border-radius: 5px;
-  border: 1px solid #ACACAC;
+  border: 1px solid #acacac;
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   padding: 0 10px;
   padding-left: 3px;
   cursor: pointer;
@@ -52,8 +52,8 @@ const DropdownButton = styled.div`
 const TriangleIcon = styled.div`
   width: 0;
   height: 0;
-  border-left: 4px solid transparent; 
-  border-right: 4px solid transparent; 
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
   border-top: 5px solid #535353;
   position: absolute;
   right: 15px;
@@ -65,13 +65,13 @@ const DropdownContent = styled.div`
   position: absolute;
   background-color: #fff;
   min-width: 103px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   right: 0;
 `;
 
 const showDropdownContent = (show: boolean): string => {
-  return show ? 'block' : 'none';
+  return show ? "block" : "none";
 };
 
 const DropdownItem = styled.div`
@@ -111,7 +111,7 @@ const Divider = styled.hr`
   border: none;
   width: 1274px;
   height: 1px;
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   margin-bottom: 20px;
   margin-top: -10px;
 `;
@@ -129,7 +129,7 @@ const DiaryEntry = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 200px;
-  border-bottom: 1px solid #C4C4C4;
+  border-bottom: 1px solid #c4c4c4;
   padding-top: 25px;
   padding-bottom: 25px;
 `;
@@ -154,7 +154,7 @@ const DiaryEntryDate = styled.div`
 const DiaryEntryContent = styled.p`
   font-family: "Pretendard";
   font-weight: 500;
-  color: #4B4B4B;
+  color: #4b4b4b;
   line-height: 22px;
   display: -webkit-box;
   -webkit-line-clamp: 4; /* 텍스트를 4줄로 제한 */
@@ -171,29 +171,34 @@ const DiaryTextContainer = styled.div`
 const DiaryImage = styled.img`
   width: 198px;
   height: 198px;
-  object-fit: cover; 
-  object-position: center; 
+  object-fit: cover;
+  object-position: center;
 `;
 
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredDiaries, setFilteredDiaries] = useState(diaryData.DiaryList); 
+  const [filteredDiaries, setFilteredDiaries] = useState(diaryData.DiaryList);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
   useEffect(() => {
     let sortedAndFiltered = [...diaryData.DiaryList]
-      .filter(diary => 
-        diary.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        diary.content.toLowerCase().includes(searchQuery.toLowerCase())
+      .filter(
+        (diary) =>
+          diary.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          diary.content.toLowerCase().includes(searchQuery.toLowerCase())
       )
       .sort((a, b) => {
         if (sortOrder === "최신순") {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         } else {
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
         }
       });
 
@@ -224,9 +229,15 @@ const DiaryPage: React.FC = () => {
             <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
               {sortOrder} <TriangleIcon />
             </DropdownButton>
-            <DropdownContent style={{ display: showDropdownContent(dropdownOpen) }}>
-              <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>최신순</DropdownItem>
-              <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>오래된순</DropdownItem>
+            <DropdownContent
+              style={{ display: showDropdownContent(dropdownOpen) }}
+            >
+              <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>
+                최신순
+              </DropdownItem>
+              <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>
+                오래된순
+              </DropdownItem>
             </DropdownContent>
           </DropdownContainer>
           <SearchBar placeholder="Search" onChange={handleSearchChange} />
@@ -242,13 +253,14 @@ const DiaryPage: React.FC = () => {
                 <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>
                 <DiaryEntryContent>{entry.content}</DiaryEntryContent>
               </DiaryTextContainer>
-              {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
+              {entry.image && (
+                <DiaryImage src={entry.image} alt="Diary entry" />
+              )}
             </DiaryEntry>
-           
           </React.Fragment>
         ))}
       </DiaryEntriesContainer>
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(filteredDiaries.length / itemsPerPage)}
         onPageChange={paginate}
