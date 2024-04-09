@@ -8,6 +8,7 @@ import GetStarted_White from "../assets/buttons/GetStarted_White";
 import AnalyzeDescription from "../components/about/AnalyzeDescription";
 import CalendarDescription from "../components/about/CalendarDescription";
 import Slider2 from "../components/about/Slider2";
+import EmotionBox from "../components/about/EmotionBox"
 
 const AboutPageContainer = styled.div`
   display: flex;
@@ -66,6 +67,7 @@ export default function AboutPage() {
       <VerticalLine />
       <RecordDescription />
       <AnalyzeDescription />
+      <EmotionBox />
       <CalendarDescription />
       <Slider2 />
       <TypoContainer>

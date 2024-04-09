@@ -42,6 +42,8 @@ const Box = styled.div<{ isClicked: boolean }>`
 
 const Title = styled.h2`
   font-family: 'PPMonumentExtended';
+  font-weight: 200;
+  letter-spacing: -1px;
   font-weight: regular;
   position: absolute;
   top: 20px;
@@ -53,6 +55,7 @@ const Title = styled.h2`
 `;
 
 const FullText = styled.span<{ isHovered: boolean; isClicked: boolean }>`
+  font-weight: 200;
   white-space: nowrap;
   position: absolute;
   left: 20px; // 기본 위치 설정
@@ -61,6 +64,18 @@ const FullText = styled.span<{ isHovered: boolean; isClicked: boolean }>`
   animation: ${({ isHovered, isClicked }) => isHovered && !isClicked ? css`${slideIn} 2s forwards` : 'none'};
 `;
 
+const EmotionImage = styled.img`
+  width: 100%; // 혹은 필요한 사이즈로 조절
+  max-height: 200px; // 이미지의 최대 높이 지정
+  object-fit: cover; // 이미지가 박스를 꽉 채우도록 조정
+`;
+
+const Description = styled.div`
+  font-family: 'PPMonumentExtended';
+  font-size: 14px; // 설명글의 글씨 크기 조정
+  color: #333; // 글씨 색상
+  margin-top: 20px; // 이미지와의 여백 조정
+`;
 
 interface EmotionBoxProps {
   text: string;
@@ -68,8 +83,27 @@ interface EmotionBoxProps {
   setIsClicked: (value: string) => void;
 }
 
+interface EmotionInfo {
+  image: string;
+  description: string;
+}
+
+// 가능한 모든 감정들의 타입 정의
+interface EmotionDetails {
+  [key: string]: EmotionInfo;
+}
+
+const emotionDetails: EmotionDetails = {
+  Happiness: {
+    image: '../../assets/images/Happiness.png',
+    description: `수집에서 행복은 초록 계열의 색으로 표현돼요<br />행복이란 뭐시기 뭐시기 이런 설명을 해줘요<br />여러분의 따뜻한 기억들을 이렇게 저렇게 저러쿵 이러쿵 해요<br />안녕하세요 안녕하십니까 냠냠냠 이렇게 해봐요 요렇게`,
+  },
+  // 다른 감정들에 대한 정보도 이와 같은 형식으로 추가...
+};
+
 const EmotionBox: React.FC<EmotionBoxProps> = ({ text, isClicked, setIsClicked }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const details = emotionDetails[text as keyof EmotionDetails];
 
   return (
     <Box
@@ -78,8 +112,13 @@ const EmotionBox: React.FC<EmotionBoxProps> = ({ text, isClicked, setIsClicked }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isClicked && <Title>{text}</Title>}
-      <FullText isHovered={isHovered || isClicked} isClicked={isClicked}>{text}</FullText>
+      {isClicked && (
+        <>
+          <EmotionImage src={`../assets/images/${details.image}`} alt={text} />
+          <Description dangerouslySetInnerHTML={{ __html: details.description }} />
+        </>
+      )}
+      {!isClicked && <FullText isHovered={isHovered || isClicked} isClicked={isClicked}>{text}</FullText>}
     </Box>
   );
 };
