@@ -67,9 +67,9 @@ function MovieRecommend() {
   return (
     <ArchiveContainer>
       <TextArea>
-        <TitleText>BOOK RECOMMENDATION</TitleText>
+        <TitleText>MOVIE RECOMMENDATION</TitleText>
         <DescriptionText>
-          지금까지 받은 책 추천 목록을 최신순으로 보여드려요
+          지금까지 받은 영화 추천 목록을 최신순으로 보여드려요
         </DescriptionText>
       </TextArea>
       <MovieRecommendContainer>
