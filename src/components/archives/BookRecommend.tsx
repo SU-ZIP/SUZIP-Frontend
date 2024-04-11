@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import styled from "styled-components";
 import More from "../../assets/images/more_gray.png";
 import Left from "../../assets/images/left.png";
 import Right from "../../assets/images/right.png";
+import BookCard from "./BookCard";
+import dummy from "../../data/ContentData.json";
+
+type Book = {
+  itemId: number;
+  name: string;
+  content: string;
+  image: string;
+  genre: string;
+  dType: "book";
+};
 
 const ArchiveContainer = styled.div`
   padding: 10vh 0 7vh 0;
@@ -15,7 +31,7 @@ const TextArea = styled.div`
 const TitleText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 1.3rem;
-  font-weight: normal;
+  font-weight: 200;
 `;
 
 const DescriptionText = styled.div`
@@ -55,16 +71,23 @@ const MoreButton = styled.img`
 `;
 
 const BookRecommendContainer = styled.div`
-  position: relative;
   width: 100%;
   height: 70vh;
   background: blue;
   margin: 10vh 0 20vh 0;
-
   text-align: center;
 `;
 
 function BookRecommendation() {
+  const [books, setBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const filteredBooks = dummy.serviceItem.filter(
+      (item) => item.dType === "book"
+    );
+    setBooks(filteredBooks as Book[]);
+  }, []);
+
   return (
     <ArchiveContainer>
       <TextArea>
@@ -74,6 +97,23 @@ function BookRecommendation() {
         </DescriptionText>
       </TextArea>
       <BookRecommendContainer>
+        <Swiper
+          slidesPerView={1}
+          centeredSlides={true}
+          spaceBetween={10}
+          grabCursor={true}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          className="mySwiper"
+        >
+          {books.map((book) => (
+            <SwiperSlide key={book.itemId}>
+              <BookCard book={book} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <ButtonOverlay>
           <Buttons src={Left} />
           <Buttons src={Right} />
