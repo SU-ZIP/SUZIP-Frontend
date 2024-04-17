@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import 'swiper/css';
+import "swiper/css/navigation";
+import 'swiper/css/pagination';
 import styled from "styled-components";
+import MovieCard from "./MovieCard";
+import dummy from "../../data/ContentData.json";
 import More from "../../assets/images/more_white.png";
 import Left from "../../assets/images/left.png";
 import Right from "../../assets/images/right.png";
+
+type Movie = {
+  itemId: number;
+  name: string;
+  content: string;
+  image: string;
+  genre: string;
+  dType: string;
+};
 
 const ArchiveContainer = styled.div`
   padding: 25vh 0 7vh 0;
@@ -64,8 +80,17 @@ const MovieRecommendContainer = styled.div`
 `;
 
 function MovieRecommend() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    const filteredMovies = dummy.serviceItem.filter(
+      (item) => item.dType === "movie"
+    );
+    setMovies(filteredMovies as Movie[]);
+  }, []);
+
   return (
-    <ArchiveContainer>
+   <ArchiveContainer>
       <TextArea>
         <TitleText>MOVIE RECOMMENDATION</TitleText>
         <DescriptionText>
@@ -73,13 +98,30 @@ function MovieRecommend() {
         </DescriptionText>
       </TextArea>
       <MovieRecommendContainer>
+        <Swiper
+          slidesPerView={5}
+          centeredSlides={true}
+          spaceBetween={100}
+          grabCursor={true}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          className="mySwiper"
+        >
+          {movies.map((movie) => (
+            <SwiperSlide key={movie.itemId}>
+              <MovieCard movie={movie} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <ButtonOverlay>
-          <Buttons src={Left} />
-          <Buttons src={Right} />
+          <Buttons src={Left} alt="Previous" />
+          <Buttons src={Right} alt="Next" />
         </ButtonOverlay>
       </MovieRecommendContainer>
       <MoreButtonContainer>
-        <MoreButton src={More} />
+        <MoreButton src={More} alt="More" />
       </MoreButtonContainer>
     </ArchiveContainer>
   );

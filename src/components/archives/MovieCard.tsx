@@ -82,31 +82,20 @@ const MovieContent = styled.div`
 `;
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-
-  useEffect(() => {
-    if (dummy && Array.isArray(dummy.serviceItem)) {
-      setMovies(dummy.serviceItem);
-    }
-  }, []);
 
   return (
-    <div>
-      {movies.map((movie) => (
-        <CardContainer key={movie.itemId}>
-          <MovieCardContainer>
-            <MovieImage src={movie.image} alt={movie.name} />
-            <MovieInfo>
-              <MovieInfoContent>
-                <MovieTitle>{movie.name}</MovieTitle>
-                <MovieContent>{movie.content}</MovieContent>
-              </MovieInfoContent>
-            </MovieInfo>
-          </MovieCardContainer>
-        </CardContainer>
-      ))}
-    </div>
-  );
+    <CardContainer>
+    <MovieCardContainer>
+      <MovieImage src={movie.image} alt={movie.name} />
+      <MovieInfo>
+        <MovieInfoContent>
+          <MovieTitle>{movie.name}</MovieTitle>
+          <MovieContent>{movie.content}</MovieContent>
+        </MovieInfoContent>
+      </MovieInfo>
+    </MovieCardContainer>
+  </CardContainer>
+);
 };
 
 export default MovieCard;

@@ -12,6 +12,7 @@ import DiaryPage from "./pages/DiaryPage";
 import DiaryViewPage from "./pages/DiaryViewPage";
 import DeleteAccount from "./pages/DeleteAccount";
 import ScrapPage from "./pages/ScrapPage";
+import KakaoCallback from "./components/social/KakaoCallback";
 
 function App() {
   return (
@@ -105,6 +106,10 @@ function App() {
                 <Header /> <ScrapPage />
               </>
             }
+          />
+           <Route
+            path="/login/oauth2/code/kakao"
+            element={<KakaoCallback />} // KakaoCallback 라우트 추가
           />
         </Routes>
       </div>

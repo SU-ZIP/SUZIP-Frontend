@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -21,7 +21,8 @@ type Book = {
 };
 
 const ArchiveContainer = styled.div`
-  padding: 10vh 0 7vh 0;
+  height: calc(100vh - 20vh); 
+  padding: 0 0 7vh 0;
 `;
 
 const TextArea = styled.div`
@@ -73,7 +74,6 @@ const MoreButton = styled.img`
 const BookRecommendContainer = styled.div`
   width: 100%;
   height: 70vh;
-  background: blue;
   margin: 10vh 0 20vh 0;
   text-align: center;
 `;
@@ -98,14 +98,18 @@ function BookRecommendation() {
       </TextArea>
       <BookRecommendContainer>
         <Swiper
-          slidesPerView={1}
+          slidesPerView={5}
           centeredSlides={true}
-          spaceBetween={10}
+          spaceBetween={1}
           grabCursor={true}
+          navigation={{
+            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next',
+          }}
           pagination={{
             clickable: true,
           }}
-          modules={[Pagination]}
+          modules={[Pagination, Navigation]}
           className="mySwiper"
         >
           {books.map((book) => (
@@ -115,8 +119,8 @@ function BookRecommendation() {
           ))}
         </Swiper>
         <ButtonOverlay>
-          <Buttons src={Left} />
-          <Buttons src={Right} />
+          <Buttons src={Left} className="swiper-button-prev" /> 
+          <Buttons src={Right} className="swiper-button-next" /> 
         </ButtonOverlay>
       </BookRecommendContainer>
       <MoreButtonContainer>

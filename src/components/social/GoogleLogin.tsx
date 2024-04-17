@@ -11,6 +11,7 @@ const GoogleContainer = styled.div`
   align-items: center;
   padding: 0.5vw;
   margin: 0.7vh 0 0.7vh 0;
+  cursor: pointer;
 `;
 
 const GoogleLogo = styled.img`
@@ -31,8 +32,12 @@ const LoginText = styled.div`
 `;
 
 export default function Google() {
+  const handleLogin = () => {
+    const GoogleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}&scope=openid%20profile%20email&redirect_uri=${process.env.REACT_APP_GOOGLE_REDIRECT_URI}`;
+    window.location.href = GoogleAuthURL;
+  };
   return (
-    <GoogleContainer>
+    <GoogleContainer onClick={handleLogin}>
       <GoogleLogo src={googleLogo} />
       <LoginText>Google로 로그인</LoginText>
     </GoogleContainer>

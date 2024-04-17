@@ -12,6 +12,7 @@ const NaverContainer = styled.div`
   padding: 0.5vw;
   background: #56bc3d;
   margin: 0.7vh 0 0.7vh 0;
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
 `;
 
 const NaverLogo = styled.img`
@@ -25,7 +26,6 @@ const LoginText = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-
   font-family: "Pretendard";
   font-weight: 400;
   font-size: 1.1rem;
@@ -33,8 +33,13 @@ const LoginText = styled.div`
 `;
 
 export default function Naver() {
+  const handleLogin = () => {
+    const naverAuthURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_NAVER_REDIRECT_URI}&state=REACT_APP_STATE`;
+    window.location.href = naverAuthURL;
+  };
+
   return (
-    <NaverContainer>
+    <NaverContainer onClick={handleLogin}>
       <NaverLogo src={naverLogo} />
       <LoginText>Naver로 로그인</LoginText>
     </NaverContainer>

@@ -82,31 +82,21 @@ const MusicContent = styled.div`
 `;
 
 const MusicCard: React.FC<MusicCardProps> = ({ music }) => {
-  const [musics, setMusics] = useState<Music[]>([]);
-
-  useEffect(() => {
-    if (dummy && Array.isArray(dummy.serviceItem)) {
-      setMusics(dummy.serviceItem);
-    }
-  }, []);
 
   return (
-    <div>
-      {musics.map((music) => (
-        <CardContainer key={music.itemId}>
-          <MusicCardContainer>
-            <MusicImage src={music.image} alt={music.name} />
-            <MusicInfo>
-              <MusicInfoContent>
-                <MusicTitle>{music.name}</MusicTitle>
-                <MusicContent>{music.content}</MusicContent>
-              </MusicInfoContent>
-            </MusicInfo>
-          </MusicCardContainer>
-        </CardContainer>
-      ))}
-    </div>
-  );
+    <CardContainer>
+    <MusicCardContainer>
+      <MusicImage src={music.image} alt={music.name} />
+      <MusicInfo>
+        <MusicInfoContent>
+          <MusicTitle>{music.name}</MusicTitle>
+          <MusicContent>{music.content}</MusicContent>
+        </MusicInfoContent>
+      </MusicInfo>
+    </MusicCardContainer>
+  </CardContainer>
+);
 };
+
 
 export default MusicCard;

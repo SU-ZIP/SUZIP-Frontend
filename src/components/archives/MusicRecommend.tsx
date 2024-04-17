@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import 'swiper/css';
+import "swiper/css/navigation";
+import 'swiper/css/pagination';
 import styled from "styled-components";
+import MusicCard from "./MusicCard";
+import dummy from "../../data/ContentData.json";
 import Left from "../../assets/images/left.png";
 import Right from "../../assets/images/right.png";
+
+type Music = {
+  itemId: number;
+  name: string;
+  content: string;
+  image: string;
+  genre: string;
+  dType: string;
+};
 
 const ArchiveContainer = styled.div`
   padding: 25vh 0 7vh 0;
@@ -50,6 +66,15 @@ const MusicRecommendContainer = styled.div`
 `;
 
 function MusicRecommend() {
+  const [musics, setMusics] = useState<Music[]>([]);
+
+  useEffect(() => {
+    const filteredMusics = dummy.serviceItem.filter(
+      (item) => item.dType === "music"
+    );
+    setMusics(filteredMusics as Music[]);
+  }, []);
+
   return (
     <ArchiveContainer>
       <TextArea>
@@ -59,9 +84,26 @@ function MusicRecommend() {
         </DescriptionText>
       </TextArea>
       <MusicRecommendContainer>
+        <Swiper
+          slidesPerView={5}
+          centeredSlides={true}
+          spaceBetween={10}
+          grabCursor={true}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          className="mySwiper"
+        >
+          {musics.map((music) => (
+            <SwiperSlide key={music.itemId}>
+              <MusicCard music={music} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <ButtonOverlay>
-          <Buttons src={Left} />
-          <Buttons src={Right} />
+          <Buttons src={Left} alt="Previous" />
+          <Buttons src={Right} alt="Next" />
         </ButtonOverlay>
       </MusicRecommendContainer>
     </ArchiveContainer>
