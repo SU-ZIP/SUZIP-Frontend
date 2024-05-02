@@ -49,7 +49,7 @@ const IndexItem = styled(Link)`
   display: block;
 `;
 
-const PagingItem = styled(Link)`
+const PagingItem = styled.a`
   text-decoration: none;
   font-family: "PPMonumentExtended";
   font-size: 1.5rem;
@@ -127,10 +127,10 @@ function IndexPage({ onClose }: IndexPageProps) {
             </IndexItem>
           </IndexMenu>
           <PagingMenu>
-            <PagingItem to="/login" onClick={onClose}>
+            <PagingItem href="http://localhost:8080/login" onClick={onClose}>
               LOGIN
             </PagingItem>
-            <PagingItem to="/signup" onClick={onClose}>
+            <PagingItem href="http://localhost:8080/signup" onClick={onClose}>
               SIGN UP
             </PagingItem>
           </PagingMenu>
