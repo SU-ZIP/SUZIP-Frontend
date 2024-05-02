@@ -28,7 +28,7 @@ const CalendarTable = styled.table`
 
 const CalendarDayHeader = styled.th`
   font-family: "PPMonumentExtended", sans-serif;
-  font-weight: 300;
+  font-weight: 200;
   color: #656565;
   padding: 20px 0;
   text-align: left;
@@ -38,7 +38,7 @@ const DateContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
-  transition: transform 0.3s ease-in-out; // 여기에 트랜지션 추가
+  transition: transform 0.3s ease-in-out;
 `;
 
 const Tooltip = styled.span`
@@ -72,7 +72,7 @@ const CalendarDayWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  transition: all 0.3s ease-in-out; // 부드러운 변화를 위한 transition 추가
+  transition: all 0.3s ease-in-out; 
   background-color: transparent;
 `;
 
@@ -88,7 +88,7 @@ const CalendarDay = styled.td`
     margin-left 0.3s;
   &:hover {
     background-color: #f6f6f6;
-    margin-left: 10px; /* 좌측으로 이동 */
+    margin-left: 10px; 
     transform: scale(0.95);
     border-radius: 10px;
     padding: 20px 0 100px 0;
