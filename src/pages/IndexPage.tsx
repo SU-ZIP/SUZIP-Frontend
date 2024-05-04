@@ -106,18 +106,32 @@ function IndexPage({ onClose }: IndexPageProps) {
   }, []);
 
   const handleLogout = () => {
-    axios.post("http://localhost:8080/api/token/logout", {}, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } })
-      .then(response => {
+    const accessToken = localStorage.getItem('accessToken');
+    console.log(accessToken)
+    if (!accessToken) {
+        console.error("No access token found");
+        setError('로그아웃 실패: 액세스 토큰이 없습니다.');
+        return;
+    }
+
+    axios.post("http://localhost:8080/api/token/logout", {}, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        },
+        withCredentials: true
+    })
+    .then(response => {
         console.log("로그아웃 되었습니다.");
-        setLoginStatus(false, ''); 
+        setLoginStatus(false, '');
         localStorage.removeItem("accessToken");
         onClose();
         navigate('/');
-      })
-      .catch(error => {
+    })
+    .catch(error => {
         console.error("로그아웃 실패:", error);
-      });
-  };
+        setError(`로그아웃 실패: ${error.response?.data?.message || '서버 에러'}`);
+    });
+};
   return (
     <ModalOverlay>
       <ModalContainer backgroundColor={backgroundColor}>
@@ -162,4 +176,3 @@ function IndexPage({ onClose }: IndexPageProps) {
 }
 
 export default IndexPage;
-

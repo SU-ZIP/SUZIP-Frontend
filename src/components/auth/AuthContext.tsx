@@ -28,6 +28,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       .then(response => {
         if (response.data.isSuccess && response.data.result) {
           setLoginStatus(true, response.data.result.name);
+          localStorage.setItem('accessToken', response.data.result.accessToken)
+          console.log(localStorage.getItem("accessToken"))
         } else {
           setLoginStatus(false);
         }
