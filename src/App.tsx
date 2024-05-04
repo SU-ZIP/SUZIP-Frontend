@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AuthProvider } from './components/auth/AuthContext';
 import Header from "./components/header/Header";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -16,6 +17,7 @@ import KakaoCallback from "./components/social/KakaoCallback";
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className="App">
         <Routes>
@@ -114,6 +116,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

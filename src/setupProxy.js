@@ -1,11 +1,18 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  app.use(
-    '/login', // 이제 '/login'으로 시작하는 요청을 대상으로 프록시 설정을 적용합니다.
-    createProxyMiddleware({
-      target: 'http://localhost:8080', // 백엔드 서버 URL
-      changeOrigin: true,
-    })
-  );
+    app.use(
+        '/login/oauth2/code/kakao',
+        createProxyMiddleware({
+            target: 'http://localhost:8080',
+            changeOrigin: true,
+            pathRewrite: {'^/login/oauth2/code/kakao' : ''},
+            onProxyRes: function (proxyRes, req, res) {
+                if (proxyRes.headers.location) {
+                    // 리다이렉트 경로를 클라이언트가 의도한 주소로 수정
+                    proxyRes.headers.location = proxyRes.headers.location.replace('http://localhost:8080/login', 'http://localhost:3000');
+                }
+            }
+        })
+    );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from 'axios';
 import closeButton from "../assets/images/close.png";
 
 const ModalOverlay = styled.div`
@@ -80,8 +81,20 @@ interface IndexPageProps {
 
 function IndexPage({ onClose }: IndexPageProps) {
   const [backgroundColor, setBackgroundColor] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // 서버에서 로그인 상태를 확인
+    axios.get("http://localhost:8080/api/auth/status", { withCredentials: true })
+      .then(response => {
+        setIsLoggedIn(response.data.success && response.data.data != null);
+      })
+      .catch(error => {
+        console.error("로그인 상태 확인 실패:", error);
+        setIsLoggedIn(false);
+      });
+
     const colors = [
       "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
       "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
@@ -93,7 +106,6 @@ function IndexPage({ onClose }: IndexPageProps) {
     setBackgroundColor(colors[0]);
 
     let currentIndex = 1;
-
     const interval = setInterval(() => {
       if (!document.hidden) {
         setBackgroundColor(colors[currentIndex]);
@@ -104,6 +116,20 @@ function IndexPage({ onClose }: IndexPageProps) {
     return () => clearInterval(interval);
   }, []);
 
+  const handleLogout = () => {
+    axios.post("http://localhost:8080/api/token/logout", {}, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } })
+      .then(response => {
+        console.log("로그아웃 되었습니다.");
+        setIsLoggedIn(false); // 로그인 상태 업데이트
+        localStorage.removeItem("accessToken"); // 로컬 스토리지에서 토큰 제거
+        onClose(); // 메뉴 닫기
+        navigate('/'); // 홈으로 리디렉션
+      })
+      .catch(error => {
+        console.error("로그아웃 실패:", error);
+      });
+  };
+  
   return (
     <ModalOverlay>
       <ModalContainer backgroundColor={backgroundColor}>
@@ -125,11 +151,17 @@ function IndexPage({ onClose }: IndexPageProps) {
             <IndexItem to="/my" onClick={onClose}>
               My
             </IndexItem>
-          </IndexMenu>
+            </IndexMenu>
           <PagingMenu>
-            <PagingItem href="http://localhost:8080/login" onClick={onClose}>
-              LOGIN
-            </PagingItem>
+            {isLoggedIn ? (
+              <PagingItem as="div" onClick={handleLogout}>
+                LOGOUT
+              </PagingItem>
+            ) : (
+              <PagingItem href="http://localhost:8080/api/login" onClick={onClose}>
+                LOGIN
+              </PagingItem>
+            )}
             <PagingItem href="http://localhost:8080/signup" onClick={onClose}>
               SIGN UP
             </PagingItem>
@@ -141,3 +173,4 @@ function IndexPage({ onClose }: IndexPageProps) {
 }
 
 export default IndexPage;
+
