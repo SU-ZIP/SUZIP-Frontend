@@ -5,7 +5,7 @@ import axios from 'axios';
 import Logo from "../../assets/images/sz.png";
 import MenuIcon from "../../assets/images/menu.png";
 import IndexPage from "../../pages/IndexPage";
-
+import { useAuth } from '../auth/AuthContext'; // 경로에 따라 수정하세요
 
 const HeaderContainer = styled.div`
   height: 10vh;
@@ -37,7 +37,7 @@ const Menu = styled.img`
 
 const UserName = styled.div`
   font-size: 1.1rem;
-  margin-right: 1vw; 
+  margin-right: 1vw;
   display: flex;
   align-items: center;
 `;
@@ -57,37 +57,9 @@ const HorizontalLine = styled.div`
   margin-top: 2vh;
 `;
 
-const fetchUserInfo = async (): Promise<any> => {
-  const url = 'http://localhost:8080/api/member/';
-  try {
-    const response = await axios.get(url, {
-      withCredentials: true
-    });
-    console.log("API Response: ", response.data);
-    return response.data.result;
-  } catch (error) {
-    console.error('Failed to fetch user info:', error);
-    return null;
-  }
-};
-
 function Header() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    fetchUserInfo().then(userInfo => {
-        console.log("User Info Response:", userInfo);
-        if (userInfo && userInfo.name) {
-            setUserName(userInfo.name);
-        } else {
-            setUserName("사용자 정보 없음");
-        }
-    }).catch(error => {
-        console.error("사용자 정보를 불러오는 중 에러 발생:", error);
-        setUserName("에러 발생");
-    });
-  }, []);
+  const { userName, isLoggedIn } = useAuth(); // AuthContext에서 상태를 사용
 
   return (
     <HeaderContainer>
@@ -96,7 +68,7 @@ function Header() {
           <LogoImg src={Logo} />
         </Link>
         <RightContainer>
-          {userName && (
+          {isLoggedIn && userName && ( // 로그인 상태와 사용자 이름이 유효할 때만 표시
             <UserName>
               <UserNameText>{userName}</UserNameText>
               <UserSuffix> 님</UserSuffix>

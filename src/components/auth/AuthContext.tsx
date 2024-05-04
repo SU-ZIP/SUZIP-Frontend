@@ -26,8 +26,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     axios.get("http://localhost:8080/api/auth/status", { withCredentials: true })
       .then(response => {
-        if (response.data.success && response.data.data) {
-          setLoginStatus(true, response.data.data.name);
+        if (response.data.isSuccess && response.data.result) {
+          setLoginStatus(true, response.data.result.name);
         } else {
           setLoginStatus(false);
         }

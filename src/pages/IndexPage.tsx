@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from 'axios';
 import closeButton from "../assets/images/close.png";
-
+import {useAuth} from "../components/auth/AuthContext"
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -58,6 +58,7 @@ const PagingItem = styled.a`
   color: #ffffff;
   margin: 3vh 2vw 0 2vh;
   white-space: nowrap;
+  cursor: pointer;
 `;
 
 const CloseBTN = styled.img`
@@ -81,20 +82,11 @@ interface IndexPageProps {
 
 function IndexPage({ onClose }: IndexPageProps) {
   const [backgroundColor, setBackgroundColor] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, setLoginStatus, userName } = useAuth();
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 서버에서 로그인 상태를 확인
-    axios.get("http://localhost:8080/api/auth/status", { withCredentials: true })
-      .then(response => {
-        setIsLoggedIn(response.data.success && response.data.data != null);
-      })
-      .catch(error => {
-        console.error("로그인 상태 확인 실패:", error);
-        setIsLoggedIn(false);
-      });
-
     const colors = [
       "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
       "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
@@ -102,9 +94,7 @@ function IndexPage({ onClose }: IndexPageProps) {
       "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
     ];
-
     setBackgroundColor(colors[0]);
-
     let currentIndex = 1;
     const interval = setInterval(() => {
       if (!document.hidden) {
@@ -112,7 +102,6 @@ function IndexPage({ onClose }: IndexPageProps) {
         currentIndex = (currentIndex + 1) % colors.length;
       }
     }, 8000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -120,20 +109,20 @@ function IndexPage({ onClose }: IndexPageProps) {
     axios.post("http://localhost:8080/api/token/logout", {}, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } })
       .then(response => {
         console.log("로그아웃 되었습니다.");
-        setIsLoggedIn(false); // 로그인 상태 업데이트
-        localStorage.removeItem("accessToken"); // 로컬 스토리지에서 토큰 제거
-        onClose(); // 메뉴 닫기
-        navigate('/'); // 홈으로 리디렉션
+        setLoginStatus(false, ''); 
+        localStorage.removeItem("accessToken");
+        onClose();
+        navigate('/');
       })
       .catch(error => {
         console.error("로그아웃 실패:", error);
       });
   };
-  
   return (
     <ModalOverlay>
       <ModalContainer backgroundColor={backgroundColor}>
         <CloseBTN src={closeButton} onClick={onClose} />
+        {error && <p>{error}</p>}
         <MenuContainer>
           <IndexMenu>
             <IndexItem to="/" onClick={onClose}>
