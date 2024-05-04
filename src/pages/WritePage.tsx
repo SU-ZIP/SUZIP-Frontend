@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 
@@ -118,11 +119,32 @@ const IconImage = styled.img`
   width: 17px;
 `;
 
+const EmotionSelect = styled.select`
+  font-family: 'Pretendard';
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 12px;
+`;
+
+
+
+
 export default function WritePage() {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
-  const [date, setDate] = useState<string>("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [date, setDate] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
+
+  const [emotion, setEmotion] = useState("");
+
+const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  setEmotion(event.target.value);
+};
 
   useEffect(() => {
     const today = new Date();
@@ -145,24 +167,51 @@ export default function WritePage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        setContent(e.target?.result?.toString() || '');
-      };
-
-      reader.readAsDataURL(file);
+      setFile(e.target.files[0]);
     }
   };
 
+  
+
   const handleSaveClick = () => {
-    setIsModalOpen(true); // Open the modal when the button is clicked
+    console.log('Save button clicked');
+    setIsModalOpen(true);
+  };
+  
+  const saveDiary = async () => {
+    console.log('Saving diary...');
+    const formData = new FormData();
+    formData.append("request", new Blob([JSON.stringify({
+      title: title,
+      content: content,
+      date: date,
+      emotions: emotion
+    })], { type: 'application/json' }));
+  
+    if (file) {
+      console.log('File attached:', file.name);
+      formData.append("file", file);
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:8080/api/diary", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Diary saved:', response.data);
+      setIsModalOpen(false); // 모달 닫기
+    } catch (error) {
+      console.error('Error saving the diary:', error);
+    }
+  };
+  
+
+  // 모달을 닫는 함수
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Function to close the modal
-  };
   return (
     <PageContainer>
       <SaveButtonContainer>
@@ -171,6 +220,12 @@ export default function WritePage() {
       <DateContainer>
         <DateLabel>Date</DateLabel>
         <DateText>{date}</DateText>
+        <EmotionSelect value={emotion} onChange={handleEmotionChange}>
+    <option value="">감정 선택</option>
+    {emotions.map(em => (
+      <option key={em} value={em}>{em}</option>
+    ))}
+  </EmotionSelect>
       </DateContainer>
       <TitleInput
         type="text"
@@ -200,7 +255,7 @@ export default function WritePage() {
           placeholder="내용을 입력하세요"
         />
       )}
-      <SaveModal isOpen={isModalOpen} onClose={handleCloseModal} /> 
+   <SaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={saveDiary} />
     </PageContainer>
   );
 }

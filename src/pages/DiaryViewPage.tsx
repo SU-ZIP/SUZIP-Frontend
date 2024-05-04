@@ -157,7 +157,6 @@ export default function WritePage() {
       >
         {diary.content}
       </ContentTextarea>
-      <SaveModal isOpen={isModalOpen} onClose={handleCloseModal} /> 
     </PageContainer>
   );
 }

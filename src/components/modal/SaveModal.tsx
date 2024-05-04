@@ -75,13 +75,17 @@ const CloseButton = styled.button`
 interface SaveModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave: () => Promise<void>; // 저장 로직 함수 타입 추가
 }
 
-const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose }) => {
+const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onSave }) => {
   const navigate = useNavigate();
 
-   const handleConfirm = () => {
-    navigate('/analyze');
+  const handleConfirm = async () => {
+    console.log('Confirm save');
+    await onSave(); // 서버에 저장
+    console.log('Diary saved and navigating to analyze page');
+    navigate('/analyze'); // 저장 후 페이지 이동
   };
 
   if (!isOpen) return null;
