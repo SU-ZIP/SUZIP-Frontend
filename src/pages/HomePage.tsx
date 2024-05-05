@@ -72,7 +72,7 @@ const CalendarDayWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  transition: all 0.3s ease-in-out; 
+  transition: all 0.3s ease-in-out;
   background-color: transparent;
 `;
 
@@ -93,13 +93,17 @@ const CalendarDay = styled.td`
     border-radius: 10px;
     padding: 20px 0 100px 0;
     & > ${DateContainer} {
-      // DateContainer에 대한 변화를 지정합니다.
-      transform: translateX(10px); // Y축으로 조금 위로 이동하게 합니다.
+      transform: translateX(10px); 
     }
   }
   &:hover ${AddButton} {
     opacity: 1;
   }
+`;
+
+const DisabledCalendarDay = styled(CalendarDay)`
+  color: #d3d3d3;
+  pointer-events: none;
 `;
 
 const DateMarker = styled.span<{ color?: string }>`
@@ -143,16 +147,28 @@ const getRandomGradient = () =>
 interface CalendarDayProps {
   day: number;
   handleDayClick: (day: number) => void;
-  openModal: () => void; // Add this line
+  openModal: () => void;
+  isFuture: boolean; 
 }
 
 const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   day,
   handleDayClick,
   openModal,
+  isFuture 
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [gradient] = useState<string>(getRandomGradient());
+
+  if (isFuture) {
+    return (
+      <DisabledCalendarDay>
+        <DateContainer>
+          <span style={{ marginLeft: "10px", color: "#d3d3d3" }}>{day}</span>
+        </DateContainer>
+      </DisabledCalendarDay>
+    );
+  }
 
   return (
     <CalendarDay onClick={() => handleDayClick(day)}>
@@ -186,6 +202,11 @@ const generateCalendarDates = (
   handleDayClick: (day: number) => void,
   openModal: () => void
 ): JSX.Element[] => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+  const currentDate = today.getDate();
+
   const dates: JSX.Element[] = [];
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const numDaysInMonth = new Date(year, month + 1, 0).getDate();
@@ -196,12 +217,14 @@ const generateCalendarDates = (
   }
 
   for (let i = 1; i <= numDaysInMonth; i++) {
+    const isFuture = year > currentYear || (year === currentYear && (month > currentMonth || (month === currentMonth && i > currentDate)));
     dayCells.push(
       <CalendarDayComponent
         key={`day-${i}`}
         day={i}
         handleDayClick={handleDayClick}
-        openModal={openModal} // openModal 함수를 CalendarDayComponent에 전달합니다.
+        openModal={openModal}
+        isFuture={isFuture}
       />
     );
   }
@@ -239,10 +262,11 @@ const HomePage: React.FC = () => {
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
   };
-
+  
   const handleNextMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
   };
+  
 
   const handleToday = () => {
     setCurrentDate(new Date());
@@ -253,7 +277,7 @@ const HomePage: React.FC = () => {
   };
 
   const redirectToWritePage = () => {
-    navigate("/write"); // '/write' 경로로 이동합니다.
+    navigate("/write");
   };
 
   const dates = generateCalendarDates(
