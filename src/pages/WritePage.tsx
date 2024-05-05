@@ -1,11 +1,10 @@
 import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-
 import PhotoImg from '../assets/images/photo.png';
-
 import SaveModal from '../components/modal/SaveModal';
-
+import { useAuth } from '../components/auth/AuthContext'; 
+import { useNavigate } from 'react-router-dom';
 const PageContainer = styled.div`
   font-family: 'Pretendard';
   display: flex;
@@ -138,6 +137,8 @@ export default function WritePage() {
   const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isLoggedIn, userName } = useAuth();
+  const navigate = useNavigate();
   const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
 
   const [emotion, setEmotion] = useState("");
@@ -145,6 +146,14 @@ export default function WritePage() {
 const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
   setEmotion(event.target.value);
 };
+
+useEffect(() => {
+  // 로그인 상태가 아니면 로그인 페이지로 리다이렉트
+  if (!isLoggedIn) {
+    alert('로그인이 필요합니다.');
+    navigate('/login');
+  }
+}, [isLoggedIn, navigate]);
 
   useEffect(() => {
     const today = new Date();
@@ -178,34 +187,34 @@ const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setIsModalOpen(true);
   };
   
-  const saveDiary = async () => {
-    console.log('Saving diary...');
-    const formData = new FormData();
-    formData.append("request", new Blob([JSON.stringify({
-      title: title,
-      content: content,
-      date: date,
-      emotions: emotion
-    })], { type: 'application/json' }));
-  
-    if (file) {
-      console.log('File attached:', file.name);
-      formData.append("file", file);
-    }
-  
-    try {
-      const response = await axios.post("http://localhost:8080/api/diary", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log('Diary saved:', response.data);
-      setIsModalOpen(false); // 모달 닫기
-    } catch (error) {
-      console.error('Error saving the diary:', error);
-    }
+  axios.defaults.withCredentials = true;  // 쿠키를 포함시키기 위한 설정
+
+const saveDiary = async () => {
+  const token = localStorage.getItem('accessToken');  // 토큰 가져오기
+  const headers = {
+    'Authorization': `Bearer ${token}`,  // 토큰을 헤더에 추가
   };
+
+  const formData = new FormData();
+  formData.append("request", JSON.stringify({
+    title: title,
+    content: content,
+    date: date,
+    emotions: emotion
+  }));
   
+  if (file) {
+    formData.append("file", file);
+  }
+
+  try {
+    const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
+    console.log('Diary saved:', response.data);
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error('Error saving the diary:', error);
+  }
+};
 
   // 모달을 닫는 함수
   const handleCloseModal = () => {

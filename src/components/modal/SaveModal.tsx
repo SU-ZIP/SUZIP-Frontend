@@ -80,12 +80,11 @@ interface SaveModalProps {
 
 const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onSave }) => {
   const navigate = useNavigate();
-
   const handleConfirm = async () => {
-    console.log('Confirm save');
-    await onSave(); // 서버에 저장
-    console.log('Diary saved and navigating to analyze page');
-    navigate('/analyze'); // 저장 후 페이지 이동
+    console.log('User confirmed save');
+    await onSave();
+    console.log('Navigating to analyze page');
+    navigate('/analyze');
   };
 
   if (!isOpen) return null;
