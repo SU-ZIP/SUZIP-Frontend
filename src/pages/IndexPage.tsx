@@ -145,10 +145,10 @@ function IndexPage({ onClose }: IndexPageProps) {
             <IndexItem to="/about" onClick={onClose}>
               About
             </IndexItem>
-            <IndexItem to="/archives" onClick={onClose}>
+            <IndexItem to="/diary" onClick={onClose}>
               Archives
             </IndexItem>
-            <IndexItem to="/services" onClick={onClose}>
+            <IndexItem to="/archives" onClick={onClose}>
               Services
             </IndexItem>
             <IndexItem to="/my" onClick={onClose}>
