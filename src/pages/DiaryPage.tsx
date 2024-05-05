@@ -204,8 +204,9 @@ const DiaryPage: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);  // 페이지는 0부터 시작하도록 설정
-  const itemsPerPage = 5;  // 페이지당 항목 수를 10으로 설정
+  const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchDiaries = async () => {
@@ -215,15 +216,13 @@ const DiaryPage: React.FC = () => {
           Authorization: `Bearer ${token}`
         },
         params: {
-          page: currentPage  // 현재 페이지 번호를 매개변수로 전달
+          page: currentPage
         }
       };
-
       try {
         const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
-          console.log("Diaries loaded:", response.data.result);
         }
       } catch (error) {
         console.error('Failed to fetch diaries:', error);
@@ -231,7 +230,29 @@ const DiaryPage: React.FC = () => {
     };
 
     fetchDiaries();
-  }, [currentPage]);  // 페이지 변경 시마다 일기 다시 불러오기
+  }, [currentPage]);
+
+  useEffect(() => {
+    function applySearchAndSort() {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      const searchedDiaries = diaries.filter(diary =>
+        diary.title.toLowerCase().includes(lowercasedQuery) ||
+        diary.content.toLowerCase().includes(lowercasedQuery)
+      );
+
+      const sortedDiaries = searchedDiaries.sort((a, b) => {
+        if (sortOrder === "최신순") {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        } else {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }
+      });
+
+      setFilteredDiaries(sortedDiaries);
+    }
+
+    applySearchAndSort();
+  }, [diaries, searchQuery, sortOrder]);
 
   const handleDropdownItemClick = (order: string) => {
     setSortOrder(order);
@@ -242,26 +263,12 @@ const DiaryPage: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearch = (): DiaryEntry[] => {
-    return diaries.filter(
-      diary =>
-        diary.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        diary.content.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  };
-
-  const sortedDiaries = handleSearch().sort((a, b) => {
-    return sortOrder === "최신순"
-      ? new Date(b.date).getTime() - new Date(a.date).getTime()
-      : new Date(a.date).getTime() - new Date(b.date).getTime();
-  });
-
-  const currentDiaries = sortedDiaries.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const currentDiaries = filteredDiaries.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
   );
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber - 1);  // 페이지 넘버를 1 감소시켜 0부터 시작하게 처리
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber - 1);
 
   return (
     <PageContainer>
@@ -282,31 +289,24 @@ const DiaryPage: React.FC = () => {
       </Header>
       <Divider />
       <DiaryEntriesContainer>
-        {diaries.length > 0 ? (
-          diaries.map((entry) => (
-            <DiaryEntry key={entry.id}>
-              <DiaryTextContainer>
-                <DiaryEntryDate>{entry.date}</DiaryEntryDate>
-                <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>
-                <DiaryEntryContent>{entry.content}</DiaryEntryContent>
-              </DiaryTextContainer>
-              {entry.image && (
-                <DiaryImage src={entry.image} alt="Diary entry" />
-              )}
-            </DiaryEntry>
-          ))
-        ) : (
-          <p>일기가 존재하지 않아요. 일기를 작성해주세요!</p>
-        )}
+        {currentDiaries.length > 0 ? currentDiaries.map(entry => (
+          <DiaryEntry key={entry.id}>
+            <DiaryTextContainer>
+              <DiaryEntryDate>{entry.date}</DiaryEntryDate>
+              <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>
+              <DiaryEntryContent>{entry.content}</DiaryEntryContent>
+            </DiaryTextContainer>
+            {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
+          </DiaryEntry>
+        )) : <p>No diaries match your search.</p>}
       </DiaryEntriesContainer>
       <Pagination
-        currentPage={currentPage + 1}  // 현재 페이지 표시를 위해 +1
-        totalPages={Math.ceil(sortedDiaries.length / itemsPerPage)}
+        currentPage={currentPage + 1}
+        totalPages={Math.ceil(filteredDiaries.length / itemsPerPage)}
         onPageChange={paginate}
       />
     </PageContainer>
   );
 };
-
 
 export default DiaryPage;
