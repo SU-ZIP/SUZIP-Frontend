@@ -18,104 +18,25 @@ import KakaoCallback from "./components/social/KakaoCallback";
 function App() {
   return (
     <AuthProvider>
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Header /> <HomePage />
-              </>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <>
-                <Header /> <AboutPage />
-              </>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <>
-                <Header /> <SignInPage />
-              </>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <>
-                <Header /> <SignUpPage />
-              </>
-            }
-          />
-          <Route
-            path="/archives"
-            element={
-              <>
-                <Header /> <ArchivePage />
-              </>
-            }
-          />
-          <Route
-            path="/write"
-            element={
-              <>
-                <Header /> <WritePage />
-              </>
-            }
-          />
-          <Route
-            path="/analyze"
-            element={
-              <>
-                <Header /> <AnalyzePage />
-              </>
-            }
-          />
-          <Route
-            path="/diary"
-            element={
-              <>
-                <Header /> <DiaryPage />
-              </>
-            }
-          />
-          <Route
-            path="/diaryView"
-            element={
-              <>
-                <Header /> <DiaryViewPage />
-              </>
-            }
-          />
-          <Route
-            path="/deleteAccount"
-            element={
-              <>
-               <DeleteAccount />
-              </>
-            }
-          />
-          <Route
-            path="/scrapPage"
-            element={
-              <>
-                <Header /> <ScrapPage />
-              </>
-            }
-          />
-           <Route
-            path="/login/oauth2/code/kakao"
-            element={<KakaoCallback />} // KakaoCallback 라우트 추가
-          />
-        </Routes>
-      </div>
-    </Router>
+      <Router>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/login" element={<SignInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/archives" element={<ArchivePage />} />
+            <Route path="/write" element={<WritePage />} />
+            <Route path="/analyze" element={<AnalyzePage />} />
+            <Route path="/diary" element={<DiaryPage />} />
+            <Route path="/diary/:diaryId" element={<DiaryViewPage />} />
+            <Route path="/deleteAccount" element={<DeleteAccount />} />
+            <Route path="/scrapPage" element={<ScrapPage />} />
+            <Route path="/login/oauth2/code/kakao" element={<KakaoCallback />} />
+          </Routes>
+        </div>
+      </Router>
     </AuthProvider>
   );
 }

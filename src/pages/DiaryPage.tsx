@@ -4,6 +4,7 @@ import axios from 'axios';
 import SearchImg from "../assets/images/search.png";
 import diaryData from "../data/Diary.json";
 import Pagination from "../assets/pagination/Pagination";
+import { Link } from 'react-router-dom';
 
 const PageContainer = styled.div`
   font-family: "Pretendard";
@@ -124,7 +125,7 @@ const DiaryEntriesContainer = styled.div`
   margin-top: -20px;
 `;
 
-const DiaryEntry = styled.div`
+const DiaryEntry = styled(Link)`
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -132,8 +133,9 @@ const DiaryEntry = styled.div`
   border-bottom: 1px solid #c4c4c4;
   padding-top: 25px;
   padding-bottom: 25px;
+  text-decoration: none;
+  color: inherit;
 `;
-
 const DiaryEntryTitle = styled.h2`
   font-family: "Pretendard";
   font-weight: 600;
@@ -176,7 +178,7 @@ const DiaryImage = styled.img`
 `;
 
 interface DiaryEntry {
-  id: number;
+  diaryId: number;
   title: string;
   emotion: string;
   color: string;
@@ -290,7 +292,7 @@ const DiaryPage: React.FC = () => {
       <Divider />
       <DiaryEntriesContainer>
         {currentDiaries.length > 0 ? currentDiaries.map(entry => (
-          <DiaryEntry key={entry.id}>
+          <DiaryEntry to={`/diary/${entry.diaryId}`} key={entry.diaryId}>
             <DiaryTextContainer>
               <DiaryEntryDate>{entry.date}</DiaryEntryDate>
               <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>

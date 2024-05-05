@@ -77,7 +77,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  margin-bottom: 12px;
+  margin-top: 1vh;
 `;
 
 const Button = styled.button`
@@ -104,7 +104,7 @@ const ContentTextarea = styled.textarea`
   height: 800px;
   padding: 8px;
   border: none;
-  margin-top: -10px;
+  margin-top: 3vh;
   font-size: 20px;
   ::placeholder {
     color: #E1E1E0;
@@ -256,7 +256,7 @@ export default function WritePage() {
         </Button>
       </ButtonContainer>
       {previewSrc && (
-        <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginBottom: '12px' }} />
+        <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
       )}
       <ContentTextarea
         value={content}

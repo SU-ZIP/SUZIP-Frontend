@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
-
+import axios from 'axios';
 import SaveModal from '../components/modal/SaveModal';
-import diaryData from '../data/Diary.json';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -10,6 +10,7 @@ const PageContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin: 0 10vw;
+  padding-bottom: 20vh;
 `;
 
 const DateContainer = styled.div`
@@ -43,9 +44,25 @@ const DiaryTitle = styled.div`
   color: #333333;
   outline: none;
   text-align: left;
-  ::placeholder {
-    color: #E1E1E0;
-  }
+`;
+
+const DiaryImage = styled.img`
+  margin-top: 15px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+`;
+
+const ContentTextarea = styled.div`
+  font-family: "Pretendard";
+  outline: none;
+  width: 100%;
+  height: auto;
+  padding: 8px;
+  margin-top: -10px;
+  line-height: 25px;
+  font-size: 18px;
+  color: #2D2D2D;
+  white-space: pre-wrap;
 `;
 
 const SaveButtonContainer = styled.div`
@@ -91,44 +108,54 @@ const ResultButton = styled.button`
   }
 `;
 
-const ContentTextarea = styled.textarea`
-  font-family: "Pretendard";
-  outline: none; 
-  width: 100%;
-  height: 800px;
-  padding: 8px;
-  border: none;
-  margin-top: -10px;
-  line-height: 25px;
-  font-size: 18px;
-  color: #2D2D2D;
-  margin-left: -10px;
-`;
+interface Diary {
+  title: string;
+  date: string;
+  content: string;
+  image: string;
+}
 
-
-const DiaryImage = styled.img`
-  width: 416px;
-  height: 416px;
-  margin-top: 15px;
-  margin-bottom: 20px; // 이미지 아래 여백 추가
-  align-self: flex-start; // 이미지를 왼쪽으로 정렬
-`;
-
-export default function WritePage() {
-  const [date, setDate] = useState<string>("");
+export default function DiaryViewPage() {
+  const { diaryId } = useParams<{ diaryId: string }>();
+  const [diary, setDiary] = useState<Diary | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [diary, setDiary] = useState(diaryData.DiaryList[0]); 
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-    });
-    setDate(formattedDate);
-  }, []);
+    async function fetchDiary() {
+      const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+      if (!token) {
+        console.error("No access token available.");
+        setError("Authentication failed. No access token found.");
+        return;
+      }
+  
+      try {
+        const response = await axios.get(`http://localhost:8080/api/diary/${diaryId}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // 헤더에 토큰 추가
+          }
+        });
+  
+        if (response.data.isSuccess) {
+          setDiary(response.data.result);
+          setError(null);
+        } else {
+          setError("Failed to load diary data.");
+          console.error('API responded with an error:', response.data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch diary data:", error);
+        setError("An error occurred while fetching diary data.");
+      }
+    }
+  
+    fetchDiary();
+  }, [diaryId]);
+  
+
+  if (error) return <div>Error: {error}</div>;
+  if (!diary) return <div>Loading...</div>;
 
   const handleSaveClick = () => {
     setIsModalOpen(true); 
@@ -137,6 +164,7 @@ export default function WritePage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <PageContainer>
       <SaveButtonContainer>
@@ -145,16 +173,12 @@ export default function WritePage() {
       </SaveButtonContainer>
       <DateContainer>
         <DateLabel>Date</DateLabel>
-        <DateText>{diary.createdAt}</DateText>
+        <DateText>{diary.date}</DateText>
       </DateContainer>
       <DiaryTitle>{diary.title}</DiaryTitle>
       <hr style={{ width: '100%', color: '#CECECE' }} />
-      <DiaryImage src={diary.image} alt="Diary" /> 
-      <ContentTextarea
-        as="div" // textarea 대신 div로 변경
-        readOnly
-        style={{ height: 'auto', whiteSpace: 'pre-wrap' }} // 내용이 div에 맞게 자동으로 줄바꿈되도록 스타일 수정
-      >
+      <DiaryImage src={diary.image} alt="Diary" />
+      <ContentTextarea>
         {diary.content}
       </ContentTextarea>
     </PageContainer>
