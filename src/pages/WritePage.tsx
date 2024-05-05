@@ -148,7 +148,8 @@ export default function WritePage() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate('http://localhost:8080/api/login'); // Redirect to the API login
+      alert('로그인이 필요합니다.');
+      window.location.href = 'http://localhost:8080/api/login'; 
     }
   }, [isLoggedIn, navigate]);
 
