@@ -142,6 +142,8 @@ const DiaryEntryTitle = styled.h2`
   font-size: 24px;
   color: #333333;
   letter-spacing: -0.5px;
+
+  margin-top: 2.5vh;
   margin-left: -2px;
 `;
 
