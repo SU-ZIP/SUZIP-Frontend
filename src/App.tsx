@@ -28,6 +28,7 @@ function App() {
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/archives" element={<ArchivePage />} />
             <Route path="/write" element={<WritePage />} />
+            <Route path="/write/:diaryId" element={<WritePage />} />
             <Route path="/analyze" element={<AnalyzePage />} />
             <Route path="/diary" element={<DiaryPage />} />
             <Route path="/diary/:diaryId" element={<DiaryViewPage />} />

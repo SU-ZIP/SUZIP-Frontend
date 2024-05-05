@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from 'axios';
 import SearchImg from "../assets/images/search.png";
-import diaryData from "../data/Diary.json";
 import Pagination from "../assets/pagination/Pagination";
 import { Link } from 'react-router-dom';
 
@@ -97,14 +96,14 @@ const SearchBar = styled.input`
   height: 34px;
   font-family: "Pretendard";
   font-size: 15px;
-  padding-left: 35px; 
+  padding-left: 35px;
   background-color: #EAEAEA;
-  background-image: url(${SearchImg}); 
+  background-image: url(${SearchImg});
   background-position: 10px center;
   background-repeat: no-repeat;
-  background-size: 13px 13px;ƒ
+  background-size: 13px;
   border-radius: 5px;
-  border: none; 
+  border: none;
   outline: none;
 `;
 
@@ -136,13 +135,13 @@ const DiaryEntry = styled(Link)`
   text-decoration: none;
   color: inherit;
 `;
+
 const DiaryEntryTitle = styled.h2`
   font-family: "Pretendard";
   font-weight: 600;
   font-size: 24px;
   color: #333333;
   letter-spacing: -0.5px;
-
   margin-top: 2.5vh;
   margin-left: -2px;
 `;
@@ -206,10 +205,11 @@ interface DiaryApiResponse {
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(""); // 올바른 위치와 형식으로 상태 선언
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -220,13 +220,15 @@ const DiaryPage: React.FC = () => {
           Authorization: `Bearer ${token}`
         },
         params: {
-          page: currentPage
+          page: currentPage,
+          size: itemsPerPage
         }
       };
       try {
         const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
+          setTotalPages(response.data.result.totalPage);
         }
       } catch (error) {
         console.error('Failed to fetch diaries:', error);
@@ -237,26 +239,26 @@ const DiaryPage: React.FC = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    function applySearchAndSort() {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      const searchedDiaries = diaries.filter(diary =>
-        diary.title.toLowerCase().includes(lowercasedQuery) ||
-        diary.content.toLowerCase().includes(lowercasedQuery)
-      );
-
-      const sortedDiaries = searchedDiaries.sort((a, b) => {
-        if (sortOrder === "최신순") {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        } else {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }
-      });
-
-      setFilteredDiaries(sortedDiaries);
-    }
-
     applySearchAndSort();
-  }, [diaries, searchQuery, sortOrder]);
+  }, [diaries, searchQuery, sortOrder]); // Include all dependencies to update filteredDiaries
+
+  const applySearchAndSort = () => {
+    const lowercasedQuery = searchQuery.toLowerCase();
+    const searchedDiaries = diaries.filter(diary =>
+      diary.title.toLowerCase().includes(lowercasedQuery) ||
+      diary.content.toLowerCase().includes(lowercasedQuery)
+    );
+
+    const sortedDiaries = searchedDiaries.sort((a, b) => {
+      if (sortOrder === "최신순") {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      } else {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+    });
+
+    setFilteredDiaries(sortedDiaries);
+  };
 
   const handleDropdownItemClick = (order: string) => {
     setSortOrder(order);
@@ -306,7 +308,7 @@ const DiaryPage: React.FC = () => {
       </DiaryEntriesContainer>
       <Pagination
         currentPage={currentPage + 1}
-        totalPages={Math.ceil(filteredDiaries.length / itemsPerPage)}
+        totalPages={totalPages}
         onPageChange={paginate}
       />
     </PageContainer>

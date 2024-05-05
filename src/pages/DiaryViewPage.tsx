@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
-import SaveModal from '../components/modal/SaveModal';
+import SaveModal from '../components/modal/SaveModal'; // 사용되지 않는 경우 이 줄은 제거 가능
+import EditModal from '../components/modal/EditModal';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -68,7 +69,7 @@ const ContentTextarea = styled.div`
 const SaveButtonContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   margin-bottom: 12px;
 `;
 
@@ -77,7 +78,7 @@ const EditButton = styled.button`
   height: 37px;
   font-family: "Pretendard";
   font-weight: 500;
-  background-color: transparent; 
+  background-color: transparent;
   color: #535353;
   border: 1px solid #ACACAC;
   cursor: pointer;
@@ -90,13 +91,12 @@ const EditButton = styled.button`
   }
 `;
 
-
 const ResultButton = styled.button`
   width: 110px;
   height: 37px;
   font-family: "Pretendard";
   font-weight: 500;
-  background-color: transparent; 
+  background-color: transparent;
   color: #535353;
   border: 1px solid #ACACAC;
   cursor: pointer;
@@ -120,23 +120,24 @@ export default function DiaryViewPage() {
   const [diary, setDiary] = useState<Diary | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchDiary() {
-      const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         console.error("No access token available.");
         setError("Authentication failed. No access token found.");
         return;
       }
-  
+
       try {
         const response = await axios.get(`http://localhost:8080/api/diary/${diaryId}`, {
           headers: {
-            Authorization: `Bearer ${token}` // 헤더에 토큰 추가
+            Authorization: `Bearer ${token}`
           }
         });
-  
+
         if (response.data.isSuccess) {
           setDiary(response.data.result);
           setError(null);
@@ -149,27 +150,27 @@ export default function DiaryViewPage() {
         setError("An error occurred while fetching diary data.");
       }
     }
-  
+
     fetchDiary();
   }, [diaryId]);
-  
+
+  const handleEdit = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmEdit = () => {
+    navigate(`/write/${diaryId}`, { state: { diary } });
+    setIsModalOpen(false);
+  };
 
   if (error) return <div>Error: {error}</div>;
   if (!diary) return <div>Loading...</div>;
 
-  const handleSaveClick = () => {
-    setIsModalOpen(true); 
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <PageContainer>
       <SaveButtonContainer>
-        <EditButton>수정하기</EditButton>
-        <ResultButton onClick={handleSaveClick}>분석결과</ResultButton>
+        <EditButton onClick={handleEdit}>수정하기</EditButton>
+        <ResultButton onClick={() => setIsModalOpen(true)}>분석결과</ResultButton>
       </SaveButtonContainer>
       <DateContainer>
         <DateLabel>Date</DateLabel>
@@ -178,9 +179,12 @@ export default function DiaryViewPage() {
       <DiaryTitle>{diary.title}</DiaryTitle>
       <hr style={{ width: '100%', color: '#CECECE' }} />
       <DiaryImage src={diary.image} alt="Diary" />
-      <ContentTextarea>
-        {diary.content}
-      </ContentTextarea>
+      <ContentTextarea>{diary.content}</ContentTextarea>
+      <EditModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmEdit}
+      />
     </PageContainer>
   );
 }
