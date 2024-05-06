@@ -159,7 +159,7 @@ export default function DiaryViewPage() {
   };
 
   const handleConfirmEdit = () => {
-    navigate(`/write/${diaryId}`, { state: { diary } });
+    navigate(`/write/diary/${diaryId}`, { state: { diary } });
     setIsModalOpen(false);
   };
 

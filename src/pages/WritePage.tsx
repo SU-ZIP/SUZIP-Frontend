@@ -136,6 +136,7 @@ export default function WritePage() {
   const [content, setContent] = useState("");
   const { date: routeDate } = useParams<{ date?: string }>();  // URL에서 날짜 가져오기
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);  // 초기값은 오늘 날짜로 설정
+  const { diaryId } = useParams<{ diaryId?: string }>();
 
   const [file, setFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState("");
@@ -221,6 +222,33 @@ export default function WritePage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setPreviewSrc(""); // 이미지 초기화
+  };
+  useEffect(() => {
+    if (diaryId) {
+      // diaryId가 있을 경우에만 해당 다이어리 정보를 가져옴
+      fetchDiary(diaryId);
+    }
+  }, [diaryId]);
+  
+  // fetchDiary 함수 추가
+  const fetchDiary = async (id: string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/diary/${id}`);
+      const { data } = response;
+      if (data.isSuccess) {
+        setTitle(data.result.title);
+        setContent(data.result.content);
+        setDate(data.result.date);
+        setEmotion(data.result.emotion); // 이 코드는 다이어리에 감정 정보가 있는 경우에만 적용되어야 함
+        setPreviewSrc(data.result.image); 
+        // 다른 필요한 상태 업데이트 추가 가능
+      } else {
+        console.error('Failed to fetch diary:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching diary:', error);
+    }
   };
 
   return (
@@ -257,9 +285,13 @@ export default function WritePage() {
           사진 첨부
         </Button>
       </ButtonContainer>
-      {previewSrc && (
-        <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
-      )}
+        {previewSrc && (
+          <div style={{ position: 'relative' }}>
+            <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
+            <button onClick={() => setPreviewSrc("")} style={{ position: 'absolute', top: 0, right: 0, padding: '4px', background: 'rgba(255, 255, 255, 0.7)', borderRadius: '50%', cursor: 'pointer' }}>X</button>
+          </div>
+        )}
+
       <ContentTextarea
         value={content}
         onChange={handleContentChange}
