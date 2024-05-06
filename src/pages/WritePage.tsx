@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PhotoImg from '../assets/images/photo.png';
-import DeleteImg from '../assets/images/delete.png'
+import DeleteImg from '../assets/images/Delete.png'
 import SaveModal from '../components/modal/SaveModal';
 import { useAuth } from '../components/auth/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
@@ -130,6 +130,16 @@ const EmotionSelect = styled.select`
   border-radius: 4px;
   padding: 8px;
   margin-right: 10px; // Adjusted margin
+`;
+
+const DeleteButton = styled.img`
+  position: absolute;
+  top: 5px;
+  right: -15px;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  padding: 4px;
 `;
 
 export default function WritePage() {
@@ -286,11 +296,11 @@ export default function WritePage() {
           사진 첨부
         </Button>
       </ButtonContainer>
-        {previewSrc && (
-          <div style={{ position: 'relative' }}>
-            <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
-            <button onClick={() => setPreviewSrc("")} style={{ position: 'absolute', top: 0, right: 0, padding: '4px', background: 'rgba(255, 255, 255, 0.7)', borderRadius: '50%', cursor: 'pointer' }}>X</button>
-          </div>
+      {previewSrc && (
+        <div style={{ position: 'relative' }}>
+          <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
+          <DeleteButton src={DeleteImg} onClick={() => setPreviewSrc("")}></DeleteButton>
+        </div>
         )}
 
       <ContentTextarea
