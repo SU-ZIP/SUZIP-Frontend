@@ -295,7 +295,7 @@ const DiaryPage: React.FC = () => {
       </Header>
       <Divider />
       <DiaryEntriesContainer>
-        {currentDiaries.length > 0 ? currentDiaries.map(entry => (
+        {diaries.length > 0 ? diaries.map(entry => (
           <DiaryEntry to={`/diary/${entry.diaryId}`} key={entry.diaryId}>
             <DiaryTextContainer>
               <DiaryEntryDate>{entry.date}</DiaryEntryDate>
