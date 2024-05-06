@@ -251,12 +251,23 @@ const HomePage: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
-
+  const [selectedDate, setSelectedDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleDayClick = (day: number) => {
-    console.log(`Clicked on day: ${day}`);
+    const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    setSelectedDate(formattedDate); // 날짜 상태를 업데이트하고
+    openModal(); // 모달을 열어 작성을 유도
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const redirectToWritePage = () => {
+    navigate(`/write/date/${selectedDate}`); // 저장된 날짜로 네비게이션
+    setIsModalOpen(false); // 모달을 닫습니다
   };
 
   const handlePrevMonth = () => {
@@ -266,26 +277,14 @@ const HomePage: React.FC = () => {
   const handleNextMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
   };
-  
 
   const handleToday = () => {
     setCurrentDate(new Date());
+    const todayFormatted = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    setSelectedDate(todayFormatted);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const redirectToWritePage = () => {
-    navigate("/write");
-  };
-
-  const dates = generateCalendarDates(
-    currentYear,
-    currentMonth,
-    handleDayClick,
-    openModal
-  );
+  const dates = generateCalendarDates(currentYear, currentMonth, handleDayClick, openModal);
 
   return (
     <Container>

@@ -5,6 +5,7 @@ import PhotoImg from '../assets/images/photo.png';
 import SaveModal from '../components/modal/SaveModal';
 import { useAuth } from '../components/auth/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -133,14 +134,17 @@ const EmotionSelect = styled.select`
 export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [date, setDate] = useState("");
+  const { date: routeDate } = useParams<{ date?: string }>();  // URL에서 날짜 가져오기
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);  // 초기값은 오늘 날짜로 설정
+
   const [file, setFile] = useState<File | null>(null);
-  const [previewSrc, setPreviewSrc] = useState(""); // State to hold preview image
+  const [previewSrc, setPreviewSrc] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isLoggedIn, userName } = useAuth();
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
   const [emotion, setEmotion] = useState("");
+
 
   const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setEmotion(event.target.value);
@@ -153,17 +157,15 @@ export default function WritePage() {
     }
   }, [isLoggedIn, navigate]);
 
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-    });
-    setDate(formattedDate);
-  }, []);
 
+
+
+  useEffect(() => {
+    console.log("Received date from URL:", routeDate);  // 로그로 날짜 확인
+    if (routeDate) {
+      setDate(routeDate);  // URL에서 받은 날짜로 상태 업데이트
+    }
+  }, [routeDate]);
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
