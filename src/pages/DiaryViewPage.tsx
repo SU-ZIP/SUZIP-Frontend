@@ -178,7 +178,7 @@ export default function DiaryViewPage() {
       </DateContainer>
       <DiaryTitle>{diary.title}</DiaryTitle>
       <hr style={{ width: '100%', color: '#CECECE' }} />
-      <DiaryImage src={diary.image} alt="Diary" />
+      {diary.image && <DiaryImage src={diary.image} alt="Diary" />}
       <ContentTextarea>{diary.content}</ContentTextarea>
       <EditModal
         isOpen={isModalOpen}

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PhotoImg from '../assets/images/photo.png';
+import DeleteImg from '../assets/images/delete.png'
 import SaveModal from '../components/modal/SaveModal';
 import { useAuth } from '../components/auth/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
