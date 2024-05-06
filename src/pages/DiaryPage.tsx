@@ -237,28 +237,29 @@ const DiaryPage: React.FC = () => {
 
     fetchDiaries();
   }, [currentPage]);
-
+  
   useEffect(() => {
+    function applySearchAndSort() {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      const searchedDiaries = diaries.filter(diary =>
+        diary.title.toLowerCase().includes(lowercasedQuery) ||
+        diary.content.toLowerCase().includes(lowercasedQuery)
+      );
+  
+      const sortedDiaries = searchedDiaries.sort((a, b) => {
+        if (sortOrder === "최신순") {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        } else {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }
+      });
+  
+      setFilteredDiaries(sortedDiaries);
+    }
+  
     applySearchAndSort();
-  }, [diaries, searchQuery, sortOrder]); // Include all dependencies to update filteredDiaries
-
-  const applySearchAndSort = () => {
-    const lowercasedQuery = searchQuery.toLowerCase();
-    const searchedDiaries = diaries.filter(diary =>
-      diary.title.toLowerCase().includes(lowercasedQuery) ||
-      diary.content.toLowerCase().includes(lowercasedQuery)
-    );
-
-    const sortedDiaries = searchedDiaries.sort((a, b) => {
-      if (sortOrder === "최신순") {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      } else {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      }
-    });
-
-    setFilteredDiaries(sortedDiaries);
-  };
+  }, [diaries, searchQuery, sortOrder]);
+  
 
   const handleDropdownItemClick = (order: string) => {
     setSortOrder(order);
