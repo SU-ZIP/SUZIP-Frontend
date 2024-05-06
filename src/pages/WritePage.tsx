@@ -152,6 +152,7 @@ export default function WritePage() {
   const [file, setFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
@@ -197,9 +198,48 @@ export default function WritePage() {
     }
   };
 
-  const handleSaveClick = () => {
-    console.log('Save button clicked');
-    setIsModalOpen(true);
+  const handleSaveClick = async () => {
+    if (isEditMode) {
+      // 수정 모드일 때는 저장하기 대신 수정하기 동작
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
+  
+        const formData = new FormData();
+        formData.append("request", JSON.stringify({
+          title: title,
+          content: content,
+          date: date,
+          emotions: emotion
+        }));
+  
+        // 이미지가 수정되었을 경우에만 FormData에 추가합니다.
+        if (file) {
+          formData.append("file", file);
+        } else {
+          // 이미지를 수정하지 않은 경우 이전 이미지 URL을 유지합니다.
+          const response = await axios.get(`http://localhost:8080/api/diary/${diaryId}`);
+          const { data } = response;
+          if (data.isSuccess) {
+            // 이전 이미지 URL이 있는 경우에만 FormData에 추가합니다.
+            if (data.result.imageUrl) {
+              formData.append("imageUrl", data.result.imageUrl);
+            }
+          }
+        }
+  
+        const response = await axios.patch(`http://localhost:8080/api/diary/${diaryId}`, formData, { headers });
+        console.log('Diary updated:', response.data);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error updating the diary:', error);
+      }
+    } else {
+      // 수정 모드가 아니면 일반적인 저장 동작
+      setIsModalOpen(true);
+    }
   };
 
   axios.defaults.withCredentials = true;
@@ -233,11 +273,13 @@ export default function WritePage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setPreviewSrc(""); // 이미지 초기화
+    setPreviewSrc(""); 
   };
+
+
   useEffect(() => {
     if (diaryId) {
-      // diaryId가 있을 경우에만 해당 다이어리 정보를 가져옴
+      setIsEditMode(true); // diaryId가 있을 경우 수정 모드로 설정
       fetchDiary(diaryId);
     }
   }, [diaryId]);
@@ -265,7 +307,7 @@ export default function WritePage() {
   return (
     <PageContainer>
       <SaveButtonContainer>
-        <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
+        <SaveButton onClick={handleSaveClick}>{isEditMode ? '수정하기' : '저장하기'}</SaveButton>
       </SaveButtonContainer>
       <DateContainer>
         <DateLabel>Date</DateLabel>
@@ -285,12 +327,12 @@ export default function WritePage() {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-        <EmotionSelect value={emotion} onChange={handleEmotionChange}>
+        <select value={emotion} onChange={handleEmotionChange}>
           <option value="">감정 선택</option>
           {emotions.map(em => (
             <option key={em} value={em}>{em}</option>
           ))}
-        </EmotionSelect>
+        </select>
         <Button onClick={() => document.getElementById('file')?.click()}>
           <IconImage src={PhotoImg} alt="Upload" />
           사진 첨부
@@ -301,8 +343,7 @@ export default function WritePage() {
           <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
           <DeleteButton src={DeleteImg} onClick={() => setPreviewSrc("")}></DeleteButton>
         </div>
-        )}
-
+      )}
       <ContentTextarea
         value={content}
         onChange={handleContentChange}

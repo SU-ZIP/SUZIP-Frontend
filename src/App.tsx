@@ -1,8 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthProvider } from './components/auth/AuthContext';
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Header from "./components/header/Header";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage"; 
 import AboutPage from "./pages/AboutPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -22,7 +22,7 @@ function App() {
         <div className="App">
           <Header />
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomeOrAboutPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
@@ -41,6 +41,12 @@ function App() {
       </Router>
     </AuthProvider>
   );
+}
+
+function HomeOrAboutPage() {
+  const { isLoggedIn } = useAuth();
+
+  return isLoggedIn ? <HomePage /> : <AboutPage />;
 }
 
 export default App;
