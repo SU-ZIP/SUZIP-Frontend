@@ -212,7 +212,8 @@ export default function WritePage() {
           title: title,
           content: content,
           date: date,
-          emotions: emotion
+          emotions: emotion,
+          previewSrc:previewSrc
         }));
   
         if (file) {
