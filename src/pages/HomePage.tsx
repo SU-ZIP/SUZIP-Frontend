@@ -151,6 +151,7 @@ interface CalendarDayProps {
   isFuture: boolean; 
 }
 
+
 const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   day,
   handleDayClick,
@@ -159,6 +160,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [gradient] = useState<string>(getRandomGradient());
+  
 
   if (isFuture) {
     return (
@@ -171,7 +173,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   }
 
   return (
-    <CalendarDay onClick={() => handleDayClick(day)}>
+    <CalendarDay onClick={() => handleDayClick(day) }>
       <DateContainer>
         <DateMarker color={gradient} />
         <span style={{ marginLeft: "10px" }}>{day}</span>
@@ -186,10 +188,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
         <AddButton
           src={addImg}
           alt="Add"
-          onClick={(e: React.MouseEvent<HTMLImageElement>) => {
-            e.stopPropagation();
-            openModal();
-          }}
+          onClick={() => openModal()}
         />
       </CalendarDayWrapper>
     </CalendarDay>
