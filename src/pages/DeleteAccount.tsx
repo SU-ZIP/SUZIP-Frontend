@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Logo from "../assets/images/logo.png";
 import Arrow from "../assets/images/dropdownarrow.png"; 
-
+import { useAuth } from '../components/auth/AuthContext';
+import axios from 'axios';
 const PageContainer = styled.div`
   font-family: "Pretendard";
   letter-spacing: -0.5px;
@@ -115,6 +116,29 @@ const NoticeInfo = styled.div`
 `;
 
 function DeleteAccount() {
+  const { setLoginStatus } = useAuth();
+
+  const handleDeleteAccount = () => {
+    const accessToken = localStorage.getItem('accessToken');  // 액세스 토큰 가져오기
+    axios.delete("http://localhost:8080/api/member/", {
+        headers: {
+            Authorization: `Bearer ${accessToken}`  // 인증 헤더 설정
+        }
+    })
+    .then(response => {
+        if (response.data.isSuccess) {
+            alert('계정이 성공적으로 삭제되었습니다.');
+            setLoginStatus(false);  // 사용자 로그아웃 처리
+            window.location.href = '/';  // 홈페이지로 리다이렉트
+        }
+    })
+    .catch(error => {
+        console.error('Account deletion failed', error);
+        alert('계정 삭제 중 문제가 발생했습니다.');
+    });
+};
+
+
   return (
     <PageContainer>
       <LogoContainer>
@@ -127,9 +151,9 @@ function DeleteAccount() {
         <AdditionalInfo>수집을 이용하면서 불편했던 점을 말씀해주시면, 수집의 서비스 개선에 참고하도록 하겠습니다.</AdditionalInfo>
         <Dropdown defaultValue="">
           <option value="" disabled hidden>탈퇴사유는 무엇인가요?</option>
-          <option value="option1">옵션 1</option>
-          <option value="option2">옵션 2</option>
-          <option value="option3">옵션 3</option>
+          <option value="option1">서비스가 부족했어요</option>
+          <option value="option2">원하는 서비스를 받지 못 했어요</option>
+          <option value="option3">기타</option>
         </Dropdown>
         <Question>탈퇴 전, 꼭 확인하세요!</Question>
         <AdditionalInfo>탈퇴 전 반드시 아래 유의 사항을 확인하시기 바랍니다.</AdditionalInfo>
@@ -143,7 +167,7 @@ function DeleteAccount() {
           <NoticeItem>수집 내 모든 서비스에서 탈퇴</NoticeItem>
           <NoticeInfo>수집 회원으로서 이용하던 서비스 모두 이용 불가</NoticeInfo>
         </NoticeList>
-        <WithdrawButton>회원 탈퇴</WithdrawButton>
+        <WithdrawButton onClick={handleDeleteAccount}>회원 탈퇴</WithdrawButton>
       </ContentContainer>
     </PageContainer>
   );

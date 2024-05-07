@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Header from "./components/header/Header";
 import HomePage from "./pages/HomePage"; 
@@ -21,7 +21,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
-          <Header />
+          <HeaderWithConditionalRendering />
           <Routes>
             <Route path="/" element={<HomeOrAboutPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -43,6 +43,18 @@ function App() {
       </Router>
     </AuthProvider>
   );
+}
+
+function HeaderWithConditionalRendering() {
+  const { pathname } = useLocation();
+
+  // Check if the current path is "/deleteAccount"
+  if (pathname === '/deleteAccount') {
+    return null; // Don't render Header component
+  }
+
+  // Render Header component for other paths
+  return <Header />;
 }
 
 function HomeOrAboutPage() {
