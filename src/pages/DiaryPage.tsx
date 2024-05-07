@@ -212,25 +212,26 @@ interface DiaryApiResponse {
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(""); // 올바른 위치와 형식으로 상태 선언
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 5;
 
+
   useEffect(() => {
     const fetchDiaries = async () => {
       const token = localStorage.getItem('accessToken');
       const config = {
         headers: { Authorization: `Bearer ${token}` },
-        params: { page: currentPage, size: itemsPerPage }
+        params: { page: currentPage, sortOrder: sortOrder }
       };
       try {
         const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
-          setFilteredDiaries(response.data.result.diaryList); 
+          setFilteredDiaries(response.data.result.diaryList); // 초기 필터된 다이어리 설정
           setTotalPages(response.data.result.totalPage);
         }
       } catch (error) {
@@ -239,13 +240,14 @@ const DiaryPage: React.FC = () => {
     };
 
     fetchDiaries();
-  }, [currentPage]);
+  }, [currentPage, sortOrder]);
 
   
 
   const handleDropdownItemClick = (order: string) => {
     setSortOrder(order);
     setDropdownOpen(false);
+    setCurrentPage(0)
   };
 
   useEffect(() => {
@@ -266,7 +268,15 @@ const DiaryPage: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
+
+  const currentDiaries = filteredDiaries.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber - 1);
+
+
 
   return (
     <PageContainer>
