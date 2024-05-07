@@ -200,7 +200,7 @@ export default function WritePage() {
 
   const handleSaveClick = async () => {
     if (isEditMode) {
-      // 수정 모드일 때는 저장하기 대신 수정하기 동작
+      // If in edit mode, perform update logic
       try {
         const token = localStorage.getItem('accessToken');
         const headers = {
@@ -215,32 +215,21 @@ export default function WritePage() {
           emotions: emotion
         }));
   
-        // 이미지가 수정되었을 경우에만 FormData에 추가합니다.
         if (file) {
           formData.append("file", file);
-        } else {
-          // 이미지를 수정하지 않은 경우 이전 이미지 URL을 유지합니다.
-          const response = await axios.get(`http://localhost:8080/api/diary/${diaryId}`);
-          const { data } = response;
-          if (data.isSuccess) {
-            // 이전 이미지 URL이 있는 경우에만 FormData에 추가합니다.
-            if (data.result.imageUrl) {
-              formData.append("imageUrl", data.result.imageUrl);
-            }
-          }
         }
   
         const response = await axios.patch(`http://localhost:8080/api/diary/${diaryId}`, formData, { headers });
         console.log('Diary updated:', response.data);
         setIsModalOpen(false);
+        navigate(`/diary/${diaryId}`); // Redirect to the DiaryViewPage
       } catch (error) {
         console.error('Error updating the diary:', error);
       }
     } else {
-      // 수정 모드가 아니면 일반적인 저장 동작
-      setIsModalOpen(true);
+      setIsModalOpen(true); // For new entries, open modal to confirm save
     }
-  };
+};
 
   axios.defaults.withCredentials = true;
 
@@ -327,12 +316,12 @@ export default function WritePage() {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-        <select value={emotion} onChange={handleEmotionChange}>
+      <EmotionSelect value={emotion} onChange={handleEmotionChange}>
           <option value="">감정 선택</option>
           {emotions.map(em => (
             <option key={em} value={em}>{em}</option>
           ))}
-        </select>
+        </EmotionSelect>
         <Button onClick={() => document.getElementById('file')?.click()}>
           <IconImage src={PhotoImg} alt="Upload" />
           사진 첨부

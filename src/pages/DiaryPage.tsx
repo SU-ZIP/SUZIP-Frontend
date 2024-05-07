@@ -305,7 +305,7 @@ const DiaryPage: React.FC = () => {
             </DiaryTextContainer>
             {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
           </DiaryEntry>
-        )) : <p>검색 결과가 존재하지 않아요.</p>}
+        )) : <p>결과가 존재하지 않아요.</p>}
       </DiaryEntriesContainer>
       <Pagination
         currentPage={currentPage + 1}
