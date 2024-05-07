@@ -4,6 +4,7 @@ import axios from 'axios';
 import SearchImg from "../assets/images/search.png";
 import Pagination from "../assets/pagination/Pagination";
 import { Link } from 'react-router-dom';
+import ErrorImg from '../assets/images/error.png'
 
 const PageContainer = styled.div`
   font-family: "Pretendard";
@@ -178,6 +179,12 @@ const DiaryImage = styled.img`
   object-position: center;
 `;
 
+const ErrorMsg = styled.p`
+  font-family: "Pretendard";
+  font-size: 18px;
+  color: #727272;
+`;
+
 interface DiaryEntry {
   diaryId: number;
   title: string;
@@ -205,7 +212,7 @@ interface DiaryApiResponse {
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>(""); // 올바른 위치와 형식으로 상태 선언
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -223,7 +230,7 @@ const DiaryPage: React.FC = () => {
         const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
-          setFilteredDiaries(response.data.result.diaryList); // 초기 필터된 다이어리 설정
+          setFilteredDiaries(response.data.result.diaryList); 
           setTotalPages(response.data.result.totalPage);
         }
       } catch (error) {
@@ -259,34 +266,29 @@ const DiaryPage: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
-
-  const currentDiaries = filteredDiaries.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber - 1);
 
   return (
     <PageContainer>
-      <Header>
-        <Title>MY DIARIES</Title>
-        <SearchBarContainer>
-          <DropdownContainer>
-            <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
-              {sortOrder} <TriangleIcon />
-            </DropdownButton>
-            <DropdownContent style={{ display: showDropdownContent(dropdownOpen) }}>
-              <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>최신순</DropdownItem>
-              <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>오래된순</DropdownItem>
-            </DropdownContent>
-          </DropdownContainer>
-          <SearchBar placeholder="Search" onChange={handleSearchChange} />
-        </SearchBarContainer>
-      </Header>
-      <Divider />
-      <DiaryEntriesContainer>
-        {filteredDiaries.length > 0 ? filteredDiaries.map(entry => (
+    <Header>
+      <Title>MY DIARIES</Title>
+      <SearchBarContainer>
+        <DropdownContainer>
+          <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
+            {sortOrder} <TriangleIcon />
+          </DropdownButton>
+          <DropdownContent style={{ display: showDropdownContent(dropdownOpen) }}>
+            <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>최신순</DropdownItem>
+            <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>오래된순</DropdownItem>
+          </DropdownContent>
+        </DropdownContainer>
+        <SearchBar placeholder="검색" onChange={handleSearchChange} />
+      </SearchBarContainer>
+    </Header>
+    <Divider />
+    <DiaryEntriesContainer>
+      {filteredDiaries.length > 0 ? (
+        filteredDiaries.map(entry => (
           <DiaryEntry to={`/diary/${entry.diaryId}`} key={entry.diaryId}>
             <DiaryTextContainer>
               <DiaryEntryDate>{entry.date}</DiaryEntryDate>
@@ -295,15 +297,29 @@ const DiaryPage: React.FC = () => {
             </DiaryTextContainer>
             {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
           </DiaryEntry>
-        )) : <p>결과가 존재하지 않아요.</p>}
-      </DiaryEntriesContainer>
+        ))
+      ) : diaries.length > 0 ? (
+        <div style={{ marginTop: '15vh',textAlign: 'center', width: '100%' }}>
+           <img src={ErrorImg} alt="No Entries" style={{ width: '42px', height: '42px' }} />
+          <ErrorMsg>검색 결과가 존재하지 않아요.</ErrorMsg>
+        </div>
+      ) : (
+        <div style={{ marginTop: '15vh',textAlign: 'center', width: '100%' }}>
+          <img src={ErrorImg} alt="No Entries" style={{ width: '42px', height: '42px' }} />
+          <ErrorMsg>일기가 존재하지 않아요.<br />새로운 일기를 수집해 주세요!</ErrorMsg>
+        </div>
+      )}
+    </DiaryEntriesContainer>
+    {filteredDiaries.length > 0 && (
       <Pagination
         currentPage={currentPage + 1}
         totalPages={totalPages}
         onPageChange={paginate}
       />
-    </PageContainer>
+    )}
+  </PageContainer>
   );
 };
+
 
 export default DiaryPage;
