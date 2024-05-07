@@ -216,18 +216,14 @@ const DiaryPage: React.FC = () => {
     const fetchDiaries = async () => {
       const token = localStorage.getItem('accessToken');
       const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        params: {
-          page: currentPage,
-          size: itemsPerPage
-        }
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page: currentPage, size: itemsPerPage }
       };
       try {
         const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
+          setFilteredDiaries(response.data.result.diaryList); // 초기 필터된 다이어리 설정
           setTotalPages(response.data.result.totalPage);
         }
       } catch (error) {
@@ -237,28 +233,7 @@ const DiaryPage: React.FC = () => {
 
     fetchDiaries();
   }, [currentPage]);
-  
-  useEffect(() => {
-    function applySearchAndSort() {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      const searchedDiaries = diaries.filter(diary =>
-        diary.title.toLowerCase().includes(lowercasedQuery) ||
-        diary.content.toLowerCase().includes(lowercasedQuery)
-      );
-  
-      const sortedDiaries = searchedDiaries.sort((a, b) => {
-        if (sortOrder === "최신순") {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        } else {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }
-      });
-  
-      setFilteredDiaries(sortedDiaries);
-    }
-  
-    applySearchAndSort();
-  }, [diaries, searchQuery, sortOrder]);
+
   
 
   const handleDropdownItemClick = (order: string) => {
@@ -266,9 +241,24 @@ const DiaryPage: React.FC = () => {
     setDropdownOpen(false);
   };
 
+  useEffect(() => {
+    const filtered = diaries.filter(diary =>
+      diary.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      diary.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const sortedFiltered = filtered.sort((a, b) => sortOrder === "최신순" ?
+      new Date(b.date).getTime() - new Date(a.date).getTime() :
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    setFilteredDiaries(sortedFiltered);
+  }, [searchQuery, diaries, sortOrder]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+
 
   const currentDiaries = filteredDiaries.slice(
     currentPage * itemsPerPage,

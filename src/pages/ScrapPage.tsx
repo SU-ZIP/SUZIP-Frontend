@@ -28,7 +28,7 @@ const Title = styled.h1`
 
 const SubTitle = styled.h2`
   font-family: "PPMonumentExtended";
-  font-weight: normal;
+  font-weight: 200;
   font-size: 23px;
   color: #666666;
   margin-bottom: 25px;
@@ -39,9 +39,9 @@ const NavButton = styled.button<{ isActive: boolean }>`
   border: none;
   font-family: "PPMonumentExtended";
   font-size: 16px;
-  color: #333333;
+  color: ${({ isActive }) => (isActive ? '#33333' : '#9D9D9D')};
   cursor: pointer;
-  font-weight: ${({ isActive }) => (isActive ? 'bold' : 'light')};
+  font-weight: 200;
   &:focus {
     outline: none;
   }
