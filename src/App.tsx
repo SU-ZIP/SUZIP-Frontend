@@ -14,6 +14,7 @@ import DiaryViewPage from "./pages/DiaryViewPage";
 import DeleteAccount from "./pages/DeleteAccount";
 import ScrapPage from "./pages/ScrapPage";
 import MyPage from "./pages/MyPage";
+import EditProfile from "./pages/EditProfile";
 import KakaoCallback from "./components/social/KakaoCallback";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
             <Route path="/deleteAccount" element={<DeleteAccount />} />
             <Route path="/scrapPage" element={<ScrapPage />} />
             <Route path="/my" element={<MyPage />} />
+            <Route path="/editProfile" element={<EditProfile />} />
             <Route path="/login/oauth2/code/kakao" element={<KakaoCallback />} />
           </Routes>
         </div>

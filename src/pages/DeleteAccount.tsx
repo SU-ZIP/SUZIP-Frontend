@@ -119,17 +119,17 @@ function DeleteAccount() {
   const { setLoginStatus } = useAuth();
 
   const handleDeleteAccount = () => {
-    const accessToken = localStorage.getItem('accessToken');  // 액세스 토큰 가져오기
+    const accessToken = localStorage.getItem('accessToken');  
     axios.delete("http://localhost:8080/api/member/", {
         headers: {
-            Authorization: `Bearer ${accessToken}`  // 인증 헤더 설정
+            Authorization: `Bearer ${accessToken}`  
         }
     })
     .then(response => {
         if (response.data.isSuccess) {
             alert('계정이 성공적으로 삭제되었습니다.');
-            setLoginStatus(false);  // 사용자 로그아웃 처리
-            window.location.href = '/';  // 홈페이지로 리다이렉트
+            setLoginStatus(false); 
+            window.location.href = '/';  
         }
     })
     .catch(error => {

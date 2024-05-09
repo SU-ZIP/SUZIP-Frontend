@@ -136,10 +136,10 @@ const MyPage = () => {
   });
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/login');
-      return;
-    }
+    // if (!isLoggedIn) {
+    //   navigate('/login');
+    //   return;
+    // }
 
     const fetchProfile = async () => {
       try {
