@@ -76,9 +76,9 @@ const CalendarDayWrapper = styled.div`
   background-color: transparent;
 `;
 
-const CalendarDay = styled.td`
+const CalendarDay = styled.td<{ isEmpty?: boolean }>`
   font-family: "PPMonumentExtended", sans-serif;
-  cursor: pointer;
+  cursor: ${({ isEmpty }) => (isEmpty ? "default" : "pointer")};
   font-weight: 300;
   color: #4b4b4b;
   padding: 20px 0 100px 0;
@@ -86,6 +86,9 @@ const CalendarDay = styled.td`
   transition:
     background-color 0.3s,
     margin-left 0.3s;
+  ${({ isEmpty }) =>
+    !isEmpty &&
+    `
   &:hover {
     background-color: #f6f6f6;
     margin-left: 10px; 
@@ -99,6 +102,7 @@ const CalendarDay = styled.td`
   &:hover ${AddButton} {
     opacity: 1;
   }
+  `}
 `;
 
 const DisabledCalendarDay = styled(CalendarDay)`
@@ -149,14 +153,15 @@ interface CalendarDayProps {
   handleDayClick: (day: number) => void;
   openModal: () => void;
   isFuture: boolean; 
+  isEmpty?: boolean;
 }
-
 
 const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   day,
   handleDayClick,
   openModal,
-  isFuture 
+  isFuture,
+  isEmpty
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [gradient] = useState<string>(getRandomGradient());
@@ -173,7 +178,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   }
 
   return (
-    <CalendarDay onClick={() => handleDayClick(day) }>
+    <CalendarDay onClick={() => handleDayClick(day) } isEmpty={isEmpty}>
       <DateContainer>
         <DateMarker color={gradient} />
         <span style={{ marginLeft: "10px" }}>{day}</span>
@@ -212,7 +217,7 @@ const generateCalendarDates = (
   const dayCells: JSX.Element[] = [];
 
   for (let i = 0; i < firstDayOfMonth; i++) {
-    dayCells.push(<CalendarDay key={`empty-start-${i}`}></CalendarDay>);
+    dayCells.push(<CalendarDay key={`empty-start-${i}`} isEmpty></CalendarDay>);
   }
 
   for (let i = 1; i <= numDaysInMonth; i++) {
@@ -233,7 +238,7 @@ const generateCalendarDates = (
     7 * Math.ceil((firstDayOfMonth + numDaysInMonth) / 7)
   ) {
     dayCells.push(
-      <CalendarDay key={`empty-end-${dayCells.length}`}></CalendarDay>
+      <CalendarDay key={`empty-end-${dayCells.length}`} isEmpty></CalendarDay>
     );
   }
 
