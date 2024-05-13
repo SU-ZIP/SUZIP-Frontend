@@ -5,7 +5,6 @@ import dummy from "../../data/ContentData.json";
 type Music = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
@@ -82,21 +81,18 @@ const MusicContent = styled.div`
 `;
 
 const MusicCard: React.FC<MusicCardProps> = ({ music }) => {
-
   return (
     <CardContainer>
-    <MusicCardContainer>
-      <MusicImage src={music.image} alt={music.name} />
-      <MusicInfo>
-        <MusicInfoContent>
-          <MusicTitle>{music.name}</MusicTitle>
-          <MusicContent>{music.content}</MusicContent>
-        </MusicInfoContent>
-      </MusicInfo>
-    </MusicCardContainer>
-  </CardContainer>
-);
+      <MusicCardContainer>
+        <MusicImage src={music.image} alt={music.name} />
+        <MusicInfo>
+          <MusicInfoContent>
+            <MusicTitle>{music.name}</MusicTitle>
+          </MusicInfoContent>
+        </MusicInfo>
+      </MusicCardContainer>
+    </CardContainer>
+  );
 };
-
 
 export default MusicCard;

@@ -5,7 +5,6 @@ import dummy from "../../data/ContentData.json";
 type Book = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
@@ -21,7 +20,9 @@ const CardContainer = styled.div`
   height: 425px; /* 기본 높이 조정 */
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
-  transition: width 0.3s ease-in-out, height 0.3s ease-in-out; /* 부드러운 전환 효과 */
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out; /* 부드러운 전환 효과 */
 `;
 
 const BookCardContainer = styled.div`
@@ -83,16 +84,12 @@ const BookContent = styled.div`
   text-align: justify; // 왼쪽 정렬
 `;
 
-
-
 const BookCard: React.FC<BookCardProps> = ({ book, isActive }) => {
-
-
   return (
     <CardContainer
       style={{
-        width: isActive ? '333px' : '292px',
-        height: isActive ? '492px' : '425px',
+        width: isActive ? "333px" : "292px",
+        height: isActive ? "492px" : "425px",
       }}
     >
       <BookCardContainer>
@@ -100,13 +97,11 @@ const BookCard: React.FC<BookCardProps> = ({ book, isActive }) => {
         <BookInfo>
           <BookInfoContent>
             <BookTitle>{book.name}</BookTitle>
-            <BookContent>{book.content}</BookContent>
           </BookInfoContent>
         </BookInfo>
       </BookCardContainer>
     </CardContainer>
   );
 };
-
 
 export default BookCard;

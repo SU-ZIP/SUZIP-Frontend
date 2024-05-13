@@ -82,20 +82,19 @@ const MovieContent = styled.div`
 `;
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-
   return (
     <CardContainer>
-    <MovieCardContainer>
-      <MovieImage src={movie.image} alt={movie.name} />
-      <MovieInfo>
-        <MovieInfoContent>
-          <MovieTitle>{movie.name}</MovieTitle>
-          <MovieContent>{movie.content}</MovieContent>
-        </MovieInfoContent>
-      </MovieInfo>
-    </MovieCardContainer>
-  </CardContainer>
-);
+      <MovieCardContainer>
+        <MovieImage src={movie.image} alt={movie.name} />
+        <MovieInfo>
+          <MovieInfoContent>
+            <MovieTitle>{movie.name}</MovieTitle>
+            <MovieContent>{movie.content}</MovieContent>
+          </MovieInfoContent>
+        </MovieInfo>
+      </MovieCardContainer>
+    </CardContainer>
+  );
 };
 
 export default MovieCard;
