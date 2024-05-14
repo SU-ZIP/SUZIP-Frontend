@@ -7,6 +7,7 @@ import SaveModal from '../components/modal/SaveModal';
 import { useAuth } from '../components/auth/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import config from '../assets/path/config';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -166,7 +167,7 @@ export default function WritePage() {
   useEffect(() => {
     if (!isLoggedIn) {
       alert('로그인이 필요합니다.');
-      window.location.href = 'http://localhost:8080/api/login'; 
+      window.location.href = `${config.API_URL}/api/login`; 
     }
   }, [isLoggedIn, navigate]);
 
@@ -220,15 +221,15 @@ export default function WritePage() {
           formData.append("file", file);
         }
   
-        const response = await axios.patch(`http://localhost:8080/api/diary/${diaryId}`, formData, { headers });
+        const response = await axios.patch(`${config.API_URL}/api/diary/${diaryId}`, formData, { headers });
         console.log('Diary updated:', response.data);
         setIsModalOpen(false);
-        navigate(`/diary/${diaryId}`); // Redirect to the DiaryViewPage
+        navigate(`/diary/${diaryId}`); 
       } catch (error) {
         console.error('Error updating the diary:', error);
       }
     } else {
-      setIsModalOpen(true); // For new entries, open modal to confirm save
+      setIsModalOpen(true); 
     }
 };
 
@@ -253,7 +254,7 @@ export default function WritePage() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
+      const response = await axios.post(`${config.API_URL}/api/diary`, formData, { headers });
       console.log('Diary saved:', response.data);
       setIsModalOpen(false);
     } catch (error) {
@@ -269,23 +270,22 @@ export default function WritePage() {
 
   useEffect(() => {
     if (diaryId) {
-      setIsEditMode(true); // diaryId가 있을 경우 수정 모드로 설정
+      setIsEditMode(true);
       fetchDiary(diaryId);
     }
   }, [diaryId]);
   
-  // fetchDiary 함수 추가
+ 
   const fetchDiary = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/diary/${id}`);
+      const response = await axios.get(`${config.API_URL}/api/diary/${id}`);
       const { data } = response;
       if (data.isSuccess) {
         setTitle(data.result.title);
         setContent(data.result.content);
         setDate(data.result.date);
-        setEmotion(data.result.emotion); // 이 코드는 다이어리에 감정 정보가 있는 경우에만 적용되어야 함
+        setEmotion(data.result.emotion); 
         setPreviewSrc(data.result.image); 
-        // 다른 필요한 상태 업데이트 추가 가능
       } else {
         console.error('Failed to fetch diary:', data.message);
       }

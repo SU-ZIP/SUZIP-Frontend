@@ -5,6 +5,7 @@ import SearchImg from "../assets/images/search.png";
 import Pagination from "../assets/pagination/Pagination";
 import { Link } from 'react-router-dom';
 import ErrorImg from '../assets/images/error.png'
+import config from '../assets/path/config';
 
 const PageContainer = styled.div`
   font-family: "Pretendard";
@@ -228,10 +229,10 @@ const DiaryPage: React.FC = () => {
         params: { page: currentPage, sortOrder: sortOrder }
       };
       try {
-        const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
+        const response = await axios.get<DiaryApiResponse>('http://mysuzip.com/api/diary', config);
         if (response.data.isSuccess) {
           setDiaries(response.data.result.diaryList);
-          setFilteredDiaries(response.data.result.diaryList); // 초기 필터된 다이어리 설정
+          setFilteredDiaries(response.data.result.diaryList);
           setTotalPages(response.data.result.totalPage);
         }
       } catch (error) {

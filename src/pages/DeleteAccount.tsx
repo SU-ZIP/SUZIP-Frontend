@@ -4,6 +4,8 @@ import Logo from "../assets/images/logo.png";
 import Arrow from "../assets/images/dropdownarrow.png"; 
 import { useAuth } from '../components/auth/AuthContext';
 import axios from 'axios';
+import config from '../assets/path/config';
+
 const PageContainer = styled.div`
   font-family: "Pretendard";
   letter-spacing: -0.5px;
@@ -120,7 +122,7 @@ function DeleteAccount() {
 
   const handleDeleteAccount = () => {
     const accessToken = localStorage.getItem('accessToken');  
-    axios.delete("http://localhost:8080/api/member/", {
+    axios.delete(`${config.API_URL}/api/member/`, {
         headers: {
             Authorization: `Bearer ${accessToken}`  
         }

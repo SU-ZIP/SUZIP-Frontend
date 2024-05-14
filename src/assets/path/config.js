@@ -1,5 +1,5 @@
 const config = {
-    API_URL: "http://localhost:8080"
+    API_URL: "http://mysuzip.com"
   };
   
   export default config;
