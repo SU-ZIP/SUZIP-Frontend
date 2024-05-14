@@ -49,6 +49,11 @@ SUZIP-Frontend
 │     │     └─ soyeon
 │     └─ tags
 ├─ .gitignore
+├─ .idea
+│  ├─ modules.xml
+│  ├─ SUZIP-Frontend.iml
+│  ├─ vcs.xml
+│  └─ workspace.xml
 ├─ @types
 │  └─ global
 │     └─ index.d.ts
@@ -67,12 +72,35 @@ SUZIP-Frontend
 │  │  │  └─ Logout_White.tsx
 │  │  ├─ fonts
 │  │  │  ├─ Font.css
+│  │  │  ├─ MonumentExtended-Regular.otf
+│  │  │  ├─ MonumentExtended-Ultrabold.otf
+│  │  │  ├─ PPMonumentExtended-Black.otf
+│  │  │  ├─ PPMonumentExtended-Light.otf
+│  │  │  ├─ PPMonumentExtended-Regular.otf
+│  │  │  ├─ Pretendard-Black.otf
+│  │  │  ├─ Pretendard-Bold.otf
+│  │  │  ├─ Pretendard-ExtraBold.otf
+│  │  │  ├─ Pretendard-ExtraLight.otf
+│  │  │  ├─ Pretendard-Light.otf
+│  │  │  ├─ Pretendard-Medium.otf
+│  │  │  ├─ Pretendard-Regular.otf
+│  │  │  ├─ Pretendard-SemiBold.otf
+│  │  │  └─ Pretendard-Thin.otf
 │  │  ├─ images
 │  │  │  ├─ add.png
+│  │  │  ├─ Angriness.png
 │  │  │  ├─ close.png
 │  │  │  ├─ close2.png
+│  │  │  ├─ Delete.png
+│  │  │  ├─ diarymenu.png
 │  │  │  ├─ dropdownarrow.png
+│  │  │  ├─ error.png
+│  │  │  ├─ Excited.png
+│  │  │  ├─ garbage.png
 │  │  │  ├─ google.png
+│  │  │  ├─ graph.png
+│  │  │  ├─ Happiness.png
+│  │  │  ├─ Horror.png
 │  │  │  ├─ kakao.png
 │  │  │  ├─ left.png
 │  │  │  ├─ logo.png
@@ -82,40 +110,51 @@ SUZIP-Frontend
 │  │  │  ├─ naver.png
 │  │  │  ├─ nextmove.png
 │  │  │  ├─ nextpage.png
+│  │  │  ├─ pencil.png
 │  │  │  ├─ photo.png
 │  │  │  ├─ prevmove.png
 │  │  │  ├─ prevpage.png
+│  │  │  ├─ profile.png
+│  │  │  ├─ profiledit.png
 │  │  │  ├─ right.png
 │  │  │  ├─ rightArrow.png
 │  │  │  ├─ rightArrow2.png
+│  │  │  ├─ Sadness.png
 │  │  │  ├─ search.png
 │  │  │  ├─ sz.png
 │  │  │  └─ todaymove.png
-│  │  └─ pagination
-│  │     └─ Pagination.tsx
+│  │  ├─ pagination
+│  │  │  └─ Pagination.tsx
+│  │  └─ path
+│  │     └─ config.js
 │  ├─ components
 │  │  ├─ about
 │  │  │  ├─ AnalyzeDescription.tsx
 │  │  │  ├─ CalendarDescription.tsx
+│  │  │  ├─ EmotionBox.tsx
 │  │  │  ├─ RecordDescription.tsx
 │  │  │  ├─ Slider2.tsx
 │  │  │  └─ TitleTypo.tsx
 │  │  ├─ archives
 │  │  │  ├─ BookCard.tsx
 │  │  │  ├─ BookRecommend.tsx
-│  │  │  ├─ Items.tsx
 │  │  │  ├─ MovieCard.tsx
 │  │  │  ├─ MovieRecommend.tsx
 │  │  │  ├─ MusicCard.tsx
 │  │  │  └─ MusicRecommend.tsx
+│  │  ├─ auth
+│  │  │  └─ AuthContext.tsx
 │  │  ├─ header
 │  │  │  └─ Header.tsx
 │  │  ├─ modal
+│  │  │  ├─ DeleteModal.tsx
+│  │  │  ├─ EditModal.tsx
 │  │  │  ├─ SaveModal.tsx
 │  │  │  └─ WriteModal.tsx
 │  │  └─ social
 │  │     ├─ GoogleLogin.tsx
 │  │     ├─ GoogleSignUp.tsx
+│  │     ├─ KakaoCallback.jsx
 │  │     ├─ KakaoLogin.tsx
 │  │     ├─ KakaoSignUp.tsx
 │  │     ├─ NaverLogin.tsx
@@ -126,19 +165,22 @@ SUZIP-Frontend
 │  │  └─ ScrapItems.json
 │  ├─ index.css
 │  ├─ index.tsx
-│  └─ pages
-│     ├─ AboutPage.tsx
-│     ├─ AnalyzePage.tsx
-│     ├─ ArchivePage.tsx
-│     ├─ DeleteAccount.tsx
-│     ├─ DiaryPage.tsx
-│     ├─ DiaryViewPage.tsx
-│     ├─ HomePage.tsx
-│     ├─ IndexPage.tsx
-│     ├─ ScrapPage.tsx
-│     ├─ SignInPage.tsx
-│     ├─ SignUpPage.tsx
-│     └─ WritePage.tsx
+│  ├─ pages
+│  │  ├─ AboutPage.tsx
+│  │  ├─ AnalyzePage.tsx
+│  │  ├─ ArchivePage.tsx
+│  │  ├─ DeleteAccount.tsx
+│  │  ├─ DiaryPage.tsx
+│  │  ├─ DiaryViewPage.tsx
+│  │  ├─ EditProfile.tsx
+│  │  ├─ HomePage.tsx
+│  │  ├─ IndexPage.tsx
+│  │  ├─ MyPage.tsx
+│  │  ├─ ScrapPage.tsx
+│  │  ├─ SignInPage.tsx
+│  │  ├─ SignUpPage.tsx
+│  │  └─ WritePage.tsx
+│  └─ setupProxy.js
 └─ tsconfig.json
 
 ```

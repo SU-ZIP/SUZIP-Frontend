@@ -4,7 +4,6 @@ import styled from "styled-components";
 type Book = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
@@ -16,11 +15,13 @@ type BookCardProps = {
 };
 
 const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? '337px' : '297px')};
-  height: ${(props) => (props.isActive ? '529px' : '440px')};
+  width: ${(props) => (props.isActive ? "337px" : "297px")};
+  height: ${(props) => (props.isActive ? "529px" : "440px")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
-  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
 `;
 
 const BookCardContainer = styled.div`
@@ -90,7 +91,6 @@ const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
         <BookInfo>
           <BookInfoContent>
             <BookTitle>{book.name}</BookTitle>
-            <BookContent>{book.content}</BookContent>
           </BookInfoContent>
         </BookInfo>
       </BookCardContainer>
