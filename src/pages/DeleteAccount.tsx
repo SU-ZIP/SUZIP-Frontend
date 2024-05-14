@@ -127,7 +127,7 @@ function DeleteAccount() {
     })
     .then(response => {
         if (response.data.isSuccess) {
-            alert('계정이 성공적으로 삭제되었습니다.');
+            alert('계정이 탈퇴되었습니다.');
             setLoginStatus(false); 
             window.location.href = '/';  
         }
