@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -21,7 +22,7 @@ type Book = {
 };
 
 const ArchiveContainer = styled.div`
-  height: calc(100vh - 20vh); 
+  height: calc(100vh - 20vh);
   padding: 0 0 7vh 0;
 `;
 
@@ -80,6 +81,7 @@ const BookRecommendContainer = styled.div`
 
 function BookRecommendation() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 책의 인덱스 설정
 
   useEffect(() => {
     const filteredBooks = dummy.serviceItem.filter(
@@ -98,7 +100,7 @@ function BookRecommendation() {
       </TextArea>
       <BookRecommendContainer>
         <Swiper
-          slidesPerView={5}
+          slidesPerView={5.5} // 첫 화면에 5.5개의 책이 보이도록 설정
           centeredSlides={true}
           spaceBetween={1}
           grabCursor={true}
@@ -111,16 +113,17 @@ function BookRecommendation() {
           }}
           modules={[Pagination, Navigation]}
           className="mySwiper"
+          onSlideChange={(swiper: SwiperClass) => setActiveIndex(swiper.activeIndex)}
         >
-          {books.map((book) => (
+          {books.map((book, index) => (
             <SwiperSlide key={book.itemId}>
-              <BookCard book={book} />
+              <BookCard book={book} isActive={index === activeIndex} />
             </SwiperSlide>
           ))}
         </Swiper>
         <ButtonOverlay>
-          <Buttons src={Left} className="swiper-button-prev" /> 
-          <Buttons src={Right} className="swiper-button-next" /> 
+          <Buttons src={Left} className="swiper-button-prev" />
+          <Buttons src={Right} className="swiper-button-next" />
         </ButtonOverlay>
       </BookRecommendContainer>
       <MoreButtonContainer>

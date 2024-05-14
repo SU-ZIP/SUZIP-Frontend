@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import dummy from "../../data/ContentData.json";
 
 type Book = {
   itemId: number;
@@ -15,14 +14,14 @@ type BookCardProps = {
   isActive?: boolean;
 };
 
-const CardContainer = styled.div`
-  width: 292px; /* 기본 너비 조정 */
-  height: 425px; /* 기본 높이 조정 */
+const CardContainer = styled.div<{ isActive: boolean }>`
+  width: ${(props) => (props.isActive ? "337px" : "297px")};
+  height: ${(props) => (props.isActive ? "529px" : "440px")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
   transition:
     width 0.3s ease-in-out,
-    height 0.3s ease-in-out; /* 부드러운 전환 효과 */
+    height 0.3s ease-in-out;
 `;
 
 const BookCardContainer = styled.div`
@@ -49,7 +48,7 @@ const BookInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; // 왼쪽 정렬을 위해 변경
+  align-items: flex-start;
   opacity: 0;
   transition: opacity 0.3s;
   position: absolute;
@@ -60,8 +59,8 @@ const BookInfo = styled.div`
 `;
 
 const BookInfoContent = styled.div`
-  padding-left: 1vw; // 여기에 패딩을 적용
-  padding-right: 1vw; // 우측 패딩도 적용하여 텍스트가 너무 끝까지 가지 않도록 함
+  padding-left: 1vw;
+  padding-right: 1vw;
   text-align: left;
 `;
 
@@ -71,7 +70,7 @@ const BookTitle = styled.div`
   font-size: 1.2rem;
   display: block;
   margin: 1vw;
-  text-align: left; // 왼쪽 정렬
+  text-align: left;
 `;
 
 const BookContent = styled.div`
@@ -81,17 +80,12 @@ const BookContent = styled.div`
   display: block;
   margin: 1vw;
   line-height: 170%;
-  text-align: justify; // 왼쪽 정렬
+  text-align: justify;
 `;
 
-const BookCard: React.FC<BookCardProps> = ({ book, isActive }) => {
+const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
   return (
-    <CardContainer
-      style={{
-        width: isActive ? "333px" : "292px",
-        height: isActive ? "492px" : "425px",
-      }}
-    >
+    <CardContainer isActive={isActive}>
       <BookCardContainer>
         <BookImage src={book.image} alt={book.name} />
         <BookInfo>

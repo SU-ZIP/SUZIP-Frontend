@@ -229,7 +229,7 @@ const MyPage = () => {
         <UserNameContainer>
           <UserName>{profile.name || 'User'}</UserName>
           <UserSuffix>님</UserSuffix>
-          <EditIcon src={editIcon} alt="Edit Profile" onClick={() => console.log("Edit profile")} />
+          <EditIcon src={editIcon} alt="Edit Profile" onClick={() => navigate('/editProfile')} />
         </UserNameContainer>
         <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       </Sidebar>
