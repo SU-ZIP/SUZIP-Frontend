@@ -22,7 +22,7 @@ type Music = {
 const ArchiveContainer = styled.div`
   height: calc(100vh - 20vh);
   margin-top: 7vh;
-  padding: 0 0 7vh 0;
+  padding: 2vh 0 7vh 0;
 `;
 
 const TextArea = styled.div`
@@ -111,9 +111,9 @@ function MusicRecommend() {
           }
         >
           {musics.map((music, index) => (
-            <SwiperSlide key={music.itemId}>
+            <StyledSwiperSlide key={music.itemId}>
               <MusicCard music={music} isActive={index === activeIndex} />
-            </SwiperSlide>
+            </StyledSwiperSlide>
           ))}
         </Swiper>
         <ButtonOverlay>
