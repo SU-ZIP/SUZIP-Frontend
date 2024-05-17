@@ -5,6 +5,8 @@ import { GooSpinner } from 'react-spinners-kit';
 import axios from 'axios';
 import BubbleImg from '../assets/images/speechbubble.png';
 import DescriptionImg from '../assets/images/question.png';
+import ScrapImg from '../assets/images/scrap.png';
+import ScrappedImg from '../assets/images/scrapped.png';
 import { DiaryData } from '../types';
 import config from '../assets/path/config';
 
@@ -240,6 +242,7 @@ const Recommendation = styled.div`
   border: 1px solid #B7B7B7;
   height: 50vh;
   padding-bottom: 4vh;
+  position: relative;
 `;
 
 const RecommendationImage = styled.img`
@@ -268,6 +271,15 @@ const RecommendationSubText = styled.div`
   color: #8E8E8E;
 `;
 
+const ScrapButton = styled.img`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+`;
+
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -279,7 +291,7 @@ const LoadingOverlay = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure it is on top */
+  z-index: 9999;
 `;
 
 const LoadingText = styled.div`
@@ -304,15 +316,15 @@ const AnalyzePage: React.FC = () => {
   const navigate = useNavigate();
   const { diaryData } = location.state || {};
   const [loading, setLoading] = useState(true);
+  const [scrapStatus, setScrapStatus] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     if (diaryData) {
       setLoading(false);
     } else {
-      // Fetch the diary data if not passed via location.state
       const fetchDiaryData = async () => {
         try {
-          const response = await axios.get(`${config.API_URL}/api/diary/${diaryId}`, {
+          const response = await axios.get(`${config.API_URL}/api/diary`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
@@ -330,6 +342,24 @@ const AnalyzePage: React.FC = () => {
       fetchDiaryData();
     }
   }, [diaryData, diaryId, navigate]);
+
+  const handleScrap = async (type: 'movie' | 'book' | 'music', contentId: number) => {
+    try {
+      const response = await axios.post(`${config.API_URL}/api/scrap`, { contentId }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+
+      if (response.data.isSuccess) {
+        setScrapStatus((prev) => ({ ...prev, [contentId]: !prev[contentId] }));
+      } else {
+        console.error('Failed to scrap:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error scrapping:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -391,6 +421,11 @@ const AnalyzePage: React.FC = () => {
           <Recommendations>
             {emotionResponseDto.recommendations.movie && (
               <Recommendation>
+                <ScrapButton
+                  src={scrapStatus[emotionResponseDto.recommendations.movie.movieId] ? ScrappedImg : ScrapImg}
+                  alt="Scrap"
+                  onClick={() => handleScrap('movie', emotionResponseDto.recommendations.movie.movieId)}
+                />
                 <RecommendationImage src={emotionResponseDto.recommendations.movie.image} alt={emotionResponseDto.recommendations.movie.name} />
                 <RecommendationText>{emotionResponseDto.recommendations.movie.name}</RecommendationText>
                 <RecommendationSubText>{emotionResponseDto.recommendations.movie.director} | {emotionResponseDto.recommendations.movie.genre}</RecommendationSubText>
@@ -398,6 +433,11 @@ const AnalyzePage: React.FC = () => {
             )}
             {emotionResponseDto.recommendations.book && (
               <Recommendation>
+                <ScrapButton
+                  src={scrapStatus[emotionResponseDto.recommendations.book.bookId] ? ScrappedImg : ScrapImg}
+                  alt="Scrap"
+                  onClick={() => handleScrap('book', emotionResponseDto.recommendations.book.bookId)}
+                />
                 <RecommendationImage src={emotionResponseDto.recommendations.book.image} alt={emotionResponseDto.recommendations.book.name} />
                 <RecommendationText>{emotionResponseDto.recommendations.book.name}</RecommendationText>
                 <RecommendationSubText>{emotionResponseDto.recommendations.book.author} | {emotionResponseDto.recommendations.book.genre}</RecommendationSubText>
@@ -405,6 +445,11 @@ const AnalyzePage: React.FC = () => {
             )}
             {emotionResponseDto.recommendations.music && (
               <Recommendation>
+                <ScrapButton
+                  src={scrapStatus[emotionResponseDto.recommendations.music.musicId] ? ScrappedImg : ScrapImg}
+                  alt="Scrap"
+                  onClick={() => handleScrap('music', emotionResponseDto.recommendations.music.musicId)}
+                />
                 <RecommendationImage src={emotionResponseDto.recommendations.music.image} alt={emotionResponseDto.recommendations.music.name} />
                 <RecommendationText>{emotionResponseDto.recommendations.music.name}</RecommendationText>
                 <RecommendationSubText>{emotionResponseDto.recommendations.music.artist}</RecommendationSubText>
