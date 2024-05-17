@@ -343,11 +343,14 @@ const AnalyzePage: React.FC = () => {
     }
   }, [diaryData, diaryId, navigate]);
 
+  
+
   const handleScrap = async (type: 'movie' | 'book' | 'music', contentId: number) => {
     try {
-      const response = await axios.post(`${config.API_URL}/api/scrap`, { contentId }, {
+      const response = await axios.post(`${config.API_URL}/api/scrap/`, { contentId }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json'
         },
       });
 
@@ -358,8 +361,10 @@ const AnalyzePage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error scrapping:', error);
+      console.error('contentId = ',contentId)
     }
   };
+  
 
   if (loading) {
     return (

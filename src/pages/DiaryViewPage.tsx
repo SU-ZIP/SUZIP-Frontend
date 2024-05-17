@@ -234,10 +234,26 @@ export default function DiaryViewPage() {
     };
   }, []);
 
-  const handleAnalysis = () => {
-    navigate(`/analyze/${diaryId}`, { state: { diaryData: diary } });
+  const handleAnalysis = async () => {
+    try {
+      const response = await axios.get(`${config.API_URL}/api/analyze/${diaryId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+
+      if (response.data.isSuccess) {
+        navigate(`/analyze/${diaryId}`, { state: { diaryData: response.data.result } });
+      } else {
+        console.error('Failed to analyze diary:', response.data.message);
+        alert('분석에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('Error analyzing diary:', error);
+      alert('분석 중 오류가 발생하였습니다.');
+    }
   };
-  
+
   if (error) return <div>Error: {error}</div>;
   if (!diary) return <div>Loading...</div>;
 
