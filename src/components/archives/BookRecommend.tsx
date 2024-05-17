@@ -42,22 +42,24 @@ const DescriptionText = styled.div`
   color: #555555;
 `;
 
+/*
 const ButtonOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  margin: 0 1vw 0 1vw;
-  z-index: 1;
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+transform: translateY(-50%);
+display: flex;
+justify-content: space-between;
+margin: 0 1vw 0 1vw;
+z-index: 10;
 `;
 
 const Buttons = styled.img`
   width: 3vw;
   height: auto;
 `;
+*/
 
 const MoreButtonContainer = styled.div`
   display: flex;
@@ -134,10 +136,13 @@ const BookRecommendation = forwardRef(
           <MoreButtonContainer>
             <MoreButton src={More} alt="More" onClick={scrollToMovie} />
           </MoreButtonContainer>
+
+          {/*
           <ButtonOverlay>
             <Buttons src={Left} className="swiper-button-prev" />
             <Buttons src={Right} className="swiper-button-next" />
           </ButtonOverlay>
+          **/}
         </BookRecommendContainer>
       </ArchiveContainer>
     );
