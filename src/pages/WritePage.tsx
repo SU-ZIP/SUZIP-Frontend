@@ -340,12 +340,7 @@ const saveDiary = async () => {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-        <EmotionSelect value={emotion} onChange={handleEmotionChange}>
-          <option value="">감정 선택</option>
-          {emotions.map(em => (
-            <option key={em} value={em}>{em}</option>
-          ))}
-        </EmotionSelect>
+
         <Button onClick={() => document.getElementById('file')?.click()}>
           <IconImage src={PhotoImg} alt="Upload" />
           사진 첨부
