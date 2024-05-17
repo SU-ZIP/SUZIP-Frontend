@@ -55,7 +55,11 @@ const DiaryTitle = styled.div`
 const DiaryImage = styled.img`
   margin-top: 15px;
   margin-bottom: 10px;
-  align-self: flex-start;
+  align-self: center;
+  margin-top: 5vh;
+  margin-bottom: 7vh;
+  max-width: 50vw;
+  max-height: 50vh;
 `;
 
 const ContentTextarea = styled.div`
