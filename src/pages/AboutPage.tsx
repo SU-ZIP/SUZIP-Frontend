@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import TitleTypo from "../components/about/TitleTypo";
@@ -11,6 +11,8 @@ import Slider2 from "../components/about/Slider2";
 import EmotionBox from "../components/about/EmotionBox";
 import ServiceImageBox from "../components/about/ServiceImageBox";
 import FooterImageBox from "../components/about/FooterImageBox";
+import LeftPopText from "../components/about/LeftPopText";
+import RightPopText from "../components/about/RightPopText";
 
 const AboutPageContainer = styled.div`
   display: flex;
@@ -73,6 +75,8 @@ export default function AboutPage() {
       <EmotionBox />
       <CalendarDescription />
       <Slider2 />
+      <LeftPopText />
+      <RightPopText />
       <FooterImageBox />
       <TypoContainer>
         <BoldTypo>It's time to</BoldTypo>
