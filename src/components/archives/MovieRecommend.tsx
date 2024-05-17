@@ -22,7 +22,7 @@ type Movie = {
 };
 
 const ArchiveContainer = styled.div`
-  padding: 25vh 0 7vh 0;
+  padding: 10vh 0 7vh 0;
   background: black;
 `;
 
@@ -76,7 +76,7 @@ const MoreButton = styled.img`
 const MovieRecommendContainer = styled.div`
   width: 100%;
   height: 70vh;
-  margin: 10vh 0 20vh 0;
+  margin: 10vh 0 0 0;
   text-align: center;
 `;
 
