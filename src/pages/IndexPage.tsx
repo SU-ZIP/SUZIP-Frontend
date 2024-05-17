@@ -4,6 +4,8 @@ import styled from "styled-components";
 import axios from 'axios';
 import closeButton from "../assets/images/close.png";
 import {useAuth} from "../components/auth/AuthContext"
+import config from '../assets/path/config';
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -114,7 +116,7 @@ function IndexPage({ onClose }: IndexPageProps) {
         return;
     }
 
-    axios.post("http://localhost:8080/api/token/logout", {}, {
+    axios.post(`${config.API_URL}/api/token/logout`, {}, {
         headers: {
             Authorization: `Bearer ${accessToken}`
         },
@@ -165,7 +167,7 @@ function IndexPage({ onClose }: IndexPageProps) {
                 LOGIN
               </PagingItem>
             )}
-            <PagingItem href="http://localhost:8080/signup" onClick={onClose}>
+            <PagingItem href="http://mysuzip.com/signup" onClick={onClose}>
               SIGN UP
             </PagingItem>
           </PagingMenu>

@@ -6,6 +6,7 @@ import { useAuth } from "../components/auth/AuthContext";
 import defaultProfileImg from "../assets/images/profile.png";
 import editIcon from '../assets/images/profiledit.png';
 import PencilImg from '../assets/images/pencil.png';
+import config from '../assets/path/config';
 
 const PageContainer = styled.div`
   display: flex;
@@ -143,7 +144,7 @@ const MyPage = () => {
 
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/member/', {
+        const response = await axios.get(`${config.API_URL}/api/member/`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
         });
         if (response.data.isSuccess) {
@@ -187,7 +188,7 @@ const MyPage = () => {
       }));
   
       try {
-        const response = await axios.patch('http://localhost:8080/api/member/', formData, {
+        const response = await axios.patch(`${config.API_URL}/api/member/`, formData, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'multipart/form-data'

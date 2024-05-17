@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
+import config from '../../assets/path/config';
 
 interface AuthContextType {
   userName: string;
@@ -24,7 +25,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/auth/status", { withCredentials: true })
+    axios.get(`${config.API_URL}/api/auth/status`, { withCredentials: true })
       .then(response => {
         if (response.data.isSuccess && response.data.result) {
           setLoginStatus(true, response.data.result.name);

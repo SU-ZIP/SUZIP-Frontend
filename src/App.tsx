@@ -32,7 +32,7 @@ function App() {
             <Route path="/write" element={<WritePage />} />
             <Route path="/write/diary/:diaryId" element={<WritePage />} />
             <Route path="/write/date/:date" element={<WritePage />} />
-            <Route path="/analyze" element={<AnalyzePage />} />
+            <Route path="/analyze" element={<AnalyzePage />} /> {/* No need to pass diaryData here */}
             <Route path="/diary" element={<DiaryPage />} />
             <Route path="/diary/:diaryId" element={<DiaryViewPage />} />
             <Route path="/deleteAccount" element={<DeleteAccount />} />
@@ -50,12 +50,10 @@ function App() {
 function HeaderWithConditionalRendering() {
   const { pathname } = useLocation();
 
-  // Check if the current path is "/deleteAccount"
   if (pathname === '/deleteAccount') {
-    return null; // Don't render Header component
+    return null;
   }
 
-  // Render Header component for other paths
   return <Header />;
 }
 

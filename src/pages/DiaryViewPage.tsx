@@ -8,6 +8,7 @@ import MenuImg from '../assets/images/diarymenu.png'
 import GarbageImg from '../assets/images/garbage.png'
 import GraphImg from '../assets/images/graph.png'
 import PencilImg from '../assets/images/pencil.png'
+import config from '../assets/path/config';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -161,7 +162,7 @@ export default function DiaryViewPage() {
       }
 
       try {
-        const response = await axios.get(`http://localhost:8080/api/diary/${diaryId}`, {
+        const response = await axios.get(`${config.API_URL}/api/diary/${diaryId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -198,7 +199,7 @@ export default function DiaryViewPage() {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/diary/${diaryId}`);
+      const response = await axios.delete(`${config.API_URL}/api/diary/${diaryId}`);
       if (response.data.isSuccess) {
         navigate('/diary'); 
       } else {
@@ -276,7 +277,7 @@ export default function DiaryViewPage() {
             onClose={() => setIsDeleteModalOpen(false)}
             onConfirm={() => {
               handleDeleteConfirm();
-              setIsDeleteModalOpen(false);  // 모달 닫기
+              setIsDeleteModalOpen(false);  
             }}
         />
     </PageContainer>

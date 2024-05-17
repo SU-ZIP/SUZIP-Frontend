@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import config from '../assets/path/config';
+
 const PageContainer = styled.div`
 display: flex;
 justify-content: center;
@@ -65,7 +67,7 @@ const Button = styled.button`
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  position: absolute; // Position it relative to the container
+  position: absolute; 
   &:hover {
     background-color: #444;
   }
@@ -105,7 +107,7 @@ function EditProfile() {
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
-        axios.get('http://localhost:8080/api/member/', {
+        axios.get(`${config.API_URL}/api/member/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
@@ -139,7 +141,7 @@ function EditProfile() {
         formData.append('name', profile.name);
 
         const accessToken = localStorage.getItem('accessToken');
-        axios.patch('http://localhost:8080/api/member/', formData, {
+        axios.patch(`${config.API_URL}/api/member/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${accessToken}`

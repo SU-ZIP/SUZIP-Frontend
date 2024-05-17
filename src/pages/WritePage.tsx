@@ -5,8 +5,8 @@ import PhotoImg from '../assets/images/photo.png';
 import DeleteImg from '../assets/images/Delete.png'
 import SaveModal from '../components/modal/SaveModal';
 import { useAuth } from '../components/auth/AuthContext'; 
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { DiaryData } from '../types'; // Import the types
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -157,7 +157,7 @@ export default function WritePage() {
   const navigate = useNavigate();
   const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
   const [emotion, setEmotion] = useState("");
-
+  const [diaryData, setDiaryData] = useState<DiaryData | null>(null); // Add this state
 
   const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setEmotion(event.target.value);
@@ -170,15 +170,13 @@ export default function WritePage() {
     }
   }, [isLoggedIn, navigate]);
 
-
-
-
   useEffect(() => {
     console.log("Received date from URL:", routeDate);  // 로그로 날짜 확인
     if (routeDate) {
       setDate(routeDate);  // URL에서 받은 날짜로 상태 업데이트
     }
   }, [routeDate]);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -213,7 +211,7 @@ export default function WritePage() {
           content: content,
           date: date,
           emotions: emotion,
-          previewSrc:previewSrc
+          previewSrc: previewSrc
         }));
   
         if (file) {
@@ -230,42 +228,60 @@ export default function WritePage() {
     } else {
       setIsModalOpen(true); // For new entries, open modal to confirm save
     }
-};
+  };
 
   axios.defaults.withCredentials = true;
 
-  const saveDiary = async () => {
-    const token = localStorage.getItem('accessToken');
-    const headers = {
-      'Authorization': `Bearer ${token}`
-    };
-
-    const formData = new FormData();
-    formData.append("request", JSON.stringify({
-      title: title,
-      content: content,
-      date: date,
-      emotions: emotion
-    }));
-    
-    if (file) {
-      formData.append("file", file);
-    }
-
-    try {
-      const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
-      console.log('Diary saved:', response.data);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error saving the diary:', error);
-    }
+  
+const saveDiary = async () => {
+  const token = localStorage.getItem('accessToken');
+  const headers = {
+    'Authorization': `Bearer ${token}`
   };
 
+  const formData = new FormData();
+  formData.append("request", JSON.stringify({
+    title: title,
+    content: content,
+    date: date
+  }));
+  
+  if (file) {
+    formData.append("file", file);
+  }
+
+  try {
+    const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
+    console.log('Diary saved:', response.data);
+    const diaryData: DiaryData = {
+      isSuccess: response.data.isSuccess,
+      code: response.data.code,
+      message: response.data.message,
+      result: {
+        content: response.data.result.content,
+        createdAt: response.data.result.createdAt,
+        date: response.data.result.date,
+        diaryId: response.data.result.diaryId,
+        emotionResponseDto: response.data.result.emotionResponseDto,
+        emotions: response.data.result.emotions,
+        imageUrl: response.data.result.imageUrl,
+        memberId: response.data.result.memberId,
+        title: response.data.result.title,
+        updatedAt: response.data.result.updatedAt
+      }
+    };
+    setDiaryData(diaryData);
+    console.log('DiaryData set:', diaryData);  // 확인용 로그
+    setIsModalOpen(false);
+    navigate('/analyze', { state: { diaryData } }); // 네비게이트와 데이터 전달
+  } catch (error) {
+    console.error('Error saving the diary:', error);
+  }
+};
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setPreviewSrc(""); 
   };
-
 
   useEffect(() => {
     if (diaryId) {
@@ -273,7 +289,14 @@ export default function WritePage() {
       fetchDiary(diaryId);
     }
   }, [diaryId]);
-  
+
+  useEffect(() => {
+    if (diaryData) {
+      console.log('Updated diaryData:', diaryData);
+      navigate('/analyze', { state: { diaryData } }); // Navigate to AnalyzePage with diaryData
+    }
+  }, [diaryData, navigate]);
+
   // fetchDiary 함수 추가
   const fetchDiary = async (id: string) => {
     try {
@@ -317,7 +340,7 @@ export default function WritePage() {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-      <EmotionSelect value={emotion} onChange={handleEmotionChange}>
+        <EmotionSelect value={emotion} onChange={handleEmotionChange}>
           <option value="">감정 선택</option>
           {emotions.map(em => (
             <option key={em} value={em}>{em}</option>

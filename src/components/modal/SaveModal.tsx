@@ -84,7 +84,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onSave }) => {
     console.log('User confirmed save');
     await onSave();
     console.log('Navigating to analyze page');
-    navigate('/analyze');
+    // navigate('/analyze');
   };
 
   if (!isOpen) return null;
