@@ -24,6 +24,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
     "react-spinners": "^0.13.8",
+    "react-spinners-kit": "^1.9.1",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",
     "swiper": "^11.1.1",

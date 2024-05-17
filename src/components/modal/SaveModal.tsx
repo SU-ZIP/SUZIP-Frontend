@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import CloseIcon from '../../assets/images/close2.png'; // Close 버튼 아이콘 경로
-import { useNavigate } from 'react-router-dom';
+import { GooSpinner } from "react-spinners-kit";
+import CloseIcon from '../../assets/images/close2.png';
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -72,34 +72,69 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it is on top */
+`;
+
+const LoadingText = styled.div`
+  margin-top: 30px;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 20px;
+  color: #333333;
+`;
+
 interface SaveModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => Promise<void>; // 저장 로직 함수 타입 추가
+  onSave: () => Promise<void>; 
 }
 
 const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onSave }) => {
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleConfirm = async () => {
-    console.log('User confirmed save');
-    await onSave();
-    console.log('Navigating to analyze page');
-    // navigate('/analyze');
+    setIsLoading(true);
+    try {
+      await onSave();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <ModalBackground>
-      <ModalContainer>
-        <CloseButton onClick={onClose} />
-        <ModalTitle>일기를 저장 및 분석하시겠습니까?</ModalTitle>
-        <ModalButtons>
-          <NoButton onClick={onClose}>아니오</NoButton>
-          <YesButton onClick={handleConfirm}>네</YesButton>
-        </ModalButtons>
-      </ModalContainer>
-    </ModalBackground>
+    <>
+      {isLoading && (
+        <LoadingOverlay>
+          <GooSpinner size={50} color="#000" />
+          <LoadingText>일기를 분석 중입니다</LoadingText>
+        </LoadingOverlay>
+      )}
+      <ModalBackground>
+        <ModalContainer>
+          <CloseButton onClick={onClose} />
+          <ModalTitle>일기를 저장 및 분석하시겠습니까?</ModalTitle>
+          {!isLoading && (
+            <ModalButtons>
+              <NoButton onClick={onClose}>아니오</NoButton>
+              <YesButton onClick={handleConfirm}>네</YesButton>
+            </ModalButtons>
+          )}
+        </ModalContainer>
+      </ModalBackground>
+    </>
   );
 };
 

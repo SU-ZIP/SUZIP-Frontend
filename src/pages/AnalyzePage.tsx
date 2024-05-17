@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useLocation } from "react-router-dom";
-import ClipLoader from "react-spinners/ClipLoader";
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { GooSpinner } from 'react-spinners-kit';
+import axios from 'axios';
 import BubbleImg from '../assets/images/speechbubble.png';
 import DescriptionImg from '../assets/images/question.png';
-import { DiaryData } from '../types'; 
+import { DiaryData } from '../types';
+import config from '../assets/path/config';
 
 interface AnalyzePageProps {
   diaryData: DiaryData;
@@ -29,6 +31,24 @@ const SectionTitle = styled.div`
   letter-spacing: -0.3px;
   font-size: 1.5rem;
   margin-bottom: 2vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ViewDiaryButton = styled.button`
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-family: "Pretendard";
+  color: #333333;
+  background: transparent;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 const Divider = styled.hr`
@@ -176,13 +196,13 @@ const ServiceDescriptionIcon = styled.img`
     display: block;
   }
 `;
+
 const ServiceDescriptionBubble = styled.div`
   display: none;
   position: absolute;
   top: -6rem;
   left: 10rem;
-  width: 220px;
-  height: 130px;
+  width: auto;
   padding: 1rem;
   background: url(${BubbleImg}) no-repeat center center;
   background-size: cover;
@@ -211,7 +231,7 @@ const RecommendationCategory = styled.div`
   font-size: 1.125rem;
   text-align: left;
   letter-spacing: -0.3px;
-  width: 30%;
+  width: 32%;
 `;
 
 const Recommendation = styled.div`
@@ -219,10 +239,12 @@ const Recommendation = styled.div`
   text-align: center;
   border: 1px solid #B7B7B7;
   height: 50vh;
+  padding-bottom: 4vh;
 `;
 
 const RecommendationImage = styled.img`
-  width: 100%;
+  margin-top: 4vh;
+  width: 15vw;
   height: auto;
   margin-bottom: 1vh;
 `;
@@ -232,11 +254,44 @@ const RecommendationText = styled.div`
   font-weight: 600;
   font-size: 1.25rem;
   letter-spacing: -0.3px;
+  padding-left: 30px;
+  padding-right: 30px;
+  color: #333333;
+`;
+
+const RecommendationSubText = styled.div`
+  font-family: "Pretendard";
+  margin-top: 0.5vh;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: -0.3px;
+  color: #8E8E8E;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it is on top */
+`;
+
+const LoadingText = styled.div`
+  margin-top: 30px;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 20px;
   color: #333333;
 `;
 
 const emotionColorMap = {
-  기쁨: "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
+  기쁨: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
   분노: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
   슬픔: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
   불안: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
@@ -244,21 +299,44 @@ const emotionColorMap = {
 };
 
 const AnalyzePage: React.FC = () => {
+  const { diaryId } = useParams<{ diaryId: string }>();
   const location = useLocation();
-  const { diaryData } = location.state || {};  // 기본값 사용
-  const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
+  const { diaryData } = location.state || {};
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (diaryData) {
       setLoading(false);
+    } else {
+      // Fetch the diary data if not passed via location.state
+      const fetchDiaryData = async () => {
+        try {
+          const response = await axios.get(`${config.API_URL}/api/diary/${diaryId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          });
+          if (response.data.isSuccess) {
+            navigate(`/analyze/${diaryId}`, { state: { diaryData: response.data.result } });
+          } else {
+            console.error('Failed to fetch diary data:', response.data.message);
+          }
+        } catch (error) {
+          console.error('Error fetching diary data:', error);
+        }
+      };
+
+      fetchDiaryData();
     }
-  }, [diaryData]);
+  }, [diaryData, diaryId, navigate]);
 
   if (loading) {
     return (
-      <Container>
-        <ClipLoader color={"#123abc"} loading={loading} size={150} />
-      </Container>
+      <LoadingOverlay>
+        <GooSpinner size={50} color="#000" />
+        <LoadingText>일기를 분석 중입니다</LoadingText>
+      </LoadingOverlay>
     );
   }
 
@@ -269,7 +347,10 @@ const AnalyzePage: React.FC = () => {
   return (
     <Container>
       <Content>
-        <SectionTitle>{result.title}</SectionTitle>
+        <SectionTitle>
+          {result.title}
+          <ViewDiaryButton onClick={() => navigate(`/diary/${result.diaryId}`)}>일기 보기</ViewDiaryButton>
+        </SectionTitle>
         <Divider />
         <Date>{result.date} 작성</Date>
         <EmotionBoxContainer>
@@ -311,19 +392,22 @@ const AnalyzePage: React.FC = () => {
             {emotionResponseDto.recommendations.movie && (
               <Recommendation>
                 <RecommendationImage src={emotionResponseDto.recommendations.movie.image} alt={emotionResponseDto.recommendations.movie.name} />
-                <RecommendationText>{emotionResponseDto.recommendations.movie.name} by {emotionResponseDto.recommendations.movie.director}</RecommendationText>
+                <RecommendationText>{emotionResponseDto.recommendations.movie.name}</RecommendationText>
+                <RecommendationSubText>{emotionResponseDto.recommendations.movie.director} | {emotionResponseDto.recommendations.movie.genre}</RecommendationSubText>
               </Recommendation>
             )}
             {emotionResponseDto.recommendations.book && (
               <Recommendation>
                 <RecommendationImage src={emotionResponseDto.recommendations.book.image} alt={emotionResponseDto.recommendations.book.name} />
-                <RecommendationText>{emotionResponseDto.recommendations.book.name} by {emotionResponseDto.recommendations.book.author}</RecommendationText>
+                <RecommendationText>{emotionResponseDto.recommendations.book.name}</RecommendationText>
+                <RecommendationSubText>{emotionResponseDto.recommendations.book.author} | {emotionResponseDto.recommendations.book.genre}</RecommendationSubText>
               </Recommendation>
             )}
             {emotionResponseDto.recommendations.music && (
               <Recommendation>
                 <RecommendationImage src={emotionResponseDto.recommendations.music.image} alt={emotionResponseDto.recommendations.music.name} />
-                <RecommendationText>{emotionResponseDto.recommendations.music.name} by {emotionResponseDto.recommendations.music.artist}</RecommendationText>
+                <RecommendationText>{emotionResponseDto.recommendations.music.name}</RecommendationText>
+                <RecommendationSubText>{emotionResponseDto.recommendations.music.artist}</RecommendationSubText>
               </Recommendation>
             )}
           </Recommendations>
@@ -331,6 +415,6 @@ const AnalyzePage: React.FC = () => {
       </Content>
     </Container>
   );
-}
+};
 
 export default AnalyzePage;

@@ -4,10 +4,10 @@ import styled from "styled-components";
 import axios from 'axios';
 import EditModal from '../components/modal/EditModal';
 import DeleteModal from "../components/modal/DeleteModal";
-import MenuImg from '../assets/images/diarymenu.png'
-import GarbageImg from '../assets/images/garbage.png'
-import GraphImg from '../assets/images/graph.png'
-import PencilImg from '../assets/images/pencil.png'
+import MenuImg from '../assets/images/diarymenu.png';
+import GarbageImg from '../assets/images/garbage.png';
+import GraphImg from '../assets/images/graph.png';
+import PencilImg from '../assets/images/pencil.png';
 import config from '../assets/path/config';
 
 const PageContainer = styled.div`
@@ -113,7 +113,6 @@ const DropdownItem = styled.a`
   }
 `;
 
-
 const AnalysisButton = styled.button`
   display: flex;
   align-items: center;
@@ -133,7 +132,6 @@ const AnalysisButton = styled.button`
     background-color: #F7F7F7;
   }
 `;
-
 
 interface Diary {
   title: string;
@@ -184,7 +182,6 @@ export default function DiaryViewPage() {
     fetchDiary();
   }, [diaryId]);
 
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -211,7 +208,6 @@ export default function DiaryViewPage() {
     }
   };
 
-
   const handleConfirmEdit = () => {
     navigate(`/write/diary/${diaryId}`, { state: { diary } });
     setIsModalOpen(false);
@@ -234,31 +230,34 @@ export default function DiaryViewPage() {
     };
   }, []);
 
-
+  const handleAnalysis = () => {
+    navigate(`/analyze/${diaryId}`, { state: { diaryData: diary } });
+  };
+  
   if (error) return <div>Error: {error}</div>;
   if (!diary) return <div>Loading...</div>;
 
   return (
     <PageContainer>
-        <SaveButtonContainer>
-      <AnalysisButton onClick={() => console.log('분석 로직')}>
-        <img src={GraphImg} alt="Graph Icon" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-        분석
-      </AnalysisButton>
-      <Dropdown ref={dropdownRef}>
-        <IconButton onClick={toggleDropdown} src={MenuImg} alt="Menu Icon" />
-        <DropdownContent style={{ display: dropdownOpen ? 'block' : 'none' }}>
-          <DropdownItem onClick={() => setIsModalOpen(true)} color="#333333">
-            수정하기
-            <img src={PencilImg} alt="Edit Icon" style={{ width: '15px', height: '15px', marginLeft: '55px' }} />
-          </DropdownItem>
-          <DropdownItem onClick={() => setIsDeleteModalOpen(true)} color="red">
-            삭제하기
-            <img src={GarbageImg} alt="Delete Icon" style={{ width: '17px', height: '17px',  marginLeft: '53px' }} />
-          </DropdownItem>
-        </DropdownContent>
-      </Dropdown>
-    </SaveButtonContainer>
+      <SaveButtonContainer>
+        <AnalysisButton onClick={handleAnalysis}>
+          <img src={GraphImg} alt="Graph Icon" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+          분석
+        </AnalysisButton>
+        <Dropdown ref={dropdownRef}>
+          <IconButton onClick={toggleDropdown} src={MenuImg} alt="Menu Icon" />
+          <DropdownContent style={{ display: dropdownOpen ? 'block' : 'none' }}>
+            <DropdownItem onClick={() => setIsModalOpen(true)} color="#333333">
+              수정하기
+              <img src={PencilImg} alt="Edit Icon" style={{ width: '15px', height: '15px', marginLeft: '55px' }} />
+            </DropdownItem>
+            <DropdownItem onClick={() => setIsDeleteModalOpen(true)} color="red">
+              삭제하기
+              <img src={GarbageImg} alt="Delete Icon" style={{ width: '17px', height: '17px',  marginLeft: '53px' }} />
+            </DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+      </SaveButtonContainer>
       <DateContainer>
         <DateLabel>Date</DateLabel>
         <DateText>{diary.date}</DateText>
@@ -272,14 +271,14 @@ export default function DiaryViewPage() {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmEdit}
       />
-       <DeleteModal
-            isOpen={isDeleteModalOpen}
-            onClose={() => setIsDeleteModalOpen(false)}
-            onConfirm={() => {
-              handleDeleteConfirm();
-              setIsDeleteModalOpen(false);  
-            }}
-        />
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          handleDeleteConfirm();
+          setIsDeleteModalOpen(false);  
+        }}
+      />
     </PageContainer>
   );
 }

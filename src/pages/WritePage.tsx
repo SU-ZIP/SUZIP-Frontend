@@ -2,8 +2,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PhotoImg from '../assets/images/photo.png';
-import DeleteImg from '../assets/images/Delete.png'
+import DeleteImg from '../assets/images/Delete.png';
 import SaveModal from '../components/modal/SaveModal';
+import ClipLoader from "react-spinners/ClipLoader";
 import { useAuth } from '../components/auth/AuthContext'; 
 import { useNavigate, useParams } from 'react-router-dom';
 import { DiaryData } from '../types'; // Import the types
@@ -142,6 +143,13 @@ const DeleteButton = styled.img`
   padding: 4px;
 `;
 
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
 export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -158,6 +166,7 @@ export default function WritePage() {
   const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
   const [emotion, setEmotion] = useState("");
   const [diaryData, setDiaryData] = useState<DiaryData | null>(null); // Add this state
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   const handleEmotionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setEmotion(event.target.value);
@@ -197,6 +206,7 @@ export default function WritePage() {
   };
 
   const handleSaveClick = async () => {
+    setLoading(true); // 저장 버튼 클릭 시 로딩 상태로 전환
     if (isEditMode) {
       // If in edit mode, perform update logic
       try {
@@ -224,60 +234,66 @@ export default function WritePage() {
         navigate(`/diary/${diaryId}`); // Redirect to the DiaryViewPage
       } catch (error) {
         console.error('Error updating the diary:', error);
+      } finally {
+        setLoading(false); // 로딩 상태 해제
       }
     } else {
       setIsModalOpen(true); // For new entries, open modal to confirm save
+      setLoading(false); // 로딩 상태 해제
     }
   };
 
   axios.defaults.withCredentials = true;
 
-  
-const saveDiary = async () => {
-  const token = localStorage.getItem('accessToken');
-  const headers = {
-    'Authorization': `Bearer ${token}`
+
+  const saveDiary = async () => {
+    const token = localStorage.getItem('accessToken');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+
+    const formData = new FormData();
+    formData.append("request", JSON.stringify({
+      title: title,
+      content: content,
+      date: date
+    }));
+    
+    if (file) {
+      formData.append("file", file);
+    }
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
+      console.log('Diary saved:', response.data);
+      const diaryData: DiaryData = {
+        isSuccess: response.data.isSuccess,
+        code: response.data.code,
+        message: response.data.message,
+        result: {
+          content: response.data.result.content,
+          createdAt: response.data.result.createdAt,
+          date: response.data.result.date,
+          diaryId: response.data.result.diaryId,
+          emotionResponseDto: response.data.result.emotionResponseDto,
+          emotions: response.data.result.emotions,
+          imageUrl: response.data.result.imageUrl,
+          memberId: response.data.result.memberId,
+          title: response.data.result.title,
+          updatedAt: response.data.result.updatedAt
+        }
+      };
+      setDiaryData(diaryData);
+      console.log('DiaryData set:', diaryData);
+      setIsModalOpen(false);
+      navigate(`/analyze/${diaryData.result.diaryId}`, { state: { diaryData } }); // navigate with diaryId
+    } catch (error) {
+      console.error('Error saving the diary:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const formData = new FormData();
-  formData.append("request", JSON.stringify({
-    title: title,
-    content: content,
-    date: date
-  }));
-  
-  if (file) {
-    formData.append("file", file);
-  }
-
-  try {
-    const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
-    console.log('Diary saved:', response.data);
-    const diaryData: DiaryData = {
-      isSuccess: response.data.isSuccess,
-      code: response.data.code,
-      message: response.data.message,
-      result: {
-        content: response.data.result.content,
-        createdAt: response.data.result.createdAt,
-        date: response.data.result.date,
-        diaryId: response.data.result.diaryId,
-        emotionResponseDto: response.data.result.emotionResponseDto,
-        emotions: response.data.result.emotions,
-        imageUrl: response.data.result.imageUrl,
-        memberId: response.data.result.memberId,
-        title: response.data.result.title,
-        updatedAt: response.data.result.updatedAt
-      }
-    };
-    setDiaryData(diaryData);
-    console.log('DiaryData set:', diaryData);  // 확인용 로그
-    setIsModalOpen(false);
-    navigate('/analyze', { state: { diaryData } }); // 네비게이트와 데이터 전달
-  } catch (error) {
-    console.error('Error saving the diary:', error);
-  }
-};
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setPreviewSrc(""); 
@@ -317,6 +333,14 @@ const saveDiary = async () => {
     }
   };
 
+  if (loading) {
+    return (
+      <SpinnerContainer>
+        <ClipLoader color={"#123abc"} loading={loading} size={150} />
+      </SpinnerContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <SaveButtonContainer>
@@ -340,7 +364,6 @@ const saveDiary = async () => {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-
         <Button onClick={() => document.getElementById('file')?.click()}>
           <IconImage src={PhotoImg} alt="Upload" />
           사진 첨부
