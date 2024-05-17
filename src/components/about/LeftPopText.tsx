@@ -1,31 +1,11 @@
-import React, { useRef, useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { motion } from "framer-motion";
-
-// keyframes 정의
-const slideInFromLeft = keyframes`
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-`;
-
-// 애니메이션 클래스를 styled-components로 정의
-const AnimatedDiv = styled.div`
-  &.slide-in-left {
-    animation: ${slideInFromLeft} 0.5s ease-out forwards;
-  }
-`;
+import React from "react";
+import styled from "styled-components";
 
 const MainMessage = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: 2vh 0 2vh 0;
 `;
 
@@ -37,6 +17,7 @@ const TextBox = styled.div`
   white-space: nowrap;
   line-height: 1.2;
   margin-right: 0.5rem;
+  text-align: left;
 `;
 
 const BoldText = styled.div`
@@ -45,6 +26,7 @@ const BoldText = styled.div`
   font-size: 1.7rem;
   font-weight: 700;
   white-space: nowrap;
+  text-align: left;
 `;
 
 function LeftPopText() {
