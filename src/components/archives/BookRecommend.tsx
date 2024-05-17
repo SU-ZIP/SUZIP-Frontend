@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
@@ -15,7 +15,6 @@ import dummy from "../../data/ContentData.json";
 type Book = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: "book";
@@ -65,72 +64,84 @@ const MoreButtonContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 5vh 0 10vh 0;
 `;
 
 const MoreButton = styled.img`
   width: 3vw;
   height: auto;
+  cursor: pointer;
 `;
 
 const BookRecommendContainer = styled.div`
   width: 100%;
   height: 70vh;
-  margin: 10vh 0 20vh 0;
+  margin: 10vh 0 30vh 0;
   text-align: center;
 `;
 
-function BookRecommendation() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 책의 인덱스 설정
+const StyledSwiperSlide = styled(SwiperSlide)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-  useEffect(() => {
-    const filteredBooks = dummy.serviceItem.filter(
-      (item) => item.dType === "book"
+const BookRecommendation = forwardRef(
+  ({ scrollToMovie }: { scrollToMovie: () => void }, ref) => {
+    const [books, setBooks] = useState<Book[]>([]);
+    const [activeIndex, setActiveIndex] = useState<number>(2);
+
+    useEffect(() => {
+      const filteredBooks = dummy.serviceItem.filter(
+        (item) => item.dType === "book"
+      );
+      setBooks(filteredBooks as Book[]);
+    }, []);
+
+    return (
+      <ArchiveContainer>
+        <TextArea>
+          <TitleText>BOOK RECOMMENDATION</TitleText>
+          <DescriptionText>
+            지금까지 받은 책 추천 목록을 최신순으로 보여드려요
+          </DescriptionText>
+        </TextArea>
+        <BookRecommendContainer>
+          <Swiper
+            slidesPerView={5}
+            centeredSlides={true}
+            spaceBetween={30}
+            grabCursor={true}
+            navigation={{
+              prevEl: ".swiper-button-prev",
+              nextEl: ".swiper-button-next",
+            }}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination, Navigation]}
+            className="mySwiper"
+            onSlideChange={(swiper: SwiperClass) =>
+              setActiveIndex(swiper.activeIndex)
+            }
+          >
+            {books.map((book, index) => (
+              <StyledSwiperSlide key={book.itemId}>
+                <BookCard book={book} isActive={index === activeIndex} />
+              </StyledSwiperSlide>
+            ))}
+          </Swiper>
+          <MoreButtonContainer>
+            <MoreButton src={More} alt="More" onClick={scrollToMovie} />
+          </MoreButtonContainer>
+          <ButtonOverlay>
+            <Buttons src={Left} className="swiper-button-prev" />
+            <Buttons src={Right} className="swiper-button-next" />
+          </ButtonOverlay>
+        </BookRecommendContainer>
+      </ArchiveContainer>
     );
-    setBooks(filteredBooks as Book[]);
-  }, []);
-
-  return (
-    <ArchiveContainer>
-      <TextArea>
-        <TitleText>BOOK RECOMMENDATION</TitleText>
-        <DescriptionText>
-          지금까지 받은 책 추천 목록을 최신순으로 보여드려요
-        </DescriptionText>
-      </TextArea>
-      <BookRecommendContainer>
-        <Swiper
-          slidesPerView={5.5} // 첫 화면에 5.5개의 책이 보이도록 설정
-          centeredSlides={true}
-          spaceBetween={1}
-          grabCursor={true}
-          navigation={{
-            prevEl: '.swiper-button-prev',
-            nextEl: '.swiper-button-next',
-          }}
-          pagination={{
-            clickable: true,
-          }}
-          modules={[Pagination, Navigation]}
-          className="mySwiper"
-          onSlideChange={(swiper: SwiperClass) => setActiveIndex(swiper.activeIndex)}
-        >
-          {books.map((book, index) => (
-            <SwiperSlide key={book.itemId}>
-              <BookCard book={book} isActive={index === activeIndex} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <ButtonOverlay>
-          <Buttons src={Left} className="swiper-button-prev" />
-          <Buttons src={Right} className="swiper-button-next" />
-        </ButtonOverlay>
-      </BookRecommendContainer>
-      <MoreButtonContainer>
-        <MoreButton src={More} />
-      </MoreButtonContainer>
-    </ArchiveContainer>
-  );
-}
+  }
+);
 
 export default BookRecommendation;

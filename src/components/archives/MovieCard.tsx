@@ -13,13 +13,17 @@ type Movie = {
 
 type MovieCardProps = {
   movie: Movie;
+  isActive?: boolean;
 };
 
-const CardContainer = styled.div`
-  width: 20vw;
-  height: 60vh;
+const CardContainer = styled.div<{ isActive: boolean }>`
+  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
+  height: ${(props) => (props.isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
 `;
 
 const MovieCardContainer = styled.div`
@@ -81,9 +85,9 @@ const MovieContent = styled.div`
   text-align: justify;
 `;
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, isActive = false }) => {
   return (
-    <CardContainer>
+    <CardContainer isActive={isActive}>
       <MovieCardContainer>
         <MovieImage src={movie.image} alt={movie.name} />
         <MovieInfo>
