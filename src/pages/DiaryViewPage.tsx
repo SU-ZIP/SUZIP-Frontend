@@ -9,6 +9,7 @@ import GarbageImg from '../assets/images/garbage.png';
 import GraphImg from '../assets/images/graph.png';
 import PencilImg from '../assets/images/pencil.png';
 import config from '../assets/path/config';
+import { DiaryData } from '../types';
 
 const PageContainer = styled.div`
   font-family: 'Pretendard';
@@ -153,6 +154,7 @@ export default function DiaryViewPage() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [diaryData, setDiaryData] = useState<DiaryData | null>(null);
 
   useEffect(() => {
     async function fetchDiary() {
@@ -221,19 +223,6 @@ export default function DiaryViewPage() {
     setDropdownOpen(!dropdownOpen);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleAnalysis = async () => {
     try {
       const response = await axios.get(`${config.API_URL}/api/analyze/${diaryId}`, {
@@ -243,7 +232,26 @@ export default function DiaryViewPage() {
       });
 
       if (response.data.isSuccess) {
-        navigate(`/analyze/${diaryId}`, { state: { diaryData: response.data.result } });
+        console.log(response.data.result)
+        const diaryData: DiaryData = {
+          isSuccess: response.data.isSuccess,
+          code: response.data.code,
+          message: response.data.message,
+          result: {
+            content: response.data.result.content,
+            createdAt: response.data.result.createdAt,
+            date: response.data.result.date,
+            diaryId: response.data.result.diaryId,
+            emotionResponseDto: response.data.result.emotionResponseDto,
+            emotions: response.data.result.emotions,
+            imageUrl: response.data.result.imageUrl,
+            memberId: response.data.result.memberId,
+            title: response.data.result.title,
+            updatedAt: response.data.result.updatedAt
+          }
+        };
+        setDiaryData(diaryData);
+        navigate(`/analyze/${diaryId}`, { state: { diaryData } });
       } else {
         console.error('Failed to analyze diary:', response.data.message);
         alert('분석에 실패하였습니다.');

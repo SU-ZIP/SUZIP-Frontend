@@ -102,7 +102,8 @@ const InteractiveBox = styled.div`
 function EditProfile() {
     const [profile, setProfile] = useState({
         email: '',
-        name: ''
+        name: '',
+        imageUrl: '',
     });
 
     useEffect(() => {
@@ -116,7 +117,8 @@ function EditProfile() {
           if (response.data.isSuccess) {
             setProfile({
               email: response.data.result.email,
-              name: response.data.result.name
+              name: response.data.result.name,
+              imageUrl: response.data.result.imageUrl
             });
           } else {
             console.error('Failed to fetch profile data');
@@ -137,8 +139,10 @@ function EditProfile() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log('Form submitted');
+
         const formData = new FormData();
-        formData.append('name', profile.name);
+        formData.append('request', JSON.stringify({ name: profile.name }));
 
         const accessToken = localStorage.getItem('accessToken');
         axios.patch(`${config.API_URL}/api/member/`, formData, {
@@ -159,27 +163,29 @@ function EditProfile() {
         });
     };
     
-  return (
-    <PageContainer>
-    <MainContent>
-      <SectionTitle>회원 정보 수정</SectionTitle>
-      <InteractiveBox>
-        <Subtitle>회원 정보</Subtitle>
+    return (
+      <PageContainer>
+      <MainContent>
+        <SectionTitle>회원 정보 수정</SectionTitle>
+        <InteractiveBox>
+          <Subtitle>회원 정보</Subtitle>
+          <Form onSubmit={handleSubmit}>
+            <FormRow>
+              <Label htmlFor="email">이메일</Label>
+              <Input id="email" type="email" name="email" value={profile.email} readOnly />
+            </FormRow>
+            <FormRow>
+              <Label htmlFor="name">이름</Label>
+              <Input id="name" type="text" name="name" value={profile.name} onChange={handleInputChange} />
+            </FormRow>
+          </Form>
+        </InteractiveBox>
         <Form onSubmit={handleSubmit}>
-          <FormRow>
-            <Label htmlFor="email">이메일</Label>
-            <Input id="email" type="email" name="email" value={profile.email} readOnly />
-          </FormRow>
-          <FormRow>
-            <Label htmlFor="name">이름</Label>
-            <Input id="name" type="text" name="name" value={profile.name} onChange={handleInputChange} />
-          </FormRow>
+        <Button type="submit">저장하기</Button>
         </Form>
-      </InteractiveBox>
-      <Button type="submit">저장하기</Button>
-    </MainContent>
-  </PageContainer>
-  );
-}
-
-export default EditProfile;
+      </MainContent>
+    </PageContainer>
+    );
+  }
+  
+  export default EditProfile;
