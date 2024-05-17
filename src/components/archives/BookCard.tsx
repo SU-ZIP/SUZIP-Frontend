@@ -15,8 +15,8 @@ type BookCardProps = {
 };
 
 const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? "337px" : "297px")};
-  height: ${(props) => (props.isActive ? "529px" : "440px")};
+  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
+  height: ${(props) => (props.isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
   transition:
@@ -71,16 +71,6 @@ const BookTitle = styled.div`
   display: block;
   margin: 1vw;
   text-align: left;
-`;
-
-const BookContent = styled.div`
-  font-family: "Pretendard";
-  font-weight: 100;
-  font-size: 1rem;
-  display: block;
-  margin: 1vw;
-  line-height: 170%;
-  text-align: justify;
 `;
 
 const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {

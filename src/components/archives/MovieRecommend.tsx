@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
+import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import 'swiper/css';
+import { Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
 import "swiper/css/navigation";
-import 'swiper/css/pagination';
+import "swiper/css/pagination";
 import styled from "styled-components";
 import MovieCard from "./MovieCard";
 import dummy from "../../data/ContentData.json";
@@ -33,7 +34,7 @@ const TextArea = styled.div`
 const TitleText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 1.3rem;
-  font-weight: normal;
+  font-weight: 200;
 `;
 
 const DescriptionText = styled.div`
@@ -69,62 +70,78 @@ const MoreButtonContainer = styled.div`
 const MoreButton = styled.img`
   width: 3vw;
   height: auto;
+  cursor: pointer;
 `;
 
 const MovieRecommendContainer = styled.div`
-  position: relative;
   width: 100%;
-  height: 40vh;
-  background: blue;
-  margin: 10vh 0 30vh 0;
+  height: 70vh;
+  margin: 10vh 0 20vh 0;
+  text-align: center;
 `;
 
-function MovieRecommend() {
-  const [movies, setMovies] = useState<Movie[]>([]);
+const StyledSwiperSlide = styled(SwiperSlide)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-  useEffect(() => {
-    const filteredMovies = dummy.serviceItem.filter(
-      (item) => item.dType === "movie"
+const MovieRecommend = forwardRef(
+  ({ scrollToMusic }: { scrollToMusic: () => void }, ref) => {
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [activeIndex, setActiveIndex] = useState<number>(2);
+
+    useEffect(() => {
+      const filteredMovies = dummy.serviceItem.filter(
+        (item) => item.dType === "movie"
+      );
+      setMovies(filteredMovies as Movie[]);
+    }, []);
+
+    return (
+      <ArchiveContainer>
+        <TextArea>
+          <TitleText>MOVIE RECOMMENDATION</TitleText>
+          <DescriptionText>
+            지금까지 받은 영화 추천 목록을 최신순으로 보여드려요
+          </DescriptionText>
+        </TextArea>
+        <MovieRecommendContainer>
+          <Swiper
+            slidesPerView={5}
+            centeredSlides={true}
+            spaceBetween={30}
+            grabCursor={true}
+            navigation={{
+              prevEl: ".swiper-button-prev",
+              nextEl: ".swiper-button-next",
+            }}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination, Navigation]}
+            className="mySwiper"
+            onSlideChange={(swiper: SwiperClass) =>
+              setActiveIndex(swiper.activeIndex)
+            }
+          >
+            {movies.map((movie, index) => (
+              <StyledSwiperSlide key={movie.itemId}>
+                <MovieCard movie={movie} isActive={index === activeIndex} />
+              </StyledSwiperSlide>
+            ))}
+          </Swiper>
+          <ButtonOverlay>
+            <Buttons src={Left} className="swiper-button-prev" />
+            <Buttons src={Right} className="swiper-button-next" />
+          </ButtonOverlay>
+        </MovieRecommendContainer>
+        <MoreButtonContainer>
+          <MoreButton src={More} alt="More" onClick={scrollToMusic} />
+        </MoreButtonContainer>
+      </ArchiveContainer>
     );
-    setMovies(filteredMovies as Movie[]);
-  }, []);
-
-  return (
-   <ArchiveContainer>
-      <TextArea>
-        <TitleText>MOVIE RECOMMENDATION</TitleText>
-        <DescriptionText>
-          지금까지 받은 영화 추천 목록을 최신순으로 보여드려요
-        </DescriptionText>
-      </TextArea>
-      <MovieRecommendContainer>
-        <Swiper
-          slidesPerView={5}
-          centeredSlides={true}
-          spaceBetween={100}
-          grabCursor={true}
-          pagination={{
-            clickable: true,
-          }}
-          modules={[Pagination]}
-          className="mySwiper"
-        >
-          {movies.map((movie) => (
-            <SwiperSlide key={movie.itemId}>
-              <MovieCard movie={movie} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <ButtonOverlay>
-          <Buttons src={Left} alt="Previous" />
-          <Buttons src={Right} alt="Next" />
-        </ButtonOverlay>
-      </MovieRecommendContainer>
-      <MoreButtonContainer>
-        <MoreButton src={More} alt="More" />
-      </MoreButtonContainer>
-    </ArchiveContainer>
-  );
-}
+  }
+);
 
 export default MovieRecommend;
