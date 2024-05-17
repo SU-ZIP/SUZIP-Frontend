@@ -10,6 +10,7 @@ import CalendarDescription from "../components/about/CalendarDescription";
 import Slider2 from "../components/about/Slider2";
 import EmotionBox from "../components/about/EmotionBox";
 import ServiceImageBox from "../components/about/ServiceImageBox";
+import FooterImageBox from "../components/about/FooterImageBox";
 
 const AboutPageContainer = styled.div`
   display: flex;
@@ -72,6 +73,7 @@ export default function AboutPage() {
       <EmotionBox />
       <CalendarDescription />
       <Slider2 />
+      <FooterImageBox />
       <TypoContainer>
         <BoldTypo>It's time to</BoldTypo>
         <BoldTypo>SUZIP.</BoldTypo>
