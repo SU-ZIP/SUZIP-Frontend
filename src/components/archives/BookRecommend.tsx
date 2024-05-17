@@ -22,7 +22,7 @@ type Book = {
 
 const ArchiveContainer = styled.div`
   height: calc(100vh - 20vh);
-  padding: 0 0 7vh 0;
+  padding: 2vh 0 7vh 0;
 `;
 
 const TextArea = styled.div`
