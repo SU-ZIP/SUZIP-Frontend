@@ -4,7 +4,7 @@ import axios from 'axios';
 import SearchImg from "../assets/images/search.png";
 import Pagination from "../assets/pagination/Pagination";
 import { Link } from 'react-router-dom';
-import ErrorImg from '../assets/images/error.png'
+import ErrorImg from '../assets/images/error.png';
 import config from '../assets/path/config';
 
 const PageContainer = styled.div`
@@ -61,9 +61,9 @@ const TriangleIcon = styled.div`
   right: 15px;
 `;
 
-const DropdownContent = styled.div`
+const DropdownContent = styled.div<{ show: boolean }>`
   width: 150px;
-  display: none;
+  display: ${({ show }) => (show ? "block" : "none")};
   position: absolute;
   background-color: #fff;
   min-width: 103px;
@@ -71,10 +71,6 @@ const DropdownContent = styled.div`
   z-index: 1;
   right: 0;
 `;
-
-const showDropdownContent = (show: boolean): string => {
-  return show ? "block" : "none";
-};
 
 const DropdownItem = styled.div`
   font-family: "Pretendard";
@@ -213,43 +209,33 @@ interface DiaryApiResponse {
 const DiaryPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>("최신순");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>(""); // 올바른 위치와 형식으로 상태 선언
+  const [searchQuery, setSearchQuery] = useState<string>(""); 
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 5;
 
+  const fetchDiaries = async () => {
+    const token = localStorage.getItem('accessToken');
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { page: currentPage, sortOrder: sortOrder, searchQuery: searchQuery }
+    };
+    try {
+      const response = await axios.get<DiaryApiResponse>('http://localhost:8080/api/diary', config);
+      if (response.data.isSuccess) {
+        setDiaries(response.data.result.diaryList);
+        setTotalPages(response.data.result.totalPage);
+      }
+    } catch (error) {
+      console.error('Failed to fetch diaries:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchDiaries = async () => {
-      const token = localStorage.getItem('accessToken');
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { page: currentPage, sortOrder: sortOrder }
-      };
-      try {
-        const response = await axios.get<DiaryApiResponse>('http://mysuzip.com/api/diary', config);
-        if (response.data.isSuccess) {
-          setDiaries(response.data.result.diaryList);
-          setFilteredDiaries(response.data.result.diaryList);
-          setTotalPages(response.data.result.totalPage);
-        }
-      } catch (error) {
-        console.error('Failed to fetch diaries:', error);
-      }
-    };
-
     fetchDiaries();
-  }, [currentPage, sortOrder]);
-
-  
-
-  const handleDropdownItemClick = (order: string) => {
-    setSortOrder(order);
-    setDropdownOpen(false);
-    setCurrentPage(0)
-  };
+  }, [currentPage, sortOrder, searchQuery]);
 
   useEffect(() => {
     const filtered = diaries.filter(diary =>
@@ -265,72 +251,65 @@ const DiaryPage: React.FC = () => {
     setFilteredDiaries(sortedFiltered);
   }, [searchQuery, diaries, sortOrder]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleDropdownItemClick = (order: string) => {
+    setSortOrder(order);
+    setDropdownOpen(false);
+    setCurrentPage(0);
   };
 
-
-  const currentDiaries = filteredDiaries.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0); // Reset to first page on search query change
+  };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber - 1);
 
-
-
   return (
     <PageContainer>
-    <Header>
-      <Title>MY DIARIES</Title>
-      <SearchBarContainer>
-        <DropdownContainer>
-          <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
-            {sortOrder} <TriangleIcon />
-          </DropdownButton>
-          <DropdownContent style={{ display: showDropdownContent(dropdownOpen) }}>
-            <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>최신순</DropdownItem>
-            <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>오래된순</DropdownItem>
-          </DropdownContent>
-        </DropdownContainer>
-        <SearchBar placeholder="검색" onChange={handleSearchChange} />
-      </SearchBarContainer>
-    </Header>
-    <Divider />
-    <DiaryEntriesContainer>
-      {filteredDiaries.length > 0 ? (
-        filteredDiaries.map(entry => (
-          <DiaryEntry to={`/diary/${entry.diaryId}`} key={entry.diaryId}>
-            <DiaryTextContainer>
-              <DiaryEntryDate>{entry.date}</DiaryEntryDate>
-              <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>
-              <DiaryEntryContent>{entry.content}</DiaryEntryContent>
-            </DiaryTextContainer>
-            {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
-          </DiaryEntry>
-        ))
-      ) : diaries.length > 0 ? (
-        <div style={{ marginTop: '15vh',textAlign: 'center', width: '100%' }}>
-           <img src={ErrorImg} alt="No Entries" style={{ width: '42px', height: '42px' }} />
-          <ErrorMsg>검색 결과가 존재하지 않아요.</ErrorMsg>
-        </div>
-      ) : (
-        <div style={{ marginTop: '15vh',textAlign: 'center', width: '100%' }}>
-          <img src={ErrorImg} alt="No Entries" style={{ width: '42px', height: '42px' }} />
-          <ErrorMsg>일기가 존재하지 않아요.<br />새로운 일기를 수집해 주세요!</ErrorMsg>
-        </div>
+      <Header>
+        <Title>MY DIARIES</Title>
+        <SearchBarContainer>
+          <DropdownContainer>
+            <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
+              {sortOrder} <TriangleIcon />
+            </DropdownButton>
+            <DropdownContent show={dropdownOpen}>
+              <DropdownItem onClick={() => handleDropdownItemClick("최신순")}>최신순</DropdownItem>
+              <DropdownItem onClick={() => handleDropdownItemClick("오래된순")}>오래된순</DropdownItem>
+            </DropdownContent>
+          </DropdownContainer>
+          <SearchBar placeholder="검색" onChange={handleSearchChange} />
+        </SearchBarContainer>
+      </Header>
+      <Divider />
+      <DiaryEntriesContainer>
+        {filteredDiaries.length > 0 ? (
+          filteredDiaries.map(entry => (
+            <DiaryEntry to={`/diary/${entry.diaryId}`} key={entry.diaryId}>
+              <DiaryTextContainer>
+                <DiaryEntryDate>{entry.date}</DiaryEntryDate>
+                <DiaryEntryTitle>{entry.title}</DiaryEntryTitle>
+                <DiaryEntryContent>{entry.content}</DiaryEntryContent>
+              </DiaryTextContainer>
+              {entry.image && <DiaryImage src={entry.image} alt="Diary entry" />}
+            </DiaryEntry>
+          ))
+        ) : (
+          <div style={{ marginTop: '15vh', textAlign: 'center', width: '100%' }}>
+            <img src={ErrorImg} alt="No Entries" style={{ width: '42px', height: '42px' }} />
+            <ErrorMsg>검색 결과가 존재하지 않아요.</ErrorMsg>
+          </div>
+        )}
+      </DiaryEntriesContainer>
+      {filteredDiaries.length > 0 && (
+        <Pagination
+          currentPage={currentPage + 1}
+          totalPages={totalPages}
+          onPageChange={paginate}
+        />
       )}
-    </DiaryEntriesContainer>
-    {filteredDiaries.length > 0 && (
-      <Pagination
-        currentPage={currentPage + 1}
-        totalPages={totalPages}
-        onPageChange={paginate}
-      />
-    )}
-  </PageContainer>
+    </PageContainer>
   );
 };
-
 
 export default DiaryPage;

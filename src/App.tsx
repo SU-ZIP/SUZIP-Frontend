@@ -32,7 +32,7 @@ function App() {
             <Route path="/write" element={<WritePage />} />
             <Route path="/write/diary/:diaryId" element={<WritePage />} />
             <Route path="/write/date/:date" element={<WritePage />} />
-            <Route path="/analyze" element={<AnalyzePage />} /> {/* No need to pass diaryData here */}
+            <Route path="/analyze/:diaryId" element={<AnalyzePage />} /> {/* No need to pass diaryData here */}
             <Route path="/diary" element={<DiaryPage />} />
             <Route path="/diary/:diaryId" element={<DiaryViewPage />} />
             <Route path="/deleteAccount" element={<DeleteAccount />} />
