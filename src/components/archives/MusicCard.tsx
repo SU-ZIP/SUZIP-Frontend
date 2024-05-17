@@ -5,7 +5,6 @@ import dummy from "../../data/ContentData.json";
 type Music = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
@@ -13,13 +12,17 @@ type Music = {
 
 type MusicCardProps = {
   music: Music;
+  isActive?: boolean;
 };
 
-const CardContainer = styled.div`
-  width: 10vw;
-  height: 10vw;
+const CardContainer = styled.div<{ isActive: boolean }>`
+  width: ${(props) => (props.isActive ? "25vw" : "20vw")};
+  height: ${(props) => (props.isActive ? "25vw" : "20vw")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
 `;
 
 const MusicCardContainer = styled.div`
@@ -71,32 +74,19 @@ const MusicTitle = styled.div`
   text-align: left;
 `;
 
-const MusicContent = styled.div`
-  font-family: "Pretendard";
-  font-weight: 100;
-  font-size: 1rem;
-  display: block;
-  margin: 1vw;
-  line-height: 170%;
-  text-align: justify;
-`;
-
-const MusicCard: React.FC<MusicCardProps> = ({ music }) => {
-
+const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
   return (
-    <CardContainer>
-    <MusicCardContainer>
-      <MusicImage src={music.image} alt={music.name} />
-      <MusicInfo>
-        <MusicInfoContent>
-          <MusicTitle>{music.name}</MusicTitle>
-          <MusicContent>{music.content}</MusicContent>
-        </MusicInfoContent>
-      </MusicInfo>
-    </MusicCardContainer>
-  </CardContainer>
-);
+    <CardContainer isActive={isActive}>
+      <MusicCardContainer>
+        <MusicImage src={music.image} alt={music.name} />
+        <MusicInfo>
+          <MusicInfoContent>
+            <MusicTitle>{music.name}</MusicTitle>
+          </MusicInfoContent>
+        </MusicInfo>
+      </MusicCardContainer>
+    </CardContainer>
+  );
 };
-
 
 export default MusicCard;

@@ -4,7 +4,6 @@ import styled from "styled-components";
 type Book = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
@@ -16,11 +15,13 @@ type BookCardProps = {
 };
 
 const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? '337px' : '297px')};
-  height: ${(props) => (props.isActive ? '529px' : '440px')};
+  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
+  height: ${(props) => (props.isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
-  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
 `;
 
 const BookCardContainer = styled.div`
@@ -72,16 +73,6 @@ const BookTitle = styled.div`
   text-align: left;
 `;
 
-const BookContent = styled.div`
-  font-family: "Pretendard";
-  font-weight: 100;
-  font-size: 1rem;
-  display: block;
-  margin: 1vw;
-  line-height: 170%;
-  text-align: justify;
-`;
-
 const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
   return (
     <CardContainer isActive={isActive}>
@@ -90,7 +81,6 @@ const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
         <BookInfo>
           <BookInfoContent>
             <BookTitle>{book.name}</BookTitle>
-            <BookContent>{book.content}</BookContent>
           </BookInfoContent>
         </BookInfo>
       </BookCardContainer>

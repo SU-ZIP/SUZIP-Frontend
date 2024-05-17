@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import 'swiper/css';
+import { Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
 import "swiper/css/navigation";
-import 'swiper/css/pagination';
+import "swiper/css/pagination";
 import styled from "styled-components";
 import MusicCard from "./MusicCard";
 import dummy from "../../data/ContentData.json";
@@ -13,14 +14,15 @@ import Right from "../../assets/images/right.png";
 type Music = {
   itemId: number;
   name: string;
-  content: string;
   image: string;
   genre: string;
   dType: string;
 };
 
 const ArchiveContainer = styled.div`
-  padding: 25vh 0 7vh 0;
+  height: calc(100vh - 20vh);
+  margin-top: 7vh;
+  padding: 0 0 7vh 0;
 `;
 
 const TextArea = styled.div`
@@ -30,7 +32,7 @@ const TextArea = styled.div`
 const TitleText = styled.div`
   font-family: "PPMonumentExtended";
   font-size: 1.3rem;
-  font-weight: normal;
+  font-weight: 200;
 `;
 
 const DescriptionText = styled.div`
@@ -58,15 +60,21 @@ const Buttons = styled.img`
 `;
 
 const MusicRecommendContainer = styled.div`
-  position: relative;
   width: 100%;
   height: 70vh;
-  background: blue;
   margin: 10vh 0 20vh 0;
+  text-align: center;
+`;
+
+const StyledSwiperSlide = styled(SwiperSlide)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 function MusicRecommend() {
   const [musics, setMusics] = useState<Music[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 책의 인덱스 설정
 
   useEffect(() => {
     const filteredMusics = dummy.serviceItem.filter(
@@ -85,25 +93,32 @@ function MusicRecommend() {
       </TextArea>
       <MusicRecommendContainer>
         <Swiper
-          slidesPerView={5}
+          slidesPerView={5} // 첫 화면에 5개의 책이 보이도록 설정
           centeredSlides={true}
-          spaceBetween={10}
+          spaceBetween={30} // 카드들 사이의 간격 설정
           grabCursor={true}
+          navigation={{
+            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+          }}
           pagination={{
             clickable: true,
           }}
-          modules={[Pagination]}
+          modules={[Pagination, Navigation]}
           className="mySwiper"
+          onSlideChange={(swiper: SwiperClass) =>
+            setActiveIndex(swiper.activeIndex)
+          }
         >
-          {musics.map((music) => (
+          {musics.map((music, index) => (
             <SwiperSlide key={music.itemId}>
-              <MusicCard music={music} />
+              <MusicCard music={music} isActive={index === activeIndex} />
             </SwiperSlide>
           ))}
         </Swiper>
         <ButtonOverlay>
-          <Buttons src={Left} alt="Previous" />
-          <Buttons src={Right} alt="Next" />
+          <Buttons src={Left} className="swiper-button-prev" />
+          <Buttons src={Right} className="swiper-button-next" />
         </ButtonOverlay>
       </MusicRecommendContainer>
     </ArchiveContainer>
