@@ -42,6 +42,7 @@ const DescriptionText = styled.div`
   color: #555555;
 `;
 
+/*
 const ButtonOverlay = styled.div`
   position: absolute;
   top: 50%;
@@ -58,6 +59,7 @@ const Buttons = styled.img`
   width: 3vw;
   height: auto;
 `;
+*/
 
 const MusicRecommendContainer = styled.div`
   width: 100%;
@@ -116,10 +118,13 @@ function MusicRecommend() {
             </StyledSwiperSlide>
           ))}
         </Swiper>
+
+        {/*
         <ButtonOverlay>
           <Buttons src={Left} className="swiper-button-prev" />
           <Buttons src={Right} className="swiper-button-next" />
         </ButtonOverlay>
+        */}
       </MusicRecommendContainer>
     </ArchiveContainer>
   );

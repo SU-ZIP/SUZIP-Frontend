@@ -43,6 +43,7 @@ const DescriptionText = styled.div`
   font-weight: normal;
 `;
 
+/*
 const ButtonOverlay = styled.div`
   position: absolute;
   top: 50%;
@@ -59,6 +60,7 @@ const Buttons = styled.img`
   width: 3vw;
   height: auto;
 `;
+*/
 
 const MoreButtonContainer = styled.div`
   display: flex;
@@ -131,10 +133,13 @@ const MovieRecommend = forwardRef(
               </StyledSwiperSlide>
             ))}
           </Swiper>
+
+          {/*
           <ButtonOverlay>
             <Buttons src={Left} className="swiper-button-prev" />
             <Buttons src={Right} className="swiper-button-next" />
           </ButtonOverlay>
+          */}
         </MovieRecommendContainer>
         <MoreButtonContainer>
           <MoreButton src={More} alt="More" onClick={scrollToMusic} />

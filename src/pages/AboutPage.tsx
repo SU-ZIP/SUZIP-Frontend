@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import TitleTypo from "../components/about/TitleTypo";
@@ -8,7 +8,11 @@ import GetStarted_White from "../assets/buttons/GetStarted_White";
 import AnalyzeDescription from "../components/about/AnalyzeDescription";
 import CalendarDescription from "../components/about/CalendarDescription";
 import Slider2 from "../components/about/Slider2";
-import EmotionBox from "../components/about/EmotionBox"
+import EmotionBox from "../components/about/EmotionBox";
+import ServiceImageBox from "../components/about/ServiceImageBox";
+import FooterImageBox from "../components/about/FooterImageBox";
+import LeftPopText from "../components/about/LeftPopText";
+import RightPopText from "../components/about/RightPopText";
 
 const AboutPageContainer = styled.div`
   display: flex;
@@ -66,10 +70,14 @@ export default function AboutPage() {
       <TitleTypo />
       <VerticalLine />
       <RecordDescription />
+      <ServiceImageBox />
       <AnalyzeDescription />
       <EmotionBox />
       <CalendarDescription />
       <Slider2 />
+      <LeftPopText />
+      <RightPopText />
+      <FooterImageBox />
       <TypoContainer>
         <BoldTypo>It's time to</BoldTypo>
         <BoldTypo>SUZIP.</BoldTypo>
