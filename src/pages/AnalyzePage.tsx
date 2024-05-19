@@ -73,18 +73,23 @@ const EmotionBoxContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 7vh;
+  flex-wrap: wrap; 
 `;
 
 const Emotion = styled.div`
   color: #4E4E4E;
   padding: 1.5vw;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
   border: 1px solid #B7B7B7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: 20%;
-  height: 10vh;
+  width: 23%;
+  height: auto;
+  box-sizing: border-box;
+  word-wrap: break-word;
 `;
 
 const EmotionTitle = styled.div`
@@ -106,14 +111,18 @@ const QuoteBox = styled.div`
   font-family: "Pretendard";
   color: #4E4E4E;
   padding: 1.5vw;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
   border: 1px solid #B7B7B7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   width: 20%;
-  height: 10vh;
+  height: auto; 
   margin-left: 1vw;
+  box-sizing: border-box;
+  word-wrap: break-word;
 `;
 
 const EmotionColorBox = styled.div`
