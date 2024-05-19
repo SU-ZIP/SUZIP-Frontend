@@ -9,9 +9,10 @@ import todayMoveImg from "../assets/images/todaymove.png";
 import addImg from "../assets/images/add.png";
 
 import WriteModal from "../components/modal/WriteModal";
-import AlreadyDiaryModal from "../components/modal/AlreadyDairyModal"; // 올바르게 임포트
+import AlreadyDiaryModal from "../components/modal/AlreadyDairyModal";
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-left: 1vw`;
 
 const Title = styled.h1`
   font-family: "PPMonumentExtended", sans-serif;
@@ -192,7 +193,6 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
   const gradient = emotionData && emotionData.emotion ? gradients[emotionData.emotion] : "#F1F1F1";
   
-  // 로그 추가
   console.log(`Day: ${day}, Emotion Data:`, emotionData);
 
   if (isFuture) {
@@ -245,8 +245,7 @@ const generateCalendarDates = async (
   const dayCells: JSX.Element[] = [];
 
   const emotionData = await fetchMonthlyEmotionData(year, month + 1);
-  
-  // 로그 추가
+
   console.log("Fetched Emotion Data:", emotionData);
 
   const emotionMap: { [key: string]: EmotionData | undefined } = {};
@@ -298,8 +297,8 @@ const HomePage: React.FC = () => {
   const currentMonth = currentDate.getMonth();
   const [selectedDate, setSelectedDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAlreadyDiaryOpen, setIsAlreadyDiaryOpen] = useState(false); // 추가: AlreadyDiaryModal 상태
-  const [diaryId, setDiaryId] = useState<number | null>(null); // 추가: 일기 ID 상태
+  const [isAlreadyDiaryOpen, setIsAlreadyDiaryOpen] = useState(false); 
+  const [diaryId, setDiaryId] = useState<number | null>(null);
   const [dates, setDates] = useState<JSX.Element[]>([]);
   const [emotionMap, setEmotionMap] = useState<{ [key: string]: EmotionData | undefined }>({});
   const navigate = useNavigate();

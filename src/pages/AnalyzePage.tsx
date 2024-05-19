@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GooSpinner } from 'react-spinners-kit';
 import axios from 'axios';
-import BubbleImg from '../assets/images/speechbubble.png';
 import DescriptionImg from '../assets/images/question.png';
 import ScrapImg from '../assets/images/scrap.png';
 import ScrappedImg from '../assets/images/scrapped.png';
@@ -131,6 +130,7 @@ const ColorTitleContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 1vh;
+  position: relative; /* 추가 */
 `;
 
 const ColorTitle = styled.div`
@@ -156,16 +156,16 @@ const DescriptionBubble = styled.div`
   display: none;
   position: absolute;
   top: 2rem;
-  left: 3.8rem;
-  width: 180px;
-  height: 105px;
-  padding: 1rem;
-  background: url(${BubbleImg}) no-repeat center center;
-  background-size: cover;
+  left: 5rem;
+  width: 230px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ccc;
   font-family: "Pretendard";
-  font-size: 13px;
+  font-size: 14px;
   color: #5A5A5A;
   text-align: center;
+  z-index: 1;
 `;
 
 const ServiceBox = styled.div`
@@ -178,6 +178,7 @@ const ServiceTitleContainer = styled.div`
   align-items: center;
   margin-bottom: 1vh;
   margin-top: 7vh;
+  position: relative; /* 추가 */
 `;
 
 const ServiceTitle = styled.div`
@@ -202,16 +203,17 @@ const ServiceDescriptionIcon = styled.img`
 const ServiceDescriptionBubble = styled.div`
   display: none;
   position: absolute;
-  top: -6rem;
-  left: 10rem;
-  width: auto;
-  padding: 1rem;
-  background: url(${BubbleImg}) no-repeat center center;
-  background-size: cover;
+  top: 2rem;
+  left: 6rem;
+  width: 230px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ccc;
   font-family: "Pretendard";
-  font-size: 13px;
+  font-size: 14px;
   color: #5A5A5A;
   text-align: center;
+  z-index: 1;
 `;
 
 const Recommendations = styled.div`
