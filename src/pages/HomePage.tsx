@@ -116,7 +116,7 @@ const DateMarker = styled.span<{ color?: string }>`
   height: 28px;
   width: 28px;
   border-radius: 50%;
-  background-image: ${(props) => props.color || getRandomGradient()};
+  background: ${(props) => props.color || "F1F1F1"};
   display: inline-block;
 `;
 
@@ -152,9 +152,6 @@ const gradients: { [key in Exclude<EmotionData['emotion'], null>]: string } = {
   ANXIETY: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
   HURT: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
 };
-
-const getRandomGradient = () =>
-  "linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)"; 
 
 const fetchMonthlyEmotionData = async (year: number, month: number) => {
   try {
@@ -193,7 +190,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   emotionData,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const gradient = emotionData && emotionData.emotion ? gradients[emotionData.emotion] : getRandomGradient();
+  const gradient = emotionData && emotionData.emotion ? gradients[emotionData.emotion] : "#F1F1F1";
   
   // 로그 추가
   console.log(`Day: ${day}, Emotion Data:`, emotionData);
