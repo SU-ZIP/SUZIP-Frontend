@@ -258,7 +258,11 @@ const Recommendation = styled.div`
   margin-bottom: 2vh; 
   flex: 1 1 30%;
   box-sizing: border-box;
-  margin-right: 1%;
+  margin-right: 2%; 
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
 `;
 
 const RecommendationImage = styled.img`
