@@ -164,7 +164,7 @@ const DescriptionBubble = styled.div`
   font-family: "Pretendard";
   font-size: 14px;
   color: #5A5A5A;
-  text-align: center;
+  text-align: justify;
   z-index: 1;
 `;
 
@@ -212,13 +212,14 @@ const ServiceDescriptionBubble = styled.div`
   font-family: "Pretendard";
   font-size: 14px;
   color: #5A5A5A;
-  text-align: center;
+  text-align: justify;
   z-index: 1;
 `;
 
 const Recommendations = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap; /* 추가 */
 `;
 
 const RecommendationCategoryContainer = styled.div`
@@ -242,16 +243,20 @@ const Recommendation = styled.div`
   width: 32%;
   text-align: center;
   border: 1px solid #B7B7B7;
-  height: 50vh;
+  height: auto;
   padding-bottom: 4vh;
   position: relative;
+  margin-bottom: 2vh; 
+  flex: 1 1 30%;
+  box-sizing: border-box;
+  margin-right: 1%;
 `;
 
 const RecommendationImage = styled.img`
   margin-top: 4vh;
-  width: 15vw;
+  width: 70%; 
   height: auto;
-  margin-bottom: 1vh;
+  margin-bottom: 2vh;
 `;
 
 const RecommendationText = styled.div`
