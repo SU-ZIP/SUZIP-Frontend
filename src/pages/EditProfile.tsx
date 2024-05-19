@@ -4,11 +4,11 @@ import axios from 'axios';
 import config from '../assets/path/config';
 
 const PageContainer = styled.div`
-display: flex;
-justify-content: center;
-align-items: start;
-padding: 20px;
-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 20px;
+  height: 100vh;
 `;
 
 const Subtitle = styled.h2`
@@ -17,7 +17,7 @@ const Subtitle = styled.h2`
   font-weight: 500;
   color: #333;
   margin-bottom: 10px;
-  margin-left: 50px;
+  margin-left: 70px;
   margin-top: 50px;
   align-self: flex-start;
   letter-spacing: -0.5px;
@@ -36,8 +36,9 @@ const FormRow = styled.div`
 
 const Label = styled.label`
   font-size: 18px;
-  color: #939393;
+  color: #333;
   font-family: "Pretendard";
+  margin-left: -70px;
   margin-right: 10px;
   width: 100px;
   font-weight: 500;
@@ -89,7 +90,7 @@ const SectionTitle = styled.h2`
 `;
 
 const InteractiveBox = styled.div`
-  width: 1302px;
+  width: 70vw;
   border-radius: 5px;
   height: 402px;
   padding: 10px 20px;
@@ -162,7 +163,7 @@ function EditProfile() {
           console.error('Error updating name:', error);
         });
     };
-    
+
     return (
       <PageContainer>
       <MainContent>
@@ -176,7 +177,7 @@ function EditProfile() {
             </FormRow>
             <FormRow>
               <Label htmlFor="name">이름</Label>
-              <Input id="name" type="text" name="name" value={profile.name} onChange={handleInputChange} />
+              <Input id="name" type="text" name="name" value={profile.name} onChange={handleInputChange} style={{ color: '#333333' }} />
             </FormRow>
           </Form>
         </InteractiveBox>
@@ -187,5 +188,5 @@ function EditProfile() {
     </PageContainer>
     );
   }
-  
-  export default EditProfile;
+
+export default EditProfile;
