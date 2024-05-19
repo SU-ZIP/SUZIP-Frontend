@@ -273,10 +273,10 @@ const RecommendationSubText = styled.div`
 
 const ScrapButton = styled.img`
   position: absolute;
-  top: 10px;
+  top: -5px;
   right: 10px;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
 `;
 
@@ -346,22 +346,35 @@ const AnalyzePage: React.FC = () => {
   
 
   const handleScrap = async (type: 'movie' | 'book' | 'music', contentId: number) => {
+    const isScrapped = scrapStatus[contentId];
     try {
-      const response = await axios.post(`${config.API_URL}/api/scrap/`, { contentId }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          'Content-Type': 'application/json'
-        },
-      });
-
-      if (response.data.isSuccess) {
-        setScrapStatus((prev) => ({ ...prev, [contentId]: !prev[contentId] }));
+      if (isScrapped) {
+        const response = await axios.delete(`${config.API_URL}/api/scrap/${contentId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (response.data.isSuccess) {
+          setScrapStatus((prev) => ({ ...prev, [contentId]: false }));
+        } else {
+          console.error('Failed to unsave scrap:', response.data.message);
+        }
       } else {
-        console.error('Failed to scrap:', response.data.message);
+        const response = await axios.post(`${config.API_URL}/api/scrap/`, { contentId }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.data.isSuccess) {
+          setScrapStatus((prev) => ({ ...prev, [contentId]: true }));
+        } else {
+          console.error('Failed to save scrap:', response.data.message);
+        }
       }
     } catch (error) {
-      console.error('Error scrapping:', error);
-      console.error('contentId = ',contentId)
+      console.error('Error toggling scrap:', error);
+      console.error('contentId =', contentId);
     }
   };
   
