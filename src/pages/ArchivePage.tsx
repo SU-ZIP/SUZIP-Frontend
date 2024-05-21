@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import axios from "axios";
 
 import BookRecommend from "../components/archives/BookRecommend";
 import MovieRecommend from "../components/archives/MovieRecommend";

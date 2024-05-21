@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+import { Swiper as SwiperClass } from "swiper/types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
 import styled from "styled-components";
 import MusicCard from "./MusicCard";
-import dummy from "../../data/ContentData.json";
 import Left from "../../assets/images/left.png";
 import Right from "../../assets/images/right.png";
+
+import axios from "axios";
+import config from "../../assets/path/config";
+import { MusicRecommendation } from "../../types";
+
+interface MusicCardProps {
+  musicData: MusicRecommendation;
+}
 
 type Music = {
   itemId: number;
@@ -56,15 +66,53 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 `;
 
 function MusicRecommend() {
+  const { musicId } = useParams<{ musicId: string }>();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { musicData } = location.state || {};
   const [musics, setMusics] = useState<Music[]>([]);
-  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 음악의 인덱스 설정
+  const [activeIndex, setActiveIndex] = useState<number>(2);
 
   useEffect(() => {
-    const filteredMusics = dummy.serviceItem.filter(
-      (item) => item.dType === "music"
-    );
-    setMusics(filteredMusics as Music[]);
-  }, []);
+    if (musicData) {
+      setMusics(musicData);
+    } else {
+      const fetchMusics = async () => {
+        try {
+          const response = await axios.get(
+            `${config.API_URL}/api/contents/musics`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+              params: {
+                page: 0, // 필요한 경우 적절한 페이지 번호를 설정
+                size: 10, // 필요한 경우 적절한 페이지 크기를 설정
+              },
+            }
+          );
+          if (response.data.isSuccess) {
+            const fetchedMusics = response.data.result.musicList.map(
+              (music: any) => ({
+                itemId: music.musicId,
+                name: music.name,
+                image: music.image,
+                genre: music.genre,
+                dType: "music",
+              })
+            );
+            setMusics(fetchedMusics);
+          } else {
+            console.error("Failed to fetch musics: ", response.data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching musics: ", error);
+        }
+      };
+
+      fetchMusics();
+    }
+  }, [musicData, musicId, navigate]);
 
   return (
     <ArchiveContainer>
