@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import dummy from "../../data/ContentData.json";
 
 type Movie = {
   itemId: number;
@@ -16,9 +15,9 @@ type MovieCardProps = {
   isActive?: boolean;
 };
 
-const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
-  height: ${(props) => (props.isActive ? "55vh" : "50vh")};
+const CardContainer = styled.div<{ $isActive: boolean }>`
+  width: ${(props) => (props.$isActive ? "35vw" : "30vw")};
+  height: ${(props) => (props.$isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
   transition:
@@ -87,7 +86,7 @@ const MovieContent = styled.div`
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, isActive = false }) => {
   return (
-    <CardContainer isActive={isActive}>
+    <CardContainer $isActive={isActive}>
       <MovieCardContainer>
         <MovieImage src={movie.image} alt={movie.name} />
         <MovieInfo>

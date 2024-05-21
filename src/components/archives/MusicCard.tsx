@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import dummy from "../../data/ContentData.json";
 
 type Music = {
   itemId: number;
@@ -15,9 +14,9 @@ type MusicCardProps = {
   isActive?: boolean;
 };
 
-const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? "25vw" : "20vw")};
-  height: ${(props) => (props.isActive ? "25vw" : "20vw")};
+const CardContainer = styled.div<{ $isActive: boolean }>`
+  width: ${(props) => (props.$isActive ? "25vw" : "20vw")};
+  height: ${(props) => (props.$isActive ? "25vw" : "20vw")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
   transition:
@@ -76,7 +75,7 @@ const MusicTitle = styled.div`
 
 const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
   return (
-    <CardContainer isActive={isActive}>
+    <CardContainer $isActive={isActive}>
       <MusicCardContainer>
         <MusicImage src={music.image} alt={music.name} />
         <MusicInfo>

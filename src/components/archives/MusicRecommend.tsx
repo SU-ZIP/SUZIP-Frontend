@@ -42,25 +42,6 @@ const DescriptionText = styled.div`
   color: #555555;
 `;
 
-/*
-const ButtonOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  margin: 0 1vw 0 1vw;
-  z-index: 1;
-`;
-
-const Buttons = styled.img`
-  width: 3vw;
-  height: auto;
-`;
-*/
-
 const MusicRecommendContainer = styled.div`
   width: 100%;
   height: 70vh;
@@ -76,7 +57,7 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 
 function MusicRecommend() {
   const [musics, setMusics] = useState<Music[]>([]);
-  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 책의 인덱스 설정
+  const [activeIndex, setActiveIndex] = useState<number>(2); // 가운데 음악의 인덱스 설정
 
   useEffect(() => {
     const filteredMusics = dummy.serviceItem.filter(
@@ -95,7 +76,7 @@ function MusicRecommend() {
       </TextArea>
       <MusicRecommendContainer>
         <Swiper
-          slidesPerView={5} // 첫 화면에 5개의 책이 보이도록 설정
+          slidesPerView={5} // 첫 화면에 5개의 음악이 보이도록 설정
           centeredSlides={true}
           spaceBetween={30} // 카드들 사이의 간격 설정
           grabCursor={true}
@@ -118,13 +99,6 @@ function MusicRecommend() {
             </StyledSwiperSlide>
           ))}
         </Swiper>
-
-        {/*
-        <ButtonOverlay>
-          <Buttons src={Left} className="swiper-button-prev" />
-          <Buttons src={Right} className="swiper-button-next" />
-        </ButtonOverlay>
-        */}
       </MusicRecommendContainer>
     </ArchiveContainer>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef } from "react";
 import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
+import axios from "axios";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -42,25 +43,6 @@ const DescriptionText = styled.div`
   font-size: 1.1rem;
   font-weight: normal;
 `;
-
-/*
-const ButtonOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  margin: 0 1vw 0 1vw;
-  z-index: 1;
-`;
-
-const Buttons = styled.img`
-  width: 3vw;
-  height: auto;
-`;
-*/
 
 const MoreButtonContainer = styled.div`
   display: flex;
@@ -133,13 +115,6 @@ const MovieRecommend = forwardRef(
               </StyledSwiperSlide>
             ))}
           </Swiper>
-
-          {/*
-          <ButtonOverlay>
-            <Buttons src={Left} className="swiper-button-prev" />
-            <Buttons src={Right} className="swiper-button-next" />
-          </ButtonOverlay>
-          */}
         </MovieRecommendContainer>
         <MoreButtonContainer>
           <MoreButton src={More} alt="More" onClick={scrollToMusic} />
