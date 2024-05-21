@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import config from '../assets/path/config';
 import prevMoveImg from "../assets/images/prevmove.png";
 import nextMoveImg from "../assets/images/nextmove.png";
 import todayMoveImg from "../assets/images/todaymove.png";
 import addImg from "../assets/images/add.png";
 
 import WriteModal from "../components/modal/WriteModal";
+import AlreadyDiaryModal from "../components/modal/AlreadyDairyModal";
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-left: 1vw`;
 
 const Title = styled.h1`
   font-family: "PPMonumentExtended", sans-serif;
@@ -114,7 +117,7 @@ const DateMarker = styled.span<{ color?: string }>`
   height: 28px;
   width: 28px;
   border-radius: 50%;
-  background-image: ${(props) => props.color || getRandomGradient()};
+  background: ${(props) => props.color || "F1F1F1"};
   display: inline-block;
 `;
 
@@ -137,23 +140,46 @@ const TodayMove = styled.img`
   height: 31px;
 `;
 
-const gradients = [
-  "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
-  "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
-  "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
-  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
-];
+interface EmotionData {
+  emotion: 'HAPPINESS' | 'ANGER' | 'SADNESS' | 'ANXIETY' | 'HURT' | null;
+  date: string;
+  diaryId?: number; // 추가: 일기 ID
+}
 
-const getRandomGradient = () =>
-  gradients[Math.floor(Math.random() * gradients.length)];
+const gradients: { [key in Exclude<EmotionData['emotion'], null>]: string } = {
+  HAPPINESS: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
+  ANGER: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+  SADNESS: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+  ANXIETY: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+  HURT: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+};
+
+const fetchMonthlyEmotionData = async (year: number, month: number) => {
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await axios.get(`${config.API_URL}/api/emotions/months`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        year,
+        month
+      }
+    });
+    return response.data.result as EmotionData[];
+  } catch (error) {
+    console.error("Error fetching monthly emotion data:", error);
+    return [];
+  }
+};
 
 interface CalendarDayProps {
   day: number;
-  handleDayClick: (day: number) => void;
+  handleDayClick: (day: number, emotionData: EmotionData | undefined) => void;
   openModal: () => void;
-  isFuture: boolean; 
+  isFuture: boolean;
   isEmpty?: boolean;
+  emotionData?: EmotionData;
 }
 
 const CalendarDayComponent: React.FC<CalendarDayProps> = ({
@@ -161,11 +187,13 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   handleDayClick,
   openModal,
   isFuture,
-  isEmpty
+  isEmpty,
+  emotionData,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [gradient] = useState<string>(getRandomGradient());
+  const gradient = emotionData && emotionData.emotion ? gradients[emotionData.emotion] : "#F1F1F1";
   
+  console.log(`Day: ${day}, Emotion Data:`, emotionData);
 
   if (isFuture) {
     return (
@@ -178,7 +206,7 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   }
 
   return (
-    <CalendarDay onClick={() => handleDayClick(day) } isEmpty={isEmpty}>
+    <CalendarDay onClick={() => handleDayClick(day, emotionData)} isEmpty={isEmpty}>
       <DateContainer>
         <DateMarker color={gradient} />
         <span style={{ marginLeft: "10px" }}>{day}</span>
@@ -200,12 +228,12 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
   );
 };
 
-const generateCalendarDates = (
+const generateCalendarDates = async (
   year: number,
   month: number,
-  handleDayClick: (day: number) => void,
+  handleDayClick: (day: number, emotionData: EmotionData | undefined) => void,
   openModal: () => void
-): JSX.Element[] => {
+): Promise<{ dates: JSX.Element[], emotionMap: { [key: string]: EmotionData | undefined } }> => {
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
@@ -216,12 +244,23 @@ const generateCalendarDates = (
   const numDaysInMonth = new Date(year, month + 1, 0).getDate();
   const dayCells: JSX.Element[] = [];
 
+  const emotionData = await fetchMonthlyEmotionData(year, month + 1);
+
+  console.log("Fetched Emotion Data:", emotionData);
+
+  const emotionMap: { [key: string]: EmotionData | undefined } = {};
+  emotionData.forEach(emotion => {
+    emotionMap[emotion.date] = emotion;
+  });
+
   for (let i = 0; i < firstDayOfMonth; i++) {
     dayCells.push(<CalendarDay key={`empty-start-${i}`} isEmpty></CalendarDay>);
   }
 
   for (let i = 1; i <= numDaysInMonth; i++) {
     const isFuture = year > currentYear || (year === currentYear && (month > currentMonth || (month === currentMonth && i > currentDate)));
+    const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+    const emotionForDay = emotionMap[dateStr];
     dayCells.push(
       <CalendarDayComponent
         key={`day-${i}`}
@@ -229,6 +268,7 @@ const generateCalendarDates = (
         handleDayClick={handleDayClick}
         openModal={openModal}
         isFuture={isFuture}
+        emotionData={emotionForDay}
       />
     );
   }
@@ -248,7 +288,7 @@ const generateCalendarDates = (
     );
   }
 
-  return dates;
+  return { dates, emotionMap };
 };
 
 const HomePage: React.FC = () => {
@@ -257,27 +297,57 @@ const HomePage: React.FC = () => {
   const currentMonth = currentDate.getMonth();
   const [selectedDate, setSelectedDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlreadyDiaryOpen, setIsAlreadyDiaryOpen] = useState(false); 
+  const [diaryId, setDiaryId] = useState<number | null>(null);
+  const [dates, setDates] = useState<JSX.Element[]>([]);
+  const [emotionMap, setEmotionMap] = useState<{ [key: string]: EmotionData | undefined }>({});
   const navigate = useNavigate();
 
-  const handleDayClick = (day: number) => {
+  useEffect(() => {
+    const fetchDates = async () => {
+      const { dates: calendarDates, emotionMap: fetchedEmotionMap } = await generateCalendarDates(currentYear, currentMonth, handleDayClick, openModal);
+      setDates(calendarDates);
+      setEmotionMap(fetchedEmotionMap);
+    };
+    fetchDates();
+  }, [currentYear, currentMonth]);
+
+  const handleDayClick = (day: number, emotionData: EmotionData | undefined) => {
     const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    setSelectedDate(formattedDate); // 날짜 상태를 업데이트하고
-    openModal(); // 모달을 열어 작성을 유도
+    setSelectedDate(formattedDate);
+
+    if (emotionData && emotionData.diaryId) {
+      setDiaryId(emotionData.diaryId);
+      setIsAlreadyDiaryOpen(true);
+    } else {
+      openModal();
+    }
   };
 
   const openModal = () => {
     setIsModalOpen(true);
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const redirectToWritePage = () => {
-    navigate(`/write/date/${selectedDate}`); // 저장된 날짜로 네비게이션
-    setIsModalOpen(false); // 모달을 닫습니다
+    navigate(`/write/date/${selectedDate}`);
+    setIsModalOpen(false);
+  };
+
+  const redirectToDiaryPage = () => {
+    if (diaryId !== null) {
+      navigate(`/diary/${diaryId}`);
+    }
+    setIsAlreadyDiaryOpen(false);
   };
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
   };
-  
+
   const handleNextMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
   };
@@ -287,8 +357,6 @@ const HomePage: React.FC = () => {
     const todayFormatted = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     setSelectedDate(todayFormatted);
   };
-
-  const dates = generateCalendarDates(currentYear, currentMonth, handleDayClick, openModal);
 
   return (
     <Container>
@@ -320,8 +388,13 @@ const HomePage: React.FC = () => {
       </CalendarTable>
       <WriteModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeModal}
         onConfirm={redirectToWritePage}
+      />
+      <AlreadyDiaryModal
+        isOpen={isAlreadyDiaryOpen}
+        onClose={() => setIsAlreadyDiaryOpen(false)}
+        onConfirm={redirectToDiaryPage}
       />
     </Container>
   );

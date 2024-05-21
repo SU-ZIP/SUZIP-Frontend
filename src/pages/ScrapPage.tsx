@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import Pagination from "../assets/pagination/Pagination";
-import ScrapDataJson from '../data/ScrapItems.json';
+import config from '../assets/path/config';
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -24,6 +25,7 @@ const Title = styled.h1`
   margin-bottom: 2.5vh;
   width: fit-content;
   margin-right: 30px;
+  font-weight: 200;
 `;
 
 const SubTitle = styled.h2`
@@ -73,7 +75,7 @@ const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
   width: ${({ category }) => {
     switch (category) {
       case 'Book': return '199px';
-      case 'Movie': return '400px';
+      case 'Movie': return '200px';
       case 'Music': return '242px';
       default: return '199px'; 
     }
@@ -81,7 +83,7 @@ const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
   height: ${({ category }) => {
     switch (category) {
       case 'Book': return '280px';
-      case 'Movie': return '207px';
+      case 'Movie': return '300px';
       case 'Music': return '242px';
       default: return '280px'; 
     }
@@ -93,61 +95,67 @@ interface ScrapItem {
     id: number;
     category: 'Book' | 'Movie' | 'Music';
     imageUrl: string;
-  }
-  
-interface ScrapData {
-ScrapItems: ScrapItem[];
 }
-  
-function convertToScrapData(data: any): ScrapData {
-return {
-    ScrapItems: data.ScrapItems.map((item: any) => ({
-    id: item.id,
-    category: item.category as 'Book' | 'Movie' | 'Music',
-    imageUrl: item.imageUrl
-    }))
-};
-}
-  
 
 const categories = ['Book', 'Movie', 'Music'];
-const ScrapData: ScrapData = convertToScrapData(ScrapDataJson);
 const itemsPerPage = 9;
 
 const ScrapPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Book');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [scrapItems, setScrapItems] = useState<ScrapItem[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  const filteredItems = ScrapData.ScrapItems.filter(item => item.category === selectedCategory);
+  useEffect(() => {
+    const fetchScrapItems = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(`${config.API_URL}/api/scrap/${selectedCategory.toLowerCase()}s`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: currentPage - 1,
+          },
+        });
+        if (response.data.isSuccess) {
+          const items = response.data.result[`${selectedCategory.toLowerCase()}List`].map((item: any) => ({
+            id: item[`${selectedCategory.toLowerCase()}Id`],
+            category: selectedCategory,
+            imageUrl: item.image,
+          }));
+          setScrapItems(items);
+          setTotalPages(response.data.result.totalPage);
+        } else {
+          console.error('Failed to fetch scrap items:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching scrap items:', error);
+      }
+    };
 
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    fetchScrapItems();
+  }, [selectedCategory, currentPage]);
 
-  const currentItems = filteredItems.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-
-
   return (
     <PageContainer>
       <Header>
-      <Title>Scrap Lists</Title>
+        <Title>Scrap Lists</Title>
         {categories.map((category, index) => (
           <>
-           <NavButton
-            key={category}
-            isActive={selectedCategory === category}
-            onClick={() => {
+            <NavButton
+              key={category}
+              isActive={selectedCategory === category}
+              onClick={() => {
                 setSelectedCategory(category);
                 setCurrentPage(1);
-            }}
+              }}
             >
-            {category}
+              {category}
             </NavButton>
             {index < categories.length - 1 && <span style={{ margin: '0 10px' }}>|</span>}
           </>
@@ -156,17 +164,17 @@ const ScrapPage: React.FC = () => {
       <SubTitle>{selectedCategory}</SubTitle>
       <GridContainer>
         <Grid>
-        {currentItems.map((item) => (
+          {scrapItems.map((item) => (
             <Item key={item.id}>
-                <Image 
-                    src={item.imageUrl} 
-                    alt={`${item.category} cover`} 
-                    category={item.category as 'Book' | 'Movie' | 'Music'} // 타입 단언 추가
-                />
+              <Image 
+                src={item.imageUrl} 
+                alt={`${item.category} cover`} 
+                category={item.category as 'Book' | 'Movie' | 'Music'} 
+              />
             </Item>
-        ))}
+          ))}
         </Grid>
-        </GridContainer>
+      </GridContainer>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GooSpinner } from 'react-spinners-kit';
 import axios from 'axios';
-import BubbleImg from '../assets/images/speechbubble.png';
 import DescriptionImg from '../assets/images/question.png';
 import ScrapImg from '../assets/images/scrap.png';
 import ScrappedImg from '../assets/images/scrapped.png';
@@ -74,18 +73,23 @@ const EmotionBoxContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 7vh;
+  flex-wrap: wrap; 
 `;
 
 const Emotion = styled.div`
   color: #4E4E4E;
   padding: 1.5vw;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
   border: 1px solid #B7B7B7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: 20%;
-  height: 10vh;
+  width: 23%;
+  height: auto;
+  box-sizing: border-box;
+  word-wrap: break-word;
 `;
 
 const EmotionTitle = styled.div`
@@ -107,14 +111,18 @@ const QuoteBox = styled.div`
   font-family: "Pretendard";
   color: #4E4E4E;
   padding: 1.5vw;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
   border: 1px solid #B7B7B7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   width: 20%;
-  height: 10vh;
+  height: auto; 
   margin-left: 1vw;
+  box-sizing: border-box;
+  word-wrap: break-word;
 `;
 
 const EmotionColorBox = styled.div`
@@ -131,6 +139,7 @@ const ColorTitleContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 1vh;
+  position: relative; /* 추가 */
 `;
 
 const ColorTitle = styled.div`
@@ -156,16 +165,16 @@ const DescriptionBubble = styled.div`
   display: none;
   position: absolute;
   top: 2rem;
-  left: 3.8rem;
-  width: 180px;
-  height: 105px;
-  padding: 1rem;
-  background: url(${BubbleImg}) no-repeat center center;
-  background-size: cover;
+  left: 5rem;
+  width: 230px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ccc;
   font-family: "Pretendard";
-  font-size: 13px;
+  font-size: 14px;
   color: #5A5A5A;
-  text-align: center;
+  text-align: justify;
+  z-index: 1;
 `;
 
 const ServiceBox = styled.div`
@@ -178,6 +187,7 @@ const ServiceTitleContainer = styled.div`
   align-items: center;
   margin-bottom: 1vh;
   margin-top: 7vh;
+  position: relative; /* 추가 */
 `;
 
 const ServiceTitle = styled.div`
@@ -202,21 +212,23 @@ const ServiceDescriptionIcon = styled.img`
 const ServiceDescriptionBubble = styled.div`
   display: none;
   position: absolute;
-  top: -6rem;
-  left: 10rem;
-  width: auto;
-  padding: 1rem;
-  background: url(${BubbleImg}) no-repeat center center;
-  background-size: cover;
+  top: 2rem;
+  left: 6rem;
+  width: 230px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ccc;
   font-family: "Pretendard";
-  font-size: 13px;
+  font-size: 14px;
   color: #5A5A5A;
-  text-align: center;
+  text-align: justify;
+  z-index: 1;
 `;
 
 const Recommendations = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap; /* 추가 */
 `;
 
 const RecommendationCategoryContainer = styled.div`
@@ -240,16 +252,24 @@ const Recommendation = styled.div`
   width: 32%;
   text-align: center;
   border: 1px solid #B7B7B7;
-  height: 50vh;
+  height: auto;
   padding-bottom: 4vh;
   position: relative;
+  margin-bottom: 2vh; 
+  flex: 1 1 30%;
+  box-sizing: border-box;
+  margin-right: 2%; 
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
 `;
 
 const RecommendationImage = styled.img`
   margin-top: 4vh;
-  width: 15vw;
+  width: 70%; 
   height: auto;
-  margin-bottom: 1vh;
+  margin-bottom: 2vh;
 `;
 
 const RecommendationText = styled.div`
@@ -273,10 +293,10 @@ const RecommendationSubText = styled.div`
 
 const ScrapButton = styled.img`
   position: absolute;
-  top: 10px;
+  top: -5px;
   right: 10px;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
 `;
 
@@ -346,22 +366,35 @@ const AnalyzePage: React.FC = () => {
   
 
   const handleScrap = async (type: 'movie' | 'book' | 'music', contentId: number) => {
+    const isScrapped = scrapStatus[contentId];
     try {
-      const response = await axios.post(`${config.API_URL}/api/scrap/`, { contentId }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          'Content-Type': 'application/json'
-        },
-      });
-
-      if (response.data.isSuccess) {
-        setScrapStatus((prev) => ({ ...prev, [contentId]: !prev[contentId] }));
+      if (isScrapped) {
+        const response = await axios.delete(`${config.API_URL}/api/scrap/${contentId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (response.data.isSuccess) {
+          setScrapStatus((prev) => ({ ...prev, [contentId]: false }));
+        } else {
+          console.error('Failed to unsave scrap:', response.data.message);
+        }
       } else {
-        console.error('Failed to scrap:', response.data.message);
+        const response = await axios.post(`${config.API_URL}/api/scrap/`, { contentId }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.data.isSuccess) {
+          setScrapStatus((prev) => ({ ...prev, [contentId]: true }));
+        } else {
+          console.error('Failed to save scrap:', response.data.message);
+        }
       }
     } catch (error) {
-      console.error('Error scrapping:', error);
-      console.error('contentId = ',contentId)
+      console.error('Error toggling scrap:', error);
+      console.error('contentId =', contentId);
     }
   };
   
