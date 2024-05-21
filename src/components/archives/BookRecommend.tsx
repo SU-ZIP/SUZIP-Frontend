@@ -1,16 +1,24 @@
-import React, { useState, useEffect, forwardRef } from "react";
-import { Swiper as SwiperClass } from "swiper/types"; // Swiper의 타입을 임포트
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+import { Swiper as SwiperClass } from "swiper/types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
 import styled from "styled-components";
-import More from "../../assets/images/more_gray.png";
-import Left from "../../assets/images/left.png";
-import Right from "../../assets/images/right.png";
 import BookCard from "./BookCard";
-import dummy from "../../data/ContentData.json";
+import More from "../../assets/images/more_gray.png";
+
+import axios from "axios";
+import config from "../../assets/path/config";
+import { BookRecommendation } from "../../types";
+
+interface BookCardProps {
+  bookData: BookRecommendation;
+}
 
 type Book = {
   itemId: number;
@@ -42,25 +50,6 @@ const DescriptionText = styled.div`
   color: #555555;
 `;
 
-/*
-const ButtonOverlay = styled.div`
-position: absolute;
-top: 50%;
-left: 0;
-right: 0;
-transform: translateY(-50%);
-display: flex;
-justify-content: space-between;
-margin: 0 1vw 0 1vw;
-z-index: 10;
-`;
-
-const Buttons = styled.img`
-  width: 3vw;
-  height: auto;
-`;
-*/
-
 const MoreButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -88,65 +77,96 @@ const StyledSwiperSlide = styled(SwiperSlide)`
   align-items: center;
 `;
 
-const BookRecommendation = forwardRef(
-  ({ scrollToMovie }: { scrollToMovie: () => void }, ref) => {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [activeIndex, setActiveIndex] = useState<number>(2);
+const BookRecommend: React.FC<{ scrollToMovie: () => void }> = ({
+  scrollToMovie,
+}) => {
+  const { bookId } = useParams<{ bookId: string }>();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { bookData } = location.state || {};
+  const [books, setBooks] = useState<Book[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(2);
 
-    useEffect(() => {
-      const filteredBooks = dummy.serviceItem.filter(
-        (item) => item.dType === "book"
-      );
-      setBooks(filteredBooks as Book[]);
-    }, []);
-
-    return (
-      <ArchiveContainer>
-        <TextArea>
-          <TitleText>BOOK RECOMMENDATION</TitleText>
-          <DescriptionText>
-            지금까지 받은 책 추천 목록을 최신순으로 보여드려요
-          </DescriptionText>
-        </TextArea>
-        <BookRecommendContainer>
-          <Swiper
-            slidesPerView={5}
-            centeredSlides={true}
-            spaceBetween={30}
-            grabCursor={true}
-            navigation={{
-              prevEl: ".swiper-button-prev",
-              nextEl: ".swiper-button-next",
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            modules={[Pagination, Navigation]}
-            className="mySwiper"
-            onSlideChange={(swiper: SwiperClass) =>
-              setActiveIndex(swiper.activeIndex)
+  useEffect(() => {
+    if (bookData) {
+      setBooks(bookData);
+    } else {
+      const fetchBooks = async () => {
+        try {
+          const response = await axios.get(
+            `${config.API_URL}/api/contents/books`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+              params: {
+                page: 0, // 필요한 경우 적절한 페이지 번호를 설정
+                size: 10, // 필요한 경우 적절한 페이지 크기를 설정
+              },
             }
-          >
-            {books.map((book, index) => (
-              <StyledSwiperSlide key={book.itemId}>
-                <BookCard book={book} isActive={index === activeIndex} />
-              </StyledSwiperSlide>
-            ))}
-          </Swiper>
-          <MoreButtonContainer>
-            <MoreButton src={More} alt="More" onClick={scrollToMovie} />
-          </MoreButtonContainer>
+          );
+          if (response.data.isSuccess) {
+            const fetchedBooks = response.data.result.bookList.map(
+              (book: any) => ({
+                itemId: book.bookId,
+                name: book.name,
+                image: book.image,
+                genre: book.genre,
+                dType: "book",
+              })
+            );
+            setBooks(fetchedBooks);
+          } else {
+            console.error("Failed to fetch books: ", response.data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching books: ", error);
+        }
+      };
 
-          {/*
-          <ButtonOverlay>
-            <Buttons src={Left} className="swiper-button-prev" />
-            <Buttons src={Right} className="swiper-button-next" />
-          </ButtonOverlay>
-          **/}
-        </BookRecommendContainer>
-      </ArchiveContainer>
-    );
-  }
-);
+      fetchBooks();
+    }
+  }, [bookData, bookId, navigate]);
 
-export default BookRecommendation;
+  return (
+    <ArchiveContainer>
+      <TextArea>
+        <TitleText>BOOK RECOMMENDATION</TitleText>
+        <DescriptionText>
+          지금까지 받은 책 추천 목록을 최신순으로 보여드려요
+        </DescriptionText>
+      </TextArea>
+      <BookRecommendContainer>
+        <Swiper
+          slidesPerView={5}
+          centeredSlides={true}
+          spaceBetween={30}
+          grabCursor={true}
+          navigation={{
+            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+          onSlideChange={(swiper: SwiperClass) =>
+            setActiveIndex(swiper.activeIndex)
+          }
+        >
+          {books.map((book, index) => (
+            <StyledSwiperSlide key={book.itemId}>
+              <BookCard book={book} isActive={index === activeIndex} />
+            </StyledSwiperSlide>
+          ))}
+        </Swiper>
+        <MoreButtonContainer>
+          <MoreButton src={More} alt="More" onClick={scrollToMovie} />
+        </MoreButtonContainer>
+      </BookRecommendContainer>
+    </ArchiveContainer>
+  );
+};
+
+export default BookRecommend;

@@ -1,12 +1,11 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
 
 const MainMessage = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end; /* 우측 정렬 */
   margin: 2vh 0 2vh 0;
 `;
 
@@ -18,6 +17,7 @@ const TextBox = styled.div`
   white-space: nowrap;
   line-height: 1.2;
   margin-right: 0.5rem;
+  text-align: right; /* 텍스트 우측 정렬 */
 `;
 
 const BoldText = styled.div`
@@ -26,6 +26,7 @@ const BoldText = styled.div`
   font-size: 1.7rem;
   font-weight: 700;
   white-space: nowrap;
+  text-align: right; /* 텍스트 우측 정렬 */
 `;
 
 function RightPopText() {
