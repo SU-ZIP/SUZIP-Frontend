@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
-import axios from 'axios';
-import EditModal from '../components/modal/EditModal';
+import EditModal from "../components/modal/EditModal";
 import DeleteModal from "../components/modal/DeleteModal";
-import MenuImg from '../assets/images/diarymenu.png';
-import GarbageImg from '../assets/images/garbage.png';
-import GraphImg from '../assets/images/graph.png';
-import PencilImg from '../assets/images/pencil.png';
-import config from '../assets/path/config';
-import { DiaryData } from '../types';
+import MenuImg from "../assets/images/diarymenu.png";
+import GarbageImg from "../assets/images/garbage.png";
+import GraphImg from "../assets/images/graph.png";
+import PencilImg from "../assets/images/pencil.png";
+
+import axios from "axios";
+import { DiaryData } from "../types";
+import config from "../assets/path/config";
 
 const PageContainer = styled.div`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -21,7 +23,7 @@ const PageContainer = styled.div`
 `;
 
 const DateContainer = styled.div`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   display: flex;
   width: 100%;
   align-items: baseline;
@@ -71,7 +73,7 @@ const ContentTextarea = styled.div`
   padding: 8px;
   line-height: 25px;
   font-size: 18px;
-  color: #2D2D2D;
+  color: #2d2d2d;
   white-space: pre-wrap;
 `;
 
@@ -100,14 +102,14 @@ const DropdownContent = styled.div`
   position: absolute;
   background-color: white;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   font-family: "Pretendard";
   font-weight: 400;
   margin-top: 10px;
 `;
 
 const DropdownItem = styled.a`
-  color: ${props => props.color || 'black'};
+  color: ${(props) => props.color || "black"};
   padding: 13px 16px;
   text-decoration: none;
   display: flex;
@@ -127,14 +129,14 @@ const AnalysisButton = styled.button`
   font-family: "Pretendard";
   font-weight: 500;
   background-color: transparent;
-  color: #9A9A9A;
-  border: 1px solid #ACACAC;
+  color: #9a9a9a;
+  border: 1px solid #acacac;
   cursor: pointer;
   font-size: 16px;
   border-radius: 4px;
   margin-right: 5px;
   &:hover {
-    background-color: #F7F7F7;
+    background-color: #f7f7f7;
   }
 `;
 
@@ -158,7 +160,7 @@ export default function DiaryViewPage() {
 
   useEffect(() => {
     async function fetchDiary() {
-      const token = localStorage.getItem('accessToken');
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         console.error("No access token available.");
         setError("Authentication failed. No access token found.");
@@ -166,18 +168,21 @@ export default function DiaryViewPage() {
       }
 
       try {
-        const response = await axios.get(`${config.API_URL}/api/diary/${diaryId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          `${config.API_URL}/api/diary/${diaryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
         if (response.data.isSuccess) {
           setDiary(response.data.result);
           setError(null);
         } else {
           setError("Failed to load diary data.");
-          console.error('API responded with an error:', response.data.message);
+          console.error("API responded with an error:", response.data.message);
         }
       } catch (error) {
         console.error("Failed to fetch diary data:", error);
@@ -190,7 +195,10 @@ export default function DiaryViewPage() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -201,16 +209,29 @@ export default function DiaryViewPage() {
   }, []);
 
   const handleDeleteConfirm = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token available.");
+      setError("Authentication failed. No access token found.");
+      return;
+    }
     try {
-      const response = await axios.delete(`${config.API_URL}/api/diary/${diaryId}`);
+      const response = await axios.delete(
+        `${config.API_URL}/api/diary/${diaryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.data.isSuccess) {
-        navigate('/diary'); 
+        navigate("/diary");
       } else {
-        alert('일기 삭제에 실패하였습니다.');
+        alert("일기 삭제에 실패하였습니다.");
       }
     } catch (error) {
-      console.error('Error deleting diary:', error);
-      alert('일기 삭제에 실패하였습니다.');
+      console.error("Error deleting diary:", error);
+      alert("일기 삭제에 실패하였습니다.");
     }
   };
 
@@ -225,14 +246,17 @@ export default function DiaryViewPage() {
 
   const handleAnalysis = async () => {
     try {
-      const response = await axios.get(`${config.API_URL}/api/analyze/${diaryId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      });
+      const response = await axios.get(
+        `${config.API_URL}/api/analyze/${diaryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
 
       if (response.data.isSuccess) {
-        console.log(response.data.result)
+        console.log(response.data.result);
         const diaryData: DiaryData = {
           isSuccess: response.data.isSuccess,
           code: response.data.code,
@@ -247,18 +271,18 @@ export default function DiaryViewPage() {
             imageUrl: response.data.result.imageUrl,
             memberId: response.data.result.memberId,
             title: response.data.result.title,
-            updatedAt: response.data.result.updatedAt
-          }
+            updatedAt: response.data.result.updatedAt,
+          },
         };
         setDiaryData(diaryData);
         navigate(`/analyze/${diaryId}`, { state: { diaryData } });
       } else {
-        console.error('Failed to analyze diary:', response.data.message);
-        alert('분석에 실패하였습니다.');
+        console.error("Failed to analyze diary:", response.data.message);
+        alert("분석에 실패하였습니다.");
       }
     } catch (error) {
-      console.error('Error analyzing diary:', error);
-      alert('분석 중 오류가 발생하였습니다.');
+      console.error("Error analyzing diary:", error);
+      alert("분석 중 오류가 발생하였습니다.");
     }
   };
 
@@ -269,19 +293,34 @@ export default function DiaryViewPage() {
     <PageContainer>
       <SaveButtonContainer>
         <AnalysisButton onClick={handleAnalysis}>
-          <img src={GraphImg} alt="Graph Icon" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+          <img
+            src={GraphImg}
+            alt="Graph Icon"
+            style={{ width: "20px", height: "20px", marginRight: "8px" }}
+          />
           분석
         </AnalysisButton>
         <Dropdown ref={dropdownRef}>
           <IconButton onClick={toggleDropdown} src={MenuImg} alt="Menu Icon" />
-          <DropdownContent style={{ display: dropdownOpen ? 'block' : 'none' }}>
+          <DropdownContent style={{ display: dropdownOpen ? "block" : "none" }}>
             <DropdownItem onClick={() => setIsModalOpen(true)} color="#333333">
               수정하기
-              <img src={PencilImg} alt="Edit Icon" style={{ width: '15px', height: '15px', marginLeft: '55px' }} />
+              <img
+                src={PencilImg}
+                alt="Edit Icon"
+                style={{ width: "15px", height: "15px", marginLeft: "55px" }}
+              />
             </DropdownItem>
-            <DropdownItem onClick={() => setIsDeleteModalOpen(true)} color="red">
+            <DropdownItem
+              onClick={() => setIsDeleteModalOpen(true)}
+              color="red"
+            >
               삭제하기
-              <img src={GarbageImg} alt="Delete Icon" style={{ width: '17px', height: '17px',  marginLeft: '53px' }} />
+              <img
+                src={GarbageImg}
+                alt="Delete Icon"
+                style={{ width: "17px", height: "17px", marginLeft: "53px" }}
+              />
             </DropdownItem>
           </DropdownContent>
         </Dropdown>
@@ -291,7 +330,7 @@ export default function DiaryViewPage() {
         <DateText>{diary.date}</DateText>
       </DateContainer>
       <DiaryTitle>{diary.title}</DiaryTitle>
-      <hr style={{ width: '100%', color: '#CECECE' }} />
+      <hr style={{ width: "100%", color: "#CECECE" }} />
       {diary.image && <DiaryImage src={diary.image} alt="Diary" />}
       <ContentTextarea>{diary.content}</ContentTextarea>
       <EditModal
@@ -304,7 +343,7 @@ export default function DiaryViewPage() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => {
           handleDeleteConfirm();
-          setIsDeleteModalOpen(false);  
+          setIsDeleteModalOpen(false);
         }}
       />
     </PageContainer>
