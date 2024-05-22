@@ -20,7 +20,7 @@ const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 348px;
-  height: 186px; 
+  height: 168px; 
   position: relative;
   display: flex;
   flex-direction: column;
@@ -83,7 +83,7 @@ const LoadingOverlay = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure it is on top */
+  z-index: 9999; 
 `;
 
 const LoadingText = styled.div`

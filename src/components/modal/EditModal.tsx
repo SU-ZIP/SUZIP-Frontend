@@ -19,7 +19,7 @@ const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 348px;
-  height: 186px;
+  height: 168px; 
   position: relative;
   display: flex;
   flex-direction: column;
