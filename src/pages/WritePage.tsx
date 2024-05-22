@@ -6,6 +6,7 @@ import PhotoImg from "../assets/images/photo.png";
 import DeleteImg from "../assets/images/Delete.png";
 import SaveModal from "../components/modal/SaveModal";
 import ClipLoader from "react-spinners/ClipLoader";
+import config from '../assets/path/config';
 
 import axios from "axios";
 import { useAuth } from "../components/auth/AuthContext";
@@ -185,7 +186,7 @@ export default function WritePage() {
   useEffect(() => {
     if (!isLoggedIn) {
       alert("로그인이 필요합니다.");
-      window.location.href = "http://localhost:8080/api/login";
+      window.location.href = `${config.API_URL}/api/login`;
     }
   }, [isLoggedIn, navigate]);
 
@@ -242,7 +243,7 @@ export default function WritePage() {
         }
 
         const response = await axios.patch(
-          `http://localhost:8080/api/diary/${diaryId}`,
+          `${config.API_URL}/api/diary/${diaryId}`,
           formData,
           { headers }
         );
@@ -284,7 +285,7 @@ export default function WritePage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/diary",
+        `${config.API_URL}/api/diary`,
         formData,
         { headers }
       );
@@ -341,7 +342,7 @@ export default function WritePage() {
   // fetchDiary 함수 추가
   const fetchDiary = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/diary/${id}`);
+      const response = await axios.get(`${config.API_URL}/api/diary/${id}`);
       const { data } = response;
       if (data.isSuccess) {
         setTitle(data.result.title);
