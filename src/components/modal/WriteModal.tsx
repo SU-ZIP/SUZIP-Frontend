@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import CloseIcon from '../../assets/images/close2.png'; // Close 버튼 아이콘 경로
 
-
 const ModalBackground = styled.div`
   position: fixed;
   top: 0;
@@ -20,11 +19,11 @@ const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 348px;
-  height: 186px; 
+  height: 168px; 
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center; // 자식 요소들을 중앙으로 정렬
+  align-items: center; 
 `;
 
 const ModalTitle = styled.div`
