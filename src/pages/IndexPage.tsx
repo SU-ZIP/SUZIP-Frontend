@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from 'axios';
+import axios from "axios";
 import closeButton from "../assets/images/close.png";
-import {useAuth} from "../components/auth/AuthContext"
-import config from '../assets/path/config';
+import { useAuth } from "../components/auth/AuthContext";
+import config from "../assets/path/config";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -85,7 +85,7 @@ interface IndexPageProps {
 function IndexPage({ onClose }: IndexPageProps) {
   const [backgroundColor, setBackgroundColor] = useState("");
   const { isLoggedIn, setLoginStatus, userName } = useAuth();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,44 +96,53 @@ function IndexPage({ onClose }: IndexPageProps) {
       "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       "linear-gradient(0deg, #96fbc4 0%, #f9f586 100%)",
     ];
+
     setBackgroundColor(colors[0]);
+
     let currentIndex = 1;
     const interval = setInterval(() => {
       if (!document.hidden) {
         setBackgroundColor(colors[currentIndex]);
         currentIndex = (currentIndex + 1) % colors.length;
       }
-    }, 8000);
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
-    const accessToken = localStorage.getItem('accessToken');
-    console.log(accessToken)
+    const accessToken = localStorage.getItem("accessToken");
+    console.log(accessToken);
     if (!accessToken) {
-        console.error("No access token found");
-        setError('로그아웃 실패: 액세스 토큰이 없습니다.');
-        return;
+      console.error("No access token found");
+      setError("로그아웃 실패: 액세스 토큰이 없습니다.");
+      return;
     }
 
-    axios.post(`${config.API_URL}/api/token/logout`, {}, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        },
-        withCredentials: true
-    })
-    .then(response => {
+    axios
+      .post(
+        `${config.API_URL}/api/token/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
         console.log("로그아웃 되었습니다.");
-        setLoginStatus(false, '');
+        setLoginStatus(false, "");
         localStorage.removeItem("accessToken");
         onClose();
-        navigate('/');
-    })
-    .catch(error => {
+        navigate("/");
+      })
+      .catch((error) => {
         console.error("로그아웃 실패:", error);
-        setError(`로그아웃 실패: ${error.response?.data?.message || '서버 에러'}`);
-    });
-};
+        setError(
+          `로그아웃 실패: ${error.response?.data?.message || "서버 에러"}`
+        );
+      });
+  };
   return (
     <ModalOverlay>
       <ModalContainer backgroundColor={backgroundColor}>
@@ -156,14 +165,17 @@ function IndexPage({ onClose }: IndexPageProps) {
             <IndexItem to="/my" onClick={onClose}>
               My
             </IndexItem>
-            </IndexMenu>
+          </IndexMenu>
           <PagingMenu>
             {isLoggedIn ? (
               <PagingItem as="div" onClick={handleLogout}>
                 LOGOUT
               </PagingItem>
             ) : (
-              <PagingItem href="http://localhost:8080/api/login" onClick={onClose}>
+              <PagingItem
+                href="http://localhost:8080/api/login"
+                onClick={onClose}
+              >
                 LOGIN
               </PagingItem>
             )}
