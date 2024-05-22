@@ -346,11 +346,14 @@ const AnalyzePage: React.FC = () => {
     } else {
       const fetchDiaryData = async () => {
         try {
-          const response = await axios.get(`${config.API_URL}/api/diary`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          });
+          const response = await axios.get(
+            `${config.API_URL}/api/diary/${diaryId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
           if (response.data.isSuccess) {
             navigate(`/analyze/${diaryId}`, {
               state: { diaryData: response.data.result },
@@ -366,6 +369,36 @@ const AnalyzePage: React.FC = () => {
       fetchDiaryData();
     }
   }, [diaryData, diaryId, navigate]);
+
+  useEffect(() => {
+    const fetchScrapStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${config.API_URL}/api/scrap/${diaryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        if (response.data.isSuccess) {
+          const scrapItems = response.data.result;
+          //console.log(response.data.result);
+          const newScrapStatus: { [key: string]: boolean } = {};
+          scrapItems.forEach((item: any) => {
+            newScrapStatus[item.contentId] = true;
+          });
+          setScrapStatus(newScrapStatus);
+        } else {
+          console.error("Failed to fetch scrap status:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching scrap status:", error);
+      }
+    };
+
+    fetchScrapStatus();
+  }, [diaryId]);
 
   const handleScrap = async (
     type: "movie" | "book" | "music",
