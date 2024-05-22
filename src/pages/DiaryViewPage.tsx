@@ -209,7 +209,33 @@ export default function DiaryViewPage() {
   }, []);
 
   const handleDeleteConfirm = async () => {
+<<<<<<< HEAD
 
+    const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.error("No access token available.");
+        setError("Authentication failed. No access token found.");
+        return;
+      }
+=======
+<<<<<<< HEAD
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token available.");
+      setError("Authentication failed. No access token found.");
+      return;
+    }
+>>>>>>> 2453e6c ([Fix] merge충돌 해결)
+    try {
+      const response = await axios.delete(`${config.API_URL}/api/diary/${diaryId}`,  {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+<<<<<<< HEAD
+      });
+=======
+      );
+=======
     const token = localStorage.getItem('accessToken');
       if (!token) {
         console.error("No access token available.");
@@ -222,6 +248,8 @@ export default function DiaryViewPage() {
           Authorization: `Bearer ${token}`
         }
       });
+>>>>>>> bb52816 ([Fix] 환경변수 오류 수정)
+>>>>>>> 2453e6c ([Fix] merge충돌 해결)
       if (response.data.isSuccess) {
         navigate("/diary");
       } else {
