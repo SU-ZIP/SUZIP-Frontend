@@ -27,26 +27,26 @@ SUZIP-Frontend
 │  │  ├─ HEAD
 │  │  └─ refs
 │  │     ├─ heads
-│  │     │  ├─ main
+│  │     │  ├─ develop
 │  │     │  └─ soyeon
 │  │     └─ remotes
 │  │        └─ origin
-│  │           ├─ dahyun
 │  │           ├─ develop
 │  │           ├─ HEAD
-│  │           └─ soyeon
+│  │           ├─ soyeon
+│  │           └─ subin
 │  ├─ ORIG_HEAD
 │  ├─ packed-refs
 │  └─ refs
 │     ├─ heads
-│     │  ├─ main
+│     │  ├─ develop
 │     │  └─ soyeon
 │     ├─ remotes
 │     │  └─ origin
-│     │     ├─ dahyun
 │     │     ├─ develop
 │     │     ├─ HEAD
-│     │     └─ soyeon
+│     │     ├─ soyeon
+│     │     └─ subin
 │     └─ tags
 ├─ .gitignore
 ├─ .idea
@@ -60,7 +60,13 @@ SUZIP-Frontend
 ├─ package-lock.json
 ├─ package.json
 ├─ public
-│  └─ index.html
+│  ├─ favicon-16x16.png
+│  ├─ favicon-32x32.png
+│  ├─ favicon-96x96.png
+│  ├─ favicon.ico
+│  ├─ index.html
+│  ├─ manifest.json
+│  └─ OG_thumbnail.png
 ├─ README.md
 ├─ src
 │  ├─ App.tsx
@@ -101,6 +107,7 @@ SUZIP-Frontend
 │  │  │  ├─ graph.png
 │  │  │  ├─ Happiness.png
 │  │  │  ├─ Horror.png
+│  │  │  ├─ imageLogo.png
 │  │  │  ├─ kakao.png
 │  │  │  ├─ left.png
 │  │  │  ├─ logo.png
@@ -116,11 +123,15 @@ SUZIP-Frontend
 │  │  │  ├─ prevpage.png
 │  │  │  ├─ profile.png
 │  │  │  ├─ profiledit.png
+│  │  │  ├─ question.png
 │  │  │  ├─ right.png
 │  │  │  ├─ rightArrow.png
 │  │  │  ├─ rightArrow2.png
 │  │  │  ├─ Sadness.png
+│  │  │  ├─ scrap.png
+│  │  │  ├─ scrapped.png
 │  │  │  ├─ search.png
+│  │  │  ├─ speechbubble.png
 │  │  │  ├─ sz.png
 │  │  │  └─ todaymove.png
 │  │  ├─ pagination
@@ -132,7 +143,11 @@ SUZIP-Frontend
 │  │  │  ├─ AnalyzeDescription.tsx
 │  │  │  ├─ CalendarDescription.tsx
 │  │  │  ├─ EmotionBox.tsx
+│  │  │  ├─ FooterImageBox.tsx
+│  │  │  ├─ LeftPopText.tsx
 │  │  │  ├─ RecordDescription.tsx
+│  │  │  ├─ RightPopText.tsx
+│  │  │  ├─ ServiceImageBox.tsx
 │  │  │  ├─ Slider2.tsx
 │  │  │  └─ TitleTypo.tsx
 │  │  ├─ archives
@@ -147,6 +162,7 @@ SUZIP-Frontend
 │  │  ├─ header
 │  │  │  └─ Header.tsx
 │  │  ├─ modal
+│  │  │  ├─ AlreadyDairyModal.tsx
 │  │  │  ├─ DeleteModal.tsx
 │  │  │  ├─ EditModal.tsx
 │  │  │  ├─ SaveModal.tsx
@@ -154,6 +170,7 @@ SUZIP-Frontend
 │  │  └─ social
 │  │     ├─ GoogleLogin.tsx
 │  │     ├─ GoogleSignUp.tsx
+│  │     ├─ KakaoCallback.js
 │  │     ├─ KakaoCallback.jsx
 │  │     ├─ KakaoLogin.tsx
 │  │     ├─ KakaoSignUp.tsx
@@ -180,7 +197,8 @@ SUZIP-Frontend
 │  │  ├─ SignInPage.tsx
 │  │  ├─ SignUpPage.tsx
 │  │  └─ WritePage.tsx
-│  └─ setupProxy.js
+│  ├─ setupProxy.js
+│  └─ types.ts
 └─ tsconfig.json
 
 ```
