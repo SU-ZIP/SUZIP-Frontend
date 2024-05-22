@@ -201,8 +201,18 @@ export default function DiaryViewPage() {
   }, []);
 
   const handleDeleteConfirm = async () => {
+    const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.error("No access token available.");
+        setError("Authentication failed. No access token found.");
+        return;
+      }
     try {
-      const response = await axios.delete(`${config.API_URL}/api/diary/${diaryId}`);
+      const response = await axios.delete(`${config.API_URL}/api/diary/${diaryId}`,  {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.data.isSuccess) {
         navigate('/diary'); 
       } else {
