@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
-import axios from "axios";
 import closeButton from "../assets/images/close.png";
+
+import axios from "axios";
 import { useAuth } from "../components/auth/AuthContext";
 import config from "../assets/path/config";
+
+interface IndexPageProps {
+  onClose: () => void;
+}
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -78,10 +84,6 @@ const CloseBTN = styled.img`
   cursor: pointer;
 `;
 
-interface IndexPageProps {
-  onClose: () => void;
-}
-
 function IndexPage({ onClose }: IndexPageProps) {
   const [backgroundColor, setBackgroundColor] = useState("");
   const { isLoggedIn, setLoginStatus, userName } = useAuth();
@@ -106,6 +108,7 @@ function IndexPage({ onClose }: IndexPageProps) {
         currentIndex = (currentIndex + 1) % colors.length;
       }
     }, 2500);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -143,6 +146,7 @@ function IndexPage({ onClose }: IndexPageProps) {
         );
       });
   };
+
   return (
     <ModalOverlay>
       <ModalContainer backgroundColor={backgroundColor}>
