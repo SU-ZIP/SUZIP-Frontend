@@ -1,16 +1,18 @@
-import axios from 'axios';
 import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import styled from "styled-components";
-import PhotoImg from '../assets/images/photo.png';
-import DeleteImg from '../assets/images/Delete.png';
-import SaveModal from '../components/modal/SaveModal';
+import PhotoImg from "../assets/images/photo.png";
+import DeleteImg from "../assets/images/Delete.png";
+import SaveModal from "../components/modal/SaveModal";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useAuth } from '../components/auth/AuthContext'; 
-import { useNavigate, useParams } from 'react-router-dom';
-import { DiaryData } from '../types'; // Import the types
+
+import axios from "axios";
+import { useAuth } from "../components/auth/AuthContext";
+import { DiaryData } from "../types";
 
 const PageContainer = styled.div`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,7 +20,7 @@ const PageContainer = styled.div`
 `;
 
 const DateContainer = styled.div`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   display: flex;
   width: 100%;
   align-items: baseline;
@@ -47,31 +49,31 @@ const TitleInput = styled.input`
   color: #333333;
   outline: none;
   ::placeholder {
-    color: #E1E1E0;
+    color: #e1e1e0;
   }
 `;
 
 const SaveButtonContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   margin-bottom: 12px;
 `;
 
-const SaveButton = styled.button`
+const SaveButton = styled.button<{ disabled: boolean }>`
   width: 110px;
   height: 37px;
   font-family: "Pretendard";
   font-weight: 500;
-  background-color: #333333; 
+  background-color: ${({ disabled }) => (disabled ? "#cccccc" : "#333333")};
   color: white;
   border: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-size: 16px;
   border-radius: 4px;
 
   &:hover {
-    background-color: #484848;
+    background-color: ${({ disabled }) => (disabled ? "#cccccc" : "#484848")};
   }
 `;
 
@@ -90,6 +92,7 @@ const Button = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  font-family: "Pretendard";
   font-size: 16px;
   font-weight: 500;
   color: #838383;
@@ -102,7 +105,7 @@ const Button = styled.button`
 
 const ContentTextarea = styled.textarea`
   font-family: "Pretendard";
-  outline: none; 
+  outline: none;
   width: 100%;
   height: 800px;
   padding: 8px;
@@ -110,7 +113,7 @@ const ContentTextarea = styled.textarea`
   margin-top: 3vh;
   font-size: 20px;
   ::placeholder {
-    color: #E1E1E0;
+    color: #e1e1e0;
   }
 `;
 
@@ -124,7 +127,7 @@ const IconImage = styled.img`
 `;
 
 const EmotionSelect = styled.select`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 16px;
   color: #333;
   border: 1px solid #ccc;
@@ -153,8 +156,8 @@ const SpinnerContainer = styled.div`
 export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const { date: routeDate } = useParams<{ date?: string }>();  // URL에서 날짜 가져오기
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);  // 초기값은 오늘 날짜로 설정
+  const { date: routeDate } = useParams<{ date?: string }>(); // URL에서 날짜 가져오기
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // 초기값은 오늘 날짜로 설정
   const { diaryId } = useParams<{ diaryId?: string }>();
 
   const [file, setFile] = useState<File | null>(null);
@@ -163,7 +166,14 @@ export default function WritePage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const emotions = ["HAPPY", "ANGER", "SADNESS", "CONFUSION", "HURT", "ANXIETY"];
+  const emotions = [
+    "HAPPY",
+    "ANGER",
+    "SADNESS",
+    "CONFUSION",
+    "HURT",
+    "ANXIETY",
+  ];
   const [emotion, setEmotion] = useState("");
   const [diaryData, setDiaryData] = useState<DiaryData | null>(null); // Add this state
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
@@ -174,15 +184,15 @@ export default function WritePage() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      alert('로그인이 필요합니다.');
-      window.location.href = 'http://localhost:8080/api/login'; 
+      alert("로그인이 필요합니다.");
+      window.location.href = "http://localhost:8080/api/login";
     }
   }, [isLoggedIn, navigate]);
 
   useEffect(() => {
-    console.log("Received date from URL:", routeDate);  // 로그로 날짜 확인
+    console.log("Received date from URL:", routeDate); // 로그로 날짜 확인
     if (routeDate) {
-      setDate(routeDate);  // URL에서 받은 날짜로 상태 업데이트
+      setDate(routeDate); // URL에서 받은 날짜로 상태 업데이트
     }
   }, [routeDate]);
 
@@ -210,30 +220,37 @@ export default function WritePage() {
     if (isEditMode) {
       // If in edit mode, perform update logic
       try {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem("accessToken");
         const headers = {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         };
-  
+
         const formData = new FormData();
-        formData.append("request", JSON.stringify({
-          title: title,
-          content: content,
-          date: date,
-          emotions: emotion,
-          previewSrc: previewSrc
-        }));
-  
+        formData.append(
+          "request",
+          JSON.stringify({
+            title: title,
+            content: content,
+            date: date,
+            emotions: emotion,
+            previewSrc: previewSrc,
+          })
+        );
+
         if (file) {
           formData.append("file", file);
         }
-  
-        const response = await axios.patch(`http://localhost:8080/api/diary/${diaryId}`, formData, { headers });
-        console.log('Diary updated:', response.data);
+
+        const response = await axios.patch(
+          `http://localhost:8080/api/diary/${diaryId}`,
+          formData,
+          { headers }
+        );
+        console.log("Diary updated:", response.data);
         setIsModalOpen(false);
         navigate(`/diary/${diaryId}`); // Redirect to the DiaryViewPage
       } catch (error) {
-        console.error('Error updating the diary:', error);
+        console.error("Error updating the diary:", error);
       } finally {
         setLoading(false); // 로딩 상태 해제
       }
@@ -245,27 +262,33 @@ export default function WritePage() {
 
   axios.defaults.withCredentials = true;
 
-
   const saveDiary = async () => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     const headers = {
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     };
 
     const formData = new FormData();
-    formData.append("request", JSON.stringify({
-      title: title,
-      content: content,
-      date: date
-    }));
-    
+    formData.append(
+      "request",
+      JSON.stringify({
+        title: title,
+        content: content,
+        date: date,
+      })
+    );
+
     if (file) {
       formData.append("file", file);
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/diary", formData, { headers });
-      console.log('Diary saved:', response.data);
+      const response = await axios.post(
+        "http://localhost:8080/api/diary",
+        formData,
+        { headers }
+      );
+      console.log("Diary saved:", response.data);
       const diaryData: DiaryData = {
         isSuccess: response.data.isSuccess,
         code: response.data.code,
@@ -280,15 +303,17 @@ export default function WritePage() {
           imageUrl: response.data.result.imageUrl,
           memberId: response.data.result.memberId,
           title: response.data.result.title,
-          updatedAt: response.data.result.updatedAt
-        }
+          updatedAt: response.data.result.updatedAt,
+        },
       };
       setDiaryData(diaryData);
-      console.log('DiaryData set:', diaryData);
+      console.log("DiaryData set:", diaryData);
       setIsModalOpen(false);
-      navigate(`/analyze/${diaryData.result.diaryId}`, { state: { diaryData } }); // navigate with diaryId
+      navigate(`/analyze/${diaryData.result.diaryId}`, {
+        state: { diaryData },
+      }); // navigate with diaryId
     } catch (error) {
-      console.error('Error saving the diary:', error);
+      console.error("Error saving the diary:", error);
     } finally {
       setLoading(false);
     }
@@ -296,7 +321,7 @@ export default function WritePage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setPreviewSrc(""); 
+    setPreviewSrc("");
   };
 
   useEffect(() => {
@@ -308,8 +333,8 @@ export default function WritePage() {
 
   useEffect(() => {
     if (diaryData) {
-      console.log('Updated diaryData:', diaryData);
-      navigate('/analyze', { state: { diaryData } }); // Navigate to AnalyzePage with diaryData
+      console.log("Updated diaryData:", diaryData);
+      navigate("/analyze", { state: { diaryData } }); // Navigate to AnalyzePage with diaryData
     }
   }, [diaryData, navigate]);
 
@@ -323,13 +348,13 @@ export default function WritePage() {
         setContent(data.result.content);
         setDate(data.result.date);
         setEmotion(data.result.emotion); // 이 코드는 다이어리에 감정 정보가 있는 경우에만 적용되어야 함
-        setPreviewSrc(data.result.image); 
+        setPreviewSrc(data.result.image);
         // 다른 필요한 상태 업데이트 추가 가능
       } else {
-        console.error('Failed to fetch diary:', data.message);
+        console.error("Failed to fetch diary:", data.message);
       }
     } catch (error) {
-      console.error('Error fetching diary:', error);
+      console.error("Error fetching diary:", error);
     }
   };
 
@@ -341,10 +366,14 @@ export default function WritePage() {
     );
   }
 
+  const isSaveButtonDisabled = !title.trim() || !content.trim();
+
   return (
     <PageContainer>
       <SaveButtonContainer>
-        <SaveButton onClick={handleSaveClick}>{isEditMode ? '수정하기' : '저장하기'}</SaveButton>
+        <SaveButton onClick={handleSaveClick} disabled={isSaveButtonDisabled}>
+          {isEditMode ? "수정하기" : "저장하기"}
+        </SaveButton>
       </SaveButtonContainer>
       <DateContainer>
         <DateLabel>Date</DateLabel>
@@ -356,7 +385,7 @@ export default function WritePage() {
         onChange={handleTitleChange}
         placeholder="제목 없음"
       />
-      <hr style={{ width: '100%', color: '#CECECE' }} />
+      <hr style={{ width: "100%", color: "#CECECE" }} />
       <FileInput
         type="file"
         id="file"
@@ -364,15 +393,22 @@ export default function WritePage() {
         onChange={handleFileChange}
       />
       <ButtonContainer>
-        <Button onClick={() => document.getElementById('file')?.click()}>
+        <Button onClick={() => document.getElementById("file")?.click()}>
           <IconImage src={PhotoImg} alt="Upload" />
           사진 첨부
         </Button>
       </ButtonContainer>
       {previewSrc && (
-        <div style={{ position: 'relative' }}>
-          <img src={previewSrc} alt="Uploaded" style={{ maxWidth: '100%', marginTop: '2vh' }} />
-          <DeleteButton src={DeleteImg} onClick={() => setPreviewSrc("")}></DeleteButton>
+        <div style={{ position: "relative" }}>
+          <img
+            src={previewSrc}
+            alt="Uploaded"
+            style={{ maxWidth: "100%", marginTop: "2vh" }}
+          />
+          <DeleteButton
+            src={DeleteImg}
+            onClick={() => setPreviewSrc("")}
+          ></DeleteButton>
         </div>
       )}
       <ContentTextarea
@@ -380,7 +416,11 @@ export default function WritePage() {
         onChange={handleContentChange}
         placeholder="내용을 입력하세요"
       />
-      <SaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={saveDiary} />
+      <SaveModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={saveDiary}
+      />
     </PageContainer>
   );
 }
