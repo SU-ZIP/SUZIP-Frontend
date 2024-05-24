@@ -24,7 +24,7 @@ const emotionColorMap: { [key: string]: string } = {
 };
 
 const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? "scale(1)" : "scale(0.8)")};
+  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
   height: ${(props) => (props.isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
