@@ -19,7 +19,7 @@ const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 348px;
-  height: 186px; 
+  height: 174px; 
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,9 @@ const ModalTitle = styled.div`
   text-align: center;
   position: absolute;
   top: 60px;
-  font-size: 20px;
+  font-size: 19px;
+  margin-top: -5px;
+  line-height: 25px;
 `;
 
 const ModalButtons = styled.div`
