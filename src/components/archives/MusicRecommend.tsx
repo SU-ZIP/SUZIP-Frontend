@@ -25,7 +25,7 @@ type Music = {
   itemId: number;
   name: string;
   image: string;
-  genre: string;
+  artist: string;
   dType: string;
   emotion: string;
 };
@@ -99,7 +99,7 @@ function MusicRecommend() {
                 itemId: music.musicId,
                 name: music.name,
                 image: music.image,
-                genre: music.genre,
+                artist: music.artist,
                 dType: "music",
                 emotion: music.emotion,
               })

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Dots from "../../assets/images/dot_white.png";
 
 type Book = {
   itemId: number;
@@ -13,6 +14,14 @@ type Book = {
 type BookCardProps = {
   book: Book;
   isActive?: boolean;
+};
+
+const emotionTextMap: { [key: string]: string } = {
+  HAPPY: "기쁨",
+  ANGER: "분노",
+  SADNESS: "슬픔",
+  NERVOUS: "긴장",
+  HURT: "상처",
 };
 
 const emotionColorMap: { [key: string]: string } = {
@@ -56,7 +65,7 @@ const BookInfo = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: flex-start;
   opacity: 0;
   transition: opacity 0.3s;
@@ -68,14 +77,13 @@ const BookInfo = styled.div`
 `;
 
 const BookInfoContent = styled.div`
-  padding-left: 1vw;
-  padding-right: 1vw;
+  padding: 0 1vw 2.5vw 1vw;
   text-align: left;
 `;
 
 const EmotionCircle = styled.div<{ bgColor: string }>`
-  width: 20px;
-  height: 20px;
+  width: 1.3vw;
+  height: 1.3vw;
   border-radius: 50%;
   background: ${(props) => props.bgColor};
   margin: 1vw;
@@ -84,10 +92,29 @@ const EmotionCircle = styled.div<{ bgColor: string }>`
 const BookTitle = styled.div`
   font-family: "Pretendard";
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   display: block;
-  margin: 1vw;
+  margin-left: 1vw;
   text-align: left;
+`;
+
+const BookContent = styled.div`
+  font-family: "Pretendard";
+  font-weight: 100;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  margin-top: 0.2vh;
+  margin-left: 1vw;
+  line-height: 170%;
+  text-align: justify;
+`;
+
+const Dot = styled.img`
+  width: 0.27vw;
+  height: auto;
+  margin: 0 0.4vw 0 0.4vw;
+  display: flex;
 `;
 
 const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
@@ -99,6 +126,11 @@ const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
           <BookInfoContent>
             <EmotionCircle bgColor={emotionColorMap[book.emotion] || "gray"} />
             <BookTitle>{book.name}</BookTitle>
+            <BookContent>
+              {emotionTextMap[book.emotion] || book.emotion}
+              <Dot src={Dots} />
+              {book.genre}
+            </BookContent>
           </BookInfoContent>
         </BookInfo>
       </BookCardContainer>
