@@ -127,9 +127,9 @@ const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
             <EmotionCircle bgColor={emotionColorMap[music.emotion] || "gray"} />
             <MusicTitle>{music.name}</MusicTitle>
             <MusicContent>
-              {music.artist}
-              <Dot src={Dots} />
               {emotionTextMap[music.emotion] || music.emotion}
+              <Dot src={Dots} />
+              {music.artist}
             </MusicContent>
           </MusicInfoContent>
         </MusicInfo>
