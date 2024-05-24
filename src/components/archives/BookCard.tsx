@@ -7,6 +7,7 @@ type Book = {
   image: string;
   genre: string;
   dType: string;
+  emotion: string;
 };
 
 type BookCardProps = {
@@ -14,8 +15,16 @@ type BookCardProps = {
   isActive?: boolean;
 };
 
+const emotionColorMap: { [key: string]: string } = {
+  HAPPY: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
+  ANGER: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+  SADNESS: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+  NERVOUS: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+  HURT: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+};
+
 const CardContainer = styled.div<{ isActive: boolean }>`
-  width: ${(props) => (props.isActive ? "35vw" : "30vw")};
+  width: ${(props) => (props.isActive ? "scale(1)" : "scale(0.8)")};
   height: ${(props) => (props.isActive ? "55vh" : "50vh")};
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.25);
   position: relative;
@@ -64,6 +73,14 @@ const BookInfoContent = styled.div`
   text-align: left;
 `;
 
+const EmotionCircle = styled.div<{ bgColor: string }>`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: ${(props) => props.bgColor};
+  margin: 1vw;
+`;
+
 const BookTitle = styled.div`
   font-family: "Pretendard";
   font-weight: 400;
@@ -80,6 +97,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, isActive = false }) => {
         <BookImage src={book.image} alt={book.name} />
         <BookInfo>
           <BookInfoContent>
+            <EmotionCircle bgColor={emotionColorMap[book.emotion] || "gray"} />
             <BookTitle>{book.name}</BookTitle>
           </BookInfoContent>
         </BookInfo>
