@@ -26,6 +26,7 @@ type Book = {
   image: string;
   genre: string;
   dType: "book";
+  emotion: string;
 };
 
 const ArchiveContainer = styled.div`
@@ -113,6 +114,7 @@ const BookRecommend: React.FC<{ scrollToMovie: () => void }> = ({
                 image: book.image,
                 genre: book.genre,
                 dType: "book",
+                emotion: book.emotion,
               })
             );
             setBooks(fetchedBooks);

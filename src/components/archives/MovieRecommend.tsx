@@ -29,6 +29,7 @@ type Movie = {
   image: string;
   genre: string;
   dType: string;
+  emotion: string;
 };
 
 const ArchiveContainer = styled.div`
@@ -102,8 +103,9 @@ const MovieRecommend: React.FC<{ scrollToMusic: () => void }> = ({
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               },
               params: {
-                page: 0, // 필요한 경우 적절한 페이지 번호를 설정
-                size: 10, // 필요한 경우 적절한 페이지 크기를 설정
+                page: 0,
+                size: 5,
+                sort: "createdAt,desc",
               },
             }
           );
@@ -115,6 +117,7 @@ const MovieRecommend: React.FC<{ scrollToMusic: () => void }> = ({
                 image: movie.image,
                 genre: movie.genre,
                 dType: "movie",
+                emotion: movie.emotion,
               })
             );
             setMovies(fetchedMovies);

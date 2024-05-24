@@ -7,11 +7,20 @@ type Music = {
   image: string;
   genre: string;
   dType: string;
+  emotion: string;
 };
 
 type MusicCardProps = {
   music: Music;
   isActive?: boolean;
+};
+
+const emotionColorMap: { [key: string]: string } = {
+  HAPPY: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
+  ANGER: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+  SADNESS: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+  NERVOUS: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+  HURT: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 };
 
 const CardContainer = styled.div<{ $isActive: boolean }>`
@@ -64,6 +73,14 @@ const MusicInfoContent = styled.div`
   text-align: left;
 `;
 
+const EmotionCircle = styled.div<{ bgColor: string }>`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: ${(props) => props.bgColor};
+  margin: 1vw;
+`;
+
 const MusicTitle = styled.div`
   font-family: "Pretendard";
   font-weight: 400;
@@ -80,6 +97,7 @@ const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
         <MusicImage src={music.image} alt={music.name} />
         <MusicInfo>
           <MusicInfoContent>
+            <EmotionCircle bgColor={emotionColorMap[music.emotion] || "gray"} />
             <MusicTitle>{music.name}</MusicTitle>
           </MusicInfoContent>
         </MusicInfo>

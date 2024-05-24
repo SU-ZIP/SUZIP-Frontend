@@ -27,6 +27,7 @@ type Music = {
   image: string;
   genre: string;
   dType: string;
+  emotion: string;
 };
 
 const ArchiveContainer = styled.div`
@@ -86,8 +87,9 @@ function MusicRecommend() {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               },
               params: {
-                page: 0, // 필요한 경우 적절한 페이지 번호를 설정
-                size: 10, // 필요한 경우 적절한 페이지 크기를 설정
+                page: 0,
+                size: 5,
+                sort: "createdAt,desc",
               },
             }
           );
@@ -99,6 +101,7 @@ function MusicRecommend() {
                 image: music.image,
                 genre: music.genre,
                 dType: "music",
+                emotion: music.emotion,
               })
             );
             setMusics(fetchedMusics);
