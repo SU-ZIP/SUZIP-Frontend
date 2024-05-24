@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import Dots from "../../assets/images/dot_white.png";
 
 type Music = {
   itemId: number;
   name: string;
   image: string;
-  genre: string;
+  artist: string;
   dType: string;
   emotion: string;
 };
@@ -13,6 +14,14 @@ type Music = {
 type MusicCardProps = {
   music: Music;
   isActive?: boolean;
+};
+
+const emotionTextMap: { [key: string]: string } = {
+  HAPPY: "기쁨",
+  ANGER: "분노",
+  SADNESS: "슬픔",
+  NERVOUS: "긴장",
+  HURT: "상처",
 };
 
 const emotionColorMap: { [key: string]: string } = {
@@ -56,7 +65,7 @@ const MusicInfo = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: flex-start;
   opacity: 0;
   transition: opacity 0.3s;
@@ -68,14 +77,13 @@ const MusicInfo = styled.div`
 `;
 
 const MusicInfoContent = styled.div`
-  padding-left: 1vw;
-  padding-right: 1vw;
+  padding: 0 1vw 2.5vw 1vw;
   text-align: left;
 `;
 
 const EmotionCircle = styled.div<{ bgColor: string }>`
-  width: 20px;
-  height: 20px;
+  width: 1.3vw;
+  height: 1.3vw;
   border-radius: 50%;
   background: ${(props) => props.bgColor};
   margin: 1vw;
@@ -84,10 +92,29 @@ const EmotionCircle = styled.div<{ bgColor: string }>`
 const MusicTitle = styled.div`
   font-family: "Pretendard";
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   display: block;
-  margin: 1vw;
+  margin-left: 1vw;
   text-align: left;
+`;
+
+const MusicContent = styled.div`
+  font-family: "Pretendard";
+  font-weight: 100;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  margin-left: 1vw;
+  margin-top: 0.2vh;
+  line-height: 170%;
+  text-align: justify;
+`;
+
+const Dot = styled.img`
+  width: 0.27vw;
+  height: auto;
+  margin: 0 0.4vw 0 0.4vw;
+  display: flex;
 `;
 
 const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
@@ -99,6 +126,11 @@ const MusicCard: React.FC<MusicCardProps> = ({ music, isActive = false }) => {
           <MusicInfoContent>
             <EmotionCircle bgColor={emotionColorMap[music.emotion] || "gray"} />
             <MusicTitle>{music.name}</MusicTitle>
+            <MusicContent>
+              {emotionTextMap[music.emotion] || music.emotion}
+              <Dot src={Dots} />
+              {music.artist}
+            </MusicContent>
           </MusicInfoContent>
         </MusicInfo>
       </MusicCardContainer>
