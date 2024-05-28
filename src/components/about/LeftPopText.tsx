@@ -32,9 +32,9 @@ const BoldText = styled.div`
 function LeftPopText() {
   return (
     <MainMessage>
-      <TextBox>aaaaaaa</TextBox>
-      <BoldText>bbbbb</BoldText>
-      <TextBox>ccccc</TextBox>
+      <TextBox>스스로의</TextBox>
+      <BoldText>내면을</BoldText>
+      <TextBox>들여다보세요</TextBox>
     </MainMessage>
   );
 }

@@ -33,7 +33,7 @@ const ImageContainer = styled.img`
 
 function GetStarted_White() {
   return (
-    <ButtonContainer to="/signup">
+    <ButtonContainer to="http://localhost:8080/api/signup">
       <TextContainer>GET STARTED</TextContainer>
       <ImageContainer src={rightArrow}></ImageContainer>
     </ButtonContainer>

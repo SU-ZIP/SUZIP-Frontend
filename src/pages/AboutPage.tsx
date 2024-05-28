@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import TitleTypo from "../components/about/TitleTypo";
 import RecordDescription from "../components/about/RecordDescription";
@@ -21,19 +21,17 @@ const AboutPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 7vh 0 10vh 0;
-  overflow-x: hidden; /* 수평 스크롤바를 없애기 위해 추가 */
+  overflow-x: hidden;
 `;
 
 const ContentContainer = styled.div`
-  width: calc(
-    100% - 4vw
-  ); /* 전체 페이지의 너비를 뷰포트에서 4vw 뺀 크기로 설정 */
-  margin: 0 2vw; /* 양 옆에 2vw의 margin을 추가 */
+  width: calc(100% - 4vw);
+  margin: 0 2vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow-x: hidden; /* 수평 스크롤바를 없애기 위해 추가 */
+  overflow-x: hidden;
 `;
 
 const TypoContainer = styled.div`
@@ -46,78 +44,17 @@ const TypoContainer = styled.div`
 
 const PopTextContainer = styled.div`
   display: flex;
+  flex-direction: column; /* 변경된 부분 */
   width: 100%;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
-const slideInFromLeft = keyframes`
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(20%);
-    opacity: 1;
-  }
-`;
-
-const slideOutToLeft = keyframes`
-  from {
-    transform: translateX(20%);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-`;
-
-const slideInFromRight = keyframes`
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(-20%);
-    opacity: 1;
-  }
-`;
-
-const slideOutToRight = keyframes`
-  from {
-    transform: translateX(-20%);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-`;
-
-const AnimatedSection = styled.div`
-  width: 45%; /* 각 섹션의 너비 조정 */
+const AnimatedSection = styled.div<{ translateX: number }>`
+  width: 100%;
   margin: 10vh 0;
-  opacity: 0; /* 초기 상태 */
-  transform: translateX(0); /* 초기 상태 */
-  transition:
-    opacity 0.5s ease,
-    transform 0.5s ease;
-
-  &.slide-in-left {
-    animation: ${slideInFromLeft} 1s ease forwards;
-  }
-
-  &.slide-out-left {
-    animation: ${slideOutToLeft} 1s ease forwards;
-  }
-
-  &.slide-in-right {
-    animation: ${slideInFromRight} 1s ease forwards;
-  }
-
-  &.slide-out-right {
-    animation: ${slideOutToRight} 1s ease forwards;
-  }
+  opacity: 1;
+  transform: translateX(${(props) => props.translateX}px);
+  transition: transform 0.2s ease-out;
 `;
 
 const BoldTypo = styled.div`
@@ -151,20 +88,52 @@ const VerticalLine = styled.div`
   margin: 4vh 0;
 `;
 
+const debounce = (func: (...args: any[]) => void, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: any[]) => {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
 export default function AboutPage() {
-  const [leftTextAnimation, setLeftTextAnimation] = useState("");
-  const [rightTextAnimation, setRightTextAnimation] = useState("");
-  const leftTextRef = useRef(null);
-  const rightTextRef = useRef(null);
+  const [leftTranslateX, setLeftTranslateX] = useState(250);
+  const [rightTranslateX, setRightTranslateX] = useState(-250);
+  const leftTextRef = useRef<HTMLDivElement>(null);
+  const rightTextRef = useRef<HTMLDivElement>(null);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [leftVisible, setLeftVisible] = useState(false);
+  const [rightVisible, setRightVisible] = useState(false);
+
+  const handleScroll = debounce(() => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollDelta = scrollTop - lastScrollTop;
+
+    if (leftVisible && leftTextRef.current) {
+      const newLeftTranslateX = leftTranslateX + scrollDelta * 0.3;
+      setLeftTranslateX(newLeftTranslateX);
+    }
+
+    if (rightVisible && rightTextRef.current) {
+      const newRightTranslateX = rightTranslateX - scrollDelta * 0.3;
+      setRightTranslateX(newRightTranslateX);
+    }
+
+    setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
+  }, 10);
 
   useEffect(() => {
     const observerLeft = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setLeftTextAnimation("slide-in-left");
+            setLeftVisible(true);
           } else {
-            setLeftTextAnimation("slide-out-left");
+            setLeftVisible(false);
           }
         });
       },
@@ -175,9 +144,9 @@ export default function AboutPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setRightTextAnimation("slide-in-right");
+            setRightVisible(true);
           } else {
-            setRightTextAnimation("slide-out-right");
+            setRightVisible(false);
           }
         });
       },
@@ -192,6 +161,8 @@ export default function AboutPage() {
       observerRight.observe(rightTextRef.current);
     }
 
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
       if (leftTextRef.current) {
         observerLeft.unobserve(leftTextRef.current);
@@ -199,8 +170,15 @@ export default function AboutPage() {
       if (rightTextRef.current) {
         observerRight.unobserve(rightTextRef.current);
       }
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [
+    leftVisible,
+    rightVisible,
+    lastScrollTop,
+    leftTranslateX,
+    rightTranslateX,
+  ]);
 
   return (
     <AboutPageContainer>
@@ -217,10 +195,10 @@ export default function AboutPage() {
       <Slider2 />
       <ContentContainer>
         <PopTextContainer>
-          <AnimatedSection ref={leftTextRef} className={leftTextAnimation}>
+          <AnimatedSection ref={leftTextRef} translateX={leftTranslateX}>
             <LeftPopText />
           </AnimatedSection>
-          <AnimatedSection ref={rightTextRef} className={rightTextAnimation}>
+          <AnimatedSection ref={rightTextRef} translateX={rightTranslateX}>
             <RightPopText />
           </AnimatedSection>
         </PopTextContainer>
@@ -232,7 +210,9 @@ export default function AboutPage() {
         <GetStarted_White />
         <SignUpText>
           이미 계정이 있다면?
-          <SignUpLink to="/login">로그인하기</SignUpLink>
+          <SignUpLink to="http://localhost:8080/api/login">
+            로그인하기
+          </SignUpLink>
         </SignUpText>
       </ContentContainer>
     </AboutPageContainer>
