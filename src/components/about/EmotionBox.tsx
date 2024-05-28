@@ -19,10 +19,10 @@ const Box = styled.div<{ isClicked: boolean; isOtherClicked: boolean }>`
   font-family: "PPMonumentExtended";
   width: ${({ isClicked, isOtherClicked }) =>
     isClicked ? "40%" : isOtherClicked ? "15%" : "20%"};
-  height: ${({ isClicked }) => (isClicked ? "50vh" : "80vh")};
+  height: ${({ isClicked }) => (isClicked ? "45vh" : "65vh")};
   color: #333333;
   background-color: #ededed;
-  margin: 0.8vw;
+  margin: 0.5vw;
   overflow: hidden;
   position: relative;
   transition: all 0.5s ease;
@@ -69,7 +69,7 @@ const EmotionImage = styled.img`
   width: 100%;
   max-height: auto;
   object-fit: cover;
-  margin-bottom: 5vh;
+  margin-bottom: 3vh;
   border-radius: 1.5vw;
 `;
 
@@ -79,7 +79,7 @@ const Description = styled.div`
   font-weight: 300;
   color: #333;
   text-align: left;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
 `;
 
 interface EmotionBoxProps {
