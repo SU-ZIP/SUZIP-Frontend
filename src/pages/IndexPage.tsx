@@ -183,7 +183,10 @@ function IndexPage({ onClose }: IndexPageProps) {
                 LOGIN
               </PagingItem>
             )}
-            <PagingItem href="http://mysuzip.com/signup" onClick={onClose}>
+            <PagingItem
+              href="http://localhost:8080/api/signup"
+              onClick={onClose}
+            >
               SIGN UP
             </PagingItem>
           </PagingMenu>
