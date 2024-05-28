@@ -6,20 +6,6 @@ SUZIP-Frontend
 │  ├─ description
 │  ├─ FETCH_HEAD
 │  ├─ HEAD
-│  ├─ hooks
-│  │  ├─ applypatch-msg.sample
-│  │  ├─ commit-msg.sample
-│  │  ├─ fsmonitor-watchman.sample
-│  │  ├─ post-update.sample
-│  │  ├─ pre-applypatch.sample
-│  │  ├─ pre-commit.sample
-│  │  ├─ pre-merge-commit.sample
-│  │  ├─ pre-push.sample
-│  │  ├─ pre-rebase.sample
-│  │  ├─ pre-receive.sample
-│  │  ├─ prepare-commit-msg.sample
-│  │  ├─ push-to-checkout.sample
-│  │  └─ update.sample
 │  ├─ index
 │  ├─ info
 │  │  └─ exclude
@@ -31,6 +17,7 @@ SUZIP-Frontend
 │  │     │  └─ soyeon
 │  │     └─ remotes
 │  │        └─ origin
+│  │           ├─ dahyun
 │  │           ├─ develop
 │  │           ├─ HEAD
 │  │           ├─ soyeon
@@ -43,6 +30,7 @@ SUZIP-Frontend
 │     │  └─ soyeon
 │     ├─ remotes
 │     │  └─ origin
+│     │     ├─ dahyun
 │     │     ├─ develop
 │     │     ├─ HEAD
 │     │     ├─ soyeon
@@ -60,80 +48,14 @@ SUZIP-Frontend
 ├─ package-lock.json
 ├─ package.json
 ├─ public
-│  ├─ favicon-16x16.png
-│  ├─ favicon-32x32.png
-│  ├─ favicon-96x96.png
-│  ├─ favicon.ico
-│  ├─ index.html
-│  ├─ manifest.json
-│  └─ OG_thumbnail.png
 ├─ README.md
 ├─ src
 │  ├─ App.tsx
 │  ├─ assets
 │  │  ├─ buttons
-│  │  │  ├─ GetStarted_Black.tsx
-│  │  │  ├─ GetStarted_White.tsx
-│  │  │  ├─ Logout_Black.tsx
-│  │  │  └─ Logout_White.tsx
 │  │  ├─ fonts
 │  │  │  ├─ Font.css
-│  │  │  ├─ MonumentExtended-Regular.otf
-│  │  │  ├─ MonumentExtended-Ultrabold.otf
-│  │  │  ├─ PPMonumentExtended-Black.otf
-│  │  │  ├─ PPMonumentExtended-Light.otf
-│  │  │  ├─ PPMonumentExtended-Regular.otf
-│  │  │  ├─ Pretendard-Black.otf
-│  │  │  ├─ Pretendard-Bold.otf
-│  │  │  ├─ Pretendard-ExtraBold.otf
-│  │  │  ├─ Pretendard-ExtraLight.otf
-│  │  │  ├─ Pretendard-Light.otf
-│  │  │  ├─ Pretendard-Medium.otf
-│  │  │  ├─ Pretendard-Regular.otf
-│  │  │  ├─ Pretendard-SemiBold.otf
-│  │  │  └─ Pretendard-Thin.otf
 │  │  ├─ images
-│  │  │  ├─ add.png
-│  │  │  ├─ Angriness.png
-│  │  │  ├─ close.png
-│  │  │  ├─ close2.png
-│  │  │  ├─ Delete.png
-│  │  │  ├─ diarymenu.png
-│  │  │  ├─ dropdownarrow.png
-│  │  │  ├─ error.png
-│  │  │  ├─ Excited.png
-│  │  │  ├─ garbage.png
-│  │  │  ├─ google.png
-│  │  │  ├─ graph.png
-│  │  │  ├─ Happiness.png
-│  │  │  ├─ Horror.png
-│  │  │  ├─ imageLogo.png
-│  │  │  ├─ kakao.png
-│  │  │  ├─ left.png
-│  │  │  ├─ logo.png
-│  │  │  ├─ menu.png
-│  │  │  ├─ more_gray.png
-│  │  │  ├─ more_white.png
-│  │  │  ├─ naver.png
-│  │  │  ├─ nextmove.png
-│  │  │  ├─ nextpage.png
-│  │  │  ├─ pencil.png
-│  │  │  ├─ photo.png
-│  │  │  ├─ prevmove.png
-│  │  │  ├─ prevpage.png
-│  │  │  ├─ profile.png
-│  │  │  ├─ profiledit.png
-│  │  │  ├─ question.png
-│  │  │  ├─ right.png
-│  │  │  ├─ rightArrow.png
-│  │  │  ├─ rightArrow2.png
-│  │  │  ├─ Sadness.png
-│  │  │  ├─ scrap.png
-│  │  │  ├─ scrapped.png
-│  │  │  ├─ search.png
-│  │  │  ├─ speechbubble.png
-│  │  │  ├─ sz.png
-│  │  │  └─ todaymove.png
 │  │  ├─ pagination
 │  │  │  └─ Pagination.tsx
 │  │  └─ path
@@ -196,6 +118,7 @@ SUZIP-Frontend
 │  │  ├─ ScrapPage.tsx
 │  │  ├─ SignInPage.tsx
 │  │  ├─ SignUpPage.tsx
+│  │  ├─ SuzipPage.tsx
 │  │  └─ WritePage.tsx
 │  ├─ setupProxy.js
 │  └─ types.ts
