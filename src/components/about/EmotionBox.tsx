@@ -38,20 +38,16 @@ const Box = styled.div<{ isClicked: boolean; isOtherClicked: boolean }>`
   padding: ${({ isClicked }) => (isClicked ? "2vw" : "0")};
 `;
 
-const Title = styled.h2<{ top: number; left: number }>`
+const Title = styled.h2`
   font-family: "PPMonumentExtended";
   font-weight: 200;
   letter-spacing: -1px;
   font-weight: regular;
   position: fixed;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
-  transform: translate(-50%, -100%);
   margin: 0;
   font-size: 3.2vw;
   color: #333333;
   text-align: center;
-  z-index: 3;
 `;
 
 const FullText = styled.span<{ isHovered: boolean; isClicked: boolean }>`
@@ -182,17 +178,25 @@ const EmotionBoxesPage: React.FC = () => {
   const handleBoxClick = (element: HTMLDivElement | null) => {
     if (element) {
       const rect = element.getBoundingClientRect();
-      const scrollY = window.scrollY; // 현재 스크롤 위치를 고려하여 top 위치를 계산합니다.
-      setTitlePosition({
-        left: rect.left + rect.width / 2, // 박스의 중앙에 위치
-        top: rect.top + scrollY - 30, // 박스의 상단 바로 위로 위치 조정
-      });
-      console.log("Title position updated:", {
-        left: rect.left + rect.width / 2,
-        top: rect.top + scrollY - 30,
-      });
+      setTitlePosition({ left: rect.left, top: rect.top });
     }
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const clickedElement = document.querySelector(".clicked");
+      if (clickedElement) {
+        const rect = clickedElement.getBoundingClientRect();
+        setTitlePosition({ left: rect.left, top: rect.top });
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div
@@ -212,13 +216,22 @@ const EmotionBoxesPage: React.FC = () => {
             text={emotion}
             isClicked={clickedBox === emotion}
             isOtherClicked={clickedBox !== "" && clickedBox !== emotion}
-            setIsClicked={setClickedBox}
+            setIsClicked={(value) => {
+              setClickedBox(value);
+              handleBoxClick(document.querySelector(`.${emotion}`));
+            }}
             onBoxClick={handleBoxClick}
           />
         )
       )}
       {clickedBox && (
-        <Title top={titlePosition.top} left={titlePosition.left}>
+        <Title
+          style={{
+            top: `${titlePosition.top}px`,
+            left: `${titlePosition.left}px`,
+            transform: "translateY(-100%)",
+          }}
+        >
           {clickedBox}
         </Title>
       )}
