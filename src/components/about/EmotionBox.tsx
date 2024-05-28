@@ -46,7 +46,7 @@ const Title = styled.h2<{ top: number; left: number }>`
   position: fixed;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  transform: translateY(-100%);
+  transform: translate(-50%, -100%);
   margin: 0;
   font-size: 3.2vw;
   color: #333333;
@@ -106,23 +106,23 @@ interface EmotionDetails {
 const emotionDetails: EmotionDetails = {
   Happiness: {
     image: Happy,
-    description: `수집에서 행복은 초록 계열의 색으로 표현돼요.<br /><br />행복은 일상의 작은 순간들, 사랑하는 사람과의 시간, 목표 달성의 기쁨, 자연 속의 평화로움을 의미합니다. 초록색은 평온함과 생동감을 상징합니다. 크고 작은 행복들을 기록해보세요.`,
+    description: `수집에서 행복은 초록 계열의 색으로 표현돼요<br /><br />행복은 일상의 작은 순간들, 사랑하는 사람과의 시간, 목표 달성의 기쁨, 자연 속의 평화로움을 의미합니다. 초록색은 평온함과 생동감을 상징합니다. 크고 작은 행복들을 기록해보세요.`,
   },
   Sadness: {
     image: Sad,
-    description: `수집에서 슬픔은 파랑 계열의 색으로 표현돼요.<br /><br />우리는 삶에서 슬픔을 피할 수 없지만, 위로와 공감을 통해 극복하고 다시 일어설 수 있습니다. 파란색은 깊이와 고요함을 상징하며, 여러분의 슬픈 기억들을 차분하게 나타냅니다.`,
+    description: `수집에서 슬픔은 파랑 계열의 색으로 표현돼요<br /><br />우리는 삶에서 슬픔을 피할 수 없지만, 위로와 공감을 통해 극복하고 다시 일어설 수 있습니다. 파란색은 깊이와 고요함을 상징합니다.`,
   },
   Angriness: {
     image: Anger,
-    description: `수집에서 분노는 빨강 계열의 색으로 표현돼요.<br /><br />분노는 우리 삶에서 강력하고 때로는 불가피한 감정으로, 긍정적인 원동력이 되기도 하고, 거친 폭력성으로 표출되기도 합니다. 빨간색은 강렬함과 에너지를 상징합니다.`,
+    description: `수집에서 분노는 빨강 계열의 색으로 표현돼요<br /><br />분노는 우리 삶에서 강력하고 때로는 불가피한 감정으로, 긍정적인 원동력이 되기도 하고, 거친 폭력성으로 표출되기도 합니다. 빨간색은 강렬함과 에너지를 상징합니다.`,
   },
   Hurt: {
     image: Hurt,
-    description: `수집에서 상처는 보라 계열의 색으로 표현돼요.<br /><br />상처는 아픔과 고통을 동반하는 감정입니다. 우리는 살면서 크고 작은 마음의 상처를 입지만, 어떤 방식으로 치료할지는 각자에게 달려있어요. 내면의 상처를 알아차리고 들여다보는 시간을 가져보세요.`,
+    description: `수집에서 상처는 보라 계열의 색으로 표현돼요<br /><br />상처는 아픔과 고통을 동반하는 감정입니다. 우리는 살면서 크고 작은 마음의 상처를 입지만, 어떤 방식으로 치료할지는 각자에게 달려있어요. 내면의 상처를 알아차리고 들여다보는 시간을 가져보세요.`,
   },
   Nervous: {
     image: Nervous,
-    description: `수집에서 불안은 노랑 계열의 색으로 표현돼요.<br /><br />불안은 우리 삶에서 예측할 수 없는 상황과 미래에 대한 두려움에서 비롯되는 감정입니다. 노란색은 긴장과 경계를 상징하며, 불안한 감정을 생생하게 나타냅니다.`,
+    description: `수집에서 불안은 노랑 계열의 색으로 표현돼요<br /><br />불안은 우리 삶에서 예측할 수 없는 상황과 미래에 대한 두려움에서 비롯되는 감정입니다. 노란색은 긴장과 경계를 상징하며, 불안한 감정을 생생하게 나타냅니다.`,
   },
 };
 
@@ -186,6 +186,10 @@ const EmotionBoxesPage: React.FC = () => {
       setTitlePosition({
         left: rect.left + rect.width / 2, // 박스의 중앙에 위치
         top: rect.top + scrollY - 30, // 박스의 상단 바로 위로 위치 조정
+      });
+      console.log("Title position updated:", {
+        left: rect.left + rect.width / 2,
+        top: rect.top + scrollY - 30,
       });
     }
   };
