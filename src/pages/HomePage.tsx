@@ -141,13 +141,13 @@ const TodayMove = styled.img`
 `;
 
 interface EmotionData {
-  emotion: 'HAPPINESS' | 'ANGER' | 'SADNESS' | 'ANXIETY' | 'HURT' | null;
+  emotion: 'HAPPY' | 'ANGER' | 'SADNESS' | 'ANXIETY' | 'HURT' | null;
   date: string;
   diaryId?: number; // 추가: 일기 ID
 }
 
 const gradients: { [key in Exclude<EmotionData['emotion'], null>]: string } = {
-  HAPPINESS: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
+  HAPPY: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
   ANGER: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
   SADNESS: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
   ANXIETY: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
@@ -192,8 +192,6 @@ const CalendarDayComponent: React.FC<CalendarDayProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const gradient = emotionData && emotionData.emotion ? gradients[emotionData.emotion] : "#F1F1F1";
-  
-  console.log(`Day: ${day}, Emotion Data:`, emotionData);
 
   if (isFuture) {
     return (
@@ -245,8 +243,6 @@ const generateCalendarDates = async (
   const dayCells: JSX.Element[] = [];
 
   const emotionData = await fetchMonthlyEmotionData(year, month + 1);
-
-  console.log("Fetched Emotion Data:", emotionData);
 
   const emotionMap: { [key: string]: EmotionData | undefined } = {};
   emotionData.forEach(emotion => {

@@ -63,12 +63,18 @@ const Grid = styled.div`
 `;
 
 const Item = styled.div`
+  position: relative;
   display: flex;
   justify-content: center; 
   align-items: center;
   width: 502px;
   height: 340px;
   background-color: #F2F2F2;
+  overflow: hidden;
+  
+  &:hover .overlay {
+    display: flex;
+  }
 `;
 
 const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
@@ -89,6 +95,23 @@ const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
     }
   }};
   object-fit: cover;
+`;
+
+const Overlay = styled.div`
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 1.15rem;
 `;
 
 interface ScrapItem {
@@ -141,6 +164,24 @@ const ScrapPage: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleCancelScrap = async (itemId: number) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await axios.delete(`${config.API_URL}/api/scrap/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data.isSuccess) {
+        setScrapItems(scrapItems.filter(item => item.id !== itemId));
+      } else {
+        console.error('Failed to cancel scrap:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error canceling scrap:', error);
+    }
+  };
+
   return (
     <PageContainer>
       <Header>
@@ -171,6 +212,12 @@ const ScrapPage: React.FC = () => {
                 alt={`${item.category} cover`} 
                 category={item.category as 'Book' | 'Movie' | 'Music'} 
               />
+              <Overlay 
+                className="overlay" 
+                onClick={() => handleCancelScrap(item.id)}
+              >
+                스크랩 취소
+              </Overlay>
             </Item>
           ))}
         </Grid>
