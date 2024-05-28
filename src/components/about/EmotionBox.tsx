@@ -22,7 +22,7 @@ const Box = styled.div<{ isClicked: boolean; isOtherClicked: boolean }>`
   height: ${({ isClicked }) => (isClicked ? "50vh" : "80vh")};
   color: #333333;
   background-color: #ededed;
-  margin: 10px;
+  margin: 0.8vw;
   overflow: hidden;
   position: relative;
   transition: all 0.5s ease;

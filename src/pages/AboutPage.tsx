@@ -20,8 +20,20 @@ const AboutPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
   padding: 7vh 0 10vh 0;
+  overflow-x: hidden; /* 수평 스크롤바를 없애기 위해 추가 */
+`;
+
+const ContentContainer = styled.div`
+  width: calc(
+    100% - 4vw
+  ); /* 전체 페이지의 너비를 뷰포트에서 4vw 뺀 크기로 설정 */
+  margin: 0 2vw; /* 양 옆에 2vw의 margin을 추가 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden; /* 수평 스크롤바를 없애기 위해 추가 */
 `;
 
 const TypoContainer = styled.div`
@@ -110,7 +122,7 @@ const AnimatedSection = styled.div`
 
 const BoldTypo = styled.div`
   font-family: "PPMonumentExtended";
-  font-size: 4rem;
+  font-size: 4.1rem;
   font-weight: 200;
   color: #333333;
   line-height: 1.2;
@@ -192,33 +204,37 @@ export default function AboutPage() {
 
   return (
     <AboutPageContainer>
-      <GetStarted_Black />
-      <TitleTypo />
-      <VerticalLine />
-      <RecordDescription />
-      <ServiceImageBox />
-      <AnalyzeDescription />
-      <EmotionBox />
-      <CalendarDescription />
+      <ContentContainer>
+        <GetStarted_Black />
+        <TitleTypo />
+        <VerticalLine />
+        <RecordDescription />
+        <ServiceImageBox />
+        <AnalyzeDescription />
+        <EmotionBox />
+        <CalendarDescription />
+      </ContentContainer>
       <Slider2 />
-      <PopTextContainer>
-        <AnimatedSection ref={leftTextRef} className={leftTextAnimation}>
-          <LeftPopText />
-        </AnimatedSection>
-        <AnimatedSection ref={rightTextRef} className={rightTextAnimation}>
-          <RightPopText />
-        </AnimatedSection>
-      </PopTextContainer>
-      <FooterImageBox />
-      <TypoContainer>
-        <BoldTypo>It's time to</BoldTypo>
-        <BoldTypo>SUZIP.</BoldTypo>
-      </TypoContainer>
-      <GetStarted_White />
-      <SignUpText>
-        이미 계정이 있다면?
-        <SignUpLink to="/login">로그인하기</SignUpLink>
-      </SignUpText>
+      <ContentContainer>
+        <PopTextContainer>
+          <AnimatedSection ref={leftTextRef} className={leftTextAnimation}>
+            <LeftPopText />
+          </AnimatedSection>
+          <AnimatedSection ref={rightTextRef} className={rightTextAnimation}>
+            <RightPopText />
+          </AnimatedSection>
+        </PopTextContainer>
+        <FooterImageBox />
+        <TypoContainer>
+          <BoldTypo>It's time to</BoldTypo>
+          <BoldTypo>SUZIP.</BoldTypo>
+        </TypoContainer>
+        <GetStarted_White />
+        <SignUpText>
+          이미 계정이 있다면?
+          <SignUpLink to="/login">로그인하기</SignUpLink>
+        </SignUpText>
+      </ContentContainer>
     </AboutPageContainer>
   );
 }
