@@ -93,6 +93,7 @@ const InteractiveBox = styled.div`
   margin-bottom: 1vh;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const InteractiveText = styled.div`
@@ -265,22 +266,16 @@ const MyPage = () => {
       </Sidebar>
       <MainContent>
         <SectionTitle>MY</SectionTitle>
-        <InteractiveBox>
-          <InteractiveText onClick={() => navigate("/scrapPage")}>
-            스크랩 목록
-          </InteractiveText>
+        <InteractiveBox onClick={() => navigate("/scrapPage")}>
+          <InteractiveText>스크랩 목록</InteractiveText>
         </InteractiveBox>
-        <InteractiveBox>
-          <InteractiveText onClick={() => navigate("/collectPage")}>
-            행복 수집
-          </InteractiveText>
+        <InteractiveBox onClick={() => navigate("/collectPage")}>
+          <InteractiveText>행복 수집</InteractiveText>
         </InteractiveBox>
         <EmptyBox />
         <SectionTitle>계정 관리</SectionTitle>
-        <InteractiveBox>
-          <InteractiveText onClick={() => navigate("/deleteAccount")}>
-            회원 탈퇴
-          </InteractiveText>
+        <InteractiveBox onClick={() => navigate("/deleteAccount")}>
+          <InteractiveText>회원 탈퇴</InteractiveText>
         </InteractiveBox>
       </MainContent>
     </PageContainer>
