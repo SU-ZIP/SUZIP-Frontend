@@ -6,7 +6,7 @@ const DescriptionContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5vw;
+  margin: 15vh 0 0 0;
 `;
 
 const MainMessage = styled.div`
@@ -57,11 +57,10 @@ function CalendarDescription() {
       <DecorationText>Calendar</DecorationText>
       <MainMessage>
         <TextBox>
-          수집은 일기를 통해 감정을 <BoldText>분석</BoldText>
-          하고
+          캘린더에 표시된 <BoldText>컬러칩</BoldText>을 통해
         </TextBox>
         <TextBox>
-          <BoldText>뭐시기 뭐시기</BoldText>해줍니다 안녕하세요 이건 이거예요
+          한 달간의 <BoldText>내 감정을 한 눈에</BoldText> 볼 수 있습니다
         </TextBox>
       </MainMessage>
     </DescriptionContainer>

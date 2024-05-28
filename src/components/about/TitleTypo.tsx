@@ -7,6 +7,8 @@ const TypoContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: #333333;
+  margin-top: 5vh;
+  margin-bottom: 15vh;
 `;
 
 const LineText = styled.div`

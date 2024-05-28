@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import React from "react";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 interface DescriptionContainerProps {
   scale: number;
-  opacity: number; 
+  opacity: number;
 }
 
 const DescriptionContainer = styled(motion.div)`
@@ -13,8 +13,10 @@ const DescriptionContainer = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5vw;
-  transition: transform 2s, opacity 2s; // 'opacity' 변환을 위한 트랜지션은 framer-motion에 의해 관리됩니다.
+  margin: 15vh 0 0 0;
+  transition:
+    transform 2s,
+    opacity 2s; // 'opacity' 변환을 위한 트랜지션은 framer-motion에 의해 관리됩니다.
 `;
 
 const MainMessage = styled.div`
@@ -83,19 +85,19 @@ function AnalyzeDescription() {
           수집은 일기를 통해 감정을 <BoldText>분석</BoldText>하고
         </TextBox>
         <TextBox>
-          <BoldText>뭐시기 뭐시기</BoldText> 해줍니다 안녕하세요 이건 이거예요
+          어울리는 컨텐츠를 <BoldText>추천</BoldText>해줍니다
         </TextBox>
       </MainMessage>
 
       <MainMessage>
         <TextBox>감정은 로버트 플루칙의 감정 심리 진화론에 따라</TextBox>
         <TextBox>
-          <HighlightText>분노 기대 기쁨 신뢰 공포 놀람 슬픔 혐오</HighlightText> 등의 감정이 나타납니다
+          <HighlightText>분노 기대 기쁨 신뢰 공포 놀람 슬픔 혐오</HighlightText>
+          등의 감정이 나타납니다
         </TextBox>
       </MainMessage>
     </DescriptionContainer>
   );
 }
-
 
 export default AnalyzeDescription;
