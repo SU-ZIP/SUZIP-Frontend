@@ -21,7 +21,7 @@ const AboutPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  padding: 5vh;
+  padding: 7vh 0 10vh 0;
 `;
 
 const TypoContainer = styled.div`
