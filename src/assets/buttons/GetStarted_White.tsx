@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import rightArrow from "../images/rightArrow2.png";
+import config from "../path/config";
 
 const ButtonContainer = styled(Link)`
   width: 10vw;
@@ -33,7 +34,7 @@ const ImageContainer = styled.img`
 
 function GetStarted_White() {
   return (
-    <ButtonContainer to="http://localhost:8080/api/signup">
+    <ButtonContainer to={`${config.API_URL}/api/signup`}>
       <TextContainer>GET STARTED</TextContainer>
       <ImageContainer src={rightArrow}></ImageContainer>
     </ButtonContainer>

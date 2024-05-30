@@ -166,7 +166,7 @@ const MyPage = () => {
         }
       } catch (error) {
         console.error("프로필 정보를 불러오는데 실패했습니다:", error);
-        navigate("/login");
+        navigate(`${config.API_URL}/api/login`);
       }
     };
 

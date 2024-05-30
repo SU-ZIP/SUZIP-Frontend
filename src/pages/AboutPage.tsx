@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import config from "../assets/path/config";
 import TitleTypo from "../components/about/TitleTypo";
 import RecordDescription from "../components/about/RecordDescription";
 import GetStarted_Black from "../assets/buttons/GetStarted_Black";
@@ -236,10 +237,7 @@ export default function AboutPage() {
         </div>
         <SignUpText>
           이미 계정이 있다면?
-          <SignUpLink
-            to="http://localhost:8080/api/login"
-            disabled={isLoggedIn}
-          >
+          <SignUpLink to={`${config.API_URL}/api/login`} disabled={isLoggedIn}>
             로그인하기
           </SignUpLink>
         </SignUpText>
