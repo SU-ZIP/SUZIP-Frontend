@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TitleTypo from "../components/about/TitleTypo";
 import RecordDescription from "../components/about/RecordDescription";
 import GetStarted_Black from "../assets/buttons/GetStarted_Black";
@@ -44,7 +44,7 @@ const TypoContainer = styled.div`
 
 const PopTextContainer = styled.div`
   display: flex;
-  flex-direction: column; /* 변경된 부분 */
+  flex-direction: column;
   width: 100%;
   justify-content: space-around;
 `;
@@ -75,10 +75,11 @@ const SignUpText = styled.div`
   color: #333333;
 `;
 
-const SignUpLink = styled(Link)`
+const SignUpLink = styled(Link)<{ disabled: boolean }>`
   margin-left: 0.4vw;
   text-align: center;
   color: #333333;
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 `;
 
 const VerticalLine = styled.div`
@@ -108,6 +109,8 @@ export default function AboutPage() {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [leftVisible, setLeftVisible] = useState(false);
   const [rightVisible, setRightVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleScroll = debounce(() => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -180,6 +183,21 @@ export default function AboutPage() {
     rightTranslateX,
   ]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleGetStartedClick = (e: React.MouseEvent) => {
+    if (isLoggedIn) {
+      e.preventDefault();
+    } else {
+      navigate("/signup");
+    }
+  };
+
   return (
     <AboutPageContainer>
       <ContentContainer>
@@ -207,10 +225,12 @@ export default function AboutPage() {
           <BoldTypo>It's time to</BoldTypo>
           <BoldTypo>SUZIP.</BoldTypo>
         </TypoContainer>
-        <GetStarted_White />
+        <div onClick={handleGetStartedClick}>
+          <GetStarted_White />
+        </div>
         <SignUpText>
           이미 계정이 있다면?
-          <SignUpLink to="http://localhost:8080/api/login">
+          <SignUpLink to="/login" disabled={isLoggedIn}>
             로그인하기
           </SignUpLink>
         </SignUpText>
