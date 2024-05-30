@@ -269,7 +269,7 @@ const MyPage = () => {
         <InteractiveBox onClick={() => navigate("/scrapPage")}>
           <InteractiveText>스크랩 목록</InteractiveText>
         </InteractiveBox>
-        <InteractiveBox onClick={() => navigate("/collectPage")}>
+        <InteractiveBox onClick={() => navigate("/suzip")}>
           <InteractiveText>행복 수집</InteractiveText>
         </InteractiveBox>
         <EmptyBox />
