@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
+import Slide1 from "../../assets/images/slide1.png";
+import Slide2 from "../../assets/images/slide2.png";
+import Slide3 from "../../assets/images/slide3.png";
+import Slide4 from "../../assets/images/slide4.png";
 
 const SliderContainer = styled.div`
   width: 100%;
@@ -13,11 +17,14 @@ const SliderContent = styled.div`
   transition: transform 0.5s ease-out;
 `;
 
-const Slide = styled.div`
+const Slide = styled.div<{ bgImage: string }>`
   flex: 0 0 auto;
   width: 674px;
   height: 792px;
   background-color: #ddd;
+  background-image: url(${(props) => props.bgImage});
+  background-size: cover;
+  background-position: center;
   border-radius: 20px;
   margin-right: 74px;
   box-shadow:
@@ -54,14 +61,23 @@ const Slider2: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const slideImages = [
+    Slide1,
+    Slide2,
+    Slide3,
+    Slide4,
+    Slide1,
+    Slide2,
+    Slide3,
+    Slide4,
+  ];
+
   return (
     <SliderContainer ref={sliderRef}>
       <SliderContent ref={contentRef}>
-        {Array(8)
-          .fill(null)
-          .map((_, index) => (
-            <Slide key={index}>Slide {index + 1}</Slide>
-          ))}
+        {slideImages.map((image, index) => (
+          <Slide key={index} bgImage={image} />
+        ))}
       </SliderContent>
     </SliderContainer>
   );
