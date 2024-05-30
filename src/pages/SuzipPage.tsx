@@ -6,7 +6,7 @@ import shuffle from "../assets/images/shuffle.png";
 import config from "../assets/path/config";
 
 const PageContainer = styled.div`
-  height: 300vh; /* 스크롤을 위해 페이지 높이를 크게 설정 */
+  height: 300vh; 
   background-color: #fff;
   position: relative;
 `;
@@ -51,7 +51,7 @@ const MainTitle = styled.h1`
 const ShuffleButton = styled.img`
   width: 35px;
   height: 35px;
-  margin-top: 1px;
+  margin-top: 15px;
   margin-left: 20px;
   cursor: pointer;
 `;
@@ -91,7 +91,7 @@ const Frame2Container = styled.div<{ translateY: number }>`
 
 const ContentContainer = styled.div`
   position: fixed;
-  top: 60%; /* 화면 중앙에 위치 */
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 60%;
@@ -99,16 +99,17 @@ const ContentContainer = styled.div`
   z-index: 1;
 `;
 
-const Image = styled.img`
+const StyledImage = styled.img`
   width: 100%;
-  max-height: 80vh;
-  object-fit: contain; /* 비율을 유지하면서 컨테이너에 맞추기 */
+  max-height: 60vh;
+  object-fit: contain; 
 `;
 
-const TitleDateContainer = styled.div`
+const TitleDateContainer = styled.div<{ imageWidth: number }>`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  width: ${(props) => props.imageWidth}px;
 `;
 
 const Title = styled.p`
@@ -134,6 +135,7 @@ const SuzipPage: React.FC = () => {
   const [diaryDate, setDiaryDate] = useState("");
   const [diaryTitle, setDiaryTitle] = useState("");
   const [scrollY, setScrollY] = useState(0);
+  const [imageWidth, setImageWidth] = useState(0);
 
   const fetchDiaryData = async () => {
     try {
@@ -146,7 +148,7 @@ const SuzipPage: React.FC = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const diary = response.data.result; // 단일 일기 객체로 접근
+      const diary = response.data.result;
       console.log("Fetched diary:", diary);
       if (diary) {
         setDiaryImage(diary.image || "");
@@ -184,6 +186,10 @@ const SuzipPage: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setImageWidth(e.currentTarget.offsetWidth);
+  };
+
   return (
     <PageContainer>
       <Frame1Container />
@@ -202,14 +208,20 @@ const SuzipPage: React.FC = () => {
       <ContentContainer>
         {diaryImage ? (
           <>
-            <Image src={diaryImage} alt="Diary Image" />
-            <TitleDateContainer>
+            <StyledImage src={diaryImage} alt="Diary Image" onLoad={handleImageLoad} />
+            <TitleDateContainer imageWidth={imageWidth}>
               <Title>{diaryTitle}</Title>
               <DateText>{diaryDate}</DateText>
             </TitleDateContainer>
           </>
         ) : (
-          <NoImageText>No Image</NoImageText>
+          <>
+            <NoImageText>No Image</NoImageText>
+            <TitleDateContainer imageWidth={imageWidth}>
+              <Title>{diaryTitle}</Title>
+              <DateText>{diaryDate}</DateText>
+            </TitleDateContainer>
+          </>
         )}
       </ContentContainer>
     </PageContainer>

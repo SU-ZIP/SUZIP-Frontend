@@ -7,6 +7,7 @@ import defaultProfileImg from "../assets/images/profile.png";
 import editIcon from "../assets/images/profiledit.png";
 import PencilImg from "../assets/images/pencil.png";
 import config from "../assets/path/config";
+import ApexCharts from 'apexcharts';
 
 const PageContainer = styled.div`
   display: flex;
@@ -78,8 +79,9 @@ const MainContent = styled.div`
 
 const SectionTitle = styled.h2`
   font-size: 24px;
+  color: #333333;
   font-family: "Pretendard";
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 15px;
   letter-spacing: -0.5px;
 `;
@@ -132,22 +134,66 @@ const EmptyBox = styled.div`
   height: 3vh;
 `;
 
+const ChartContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+`;
+
 const MyPage = () => {
   const { userName, isLoggedIn, setLoginStatus } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const chartRef = useRef<ApexCharts | null>(null);
 
   const [profile, setProfile] = useState({
     name: "",
     profileImage: "",
   });
 
-  useEffect(() => {
-    // if (!isLoggedIn) {
-    //   navigate('/login');
-    //   return;
-    // }
+  const [chartData, setChartData] = useState<{ [key: string]: number }>({
+    HAPPY: 0,
+    ANGER: 0,
+    SADNESS: 0,
+    HURT: 0,
+    ANXIETY: 0,
+  });
 
+  const fetchMonthEmotions = async (year: number, month: number) => {
+    try {
+      const response = await axios.get(`${config.API_URL}/api/emotions/months`, {
+        params: { year, month },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+
+      if (response.data.isSuccess) {
+        const emotions = response.data.result;
+        const emotionCount: { [key: string]: number } = {
+          HAPPY: 0,
+          ANGER: 0,
+          SADNESS: 0,
+          HURT: 0,
+          ANXIETY: 0,
+        };
+
+        emotions.forEach((emotion: { emotion: string }) => {
+          if (emotion.emotion in emotionCount) {
+            emotionCount[emotion.emotion]++;
+          }
+        });
+
+        setChartData(emotionCount);
+      } else {
+        console.error("Failed to fetch emotions:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching emotions:", error);
+    }
+  };
+
+  useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${config.API_URL}/api/member/`, {
@@ -162,16 +208,126 @@ const MyPage = () => {
               response.data.result.profileImage || defaultProfileImg,
           });
         } else {
-          throw new Error("프로필 정보를 불러오는데 실패했습니다.");
+          throw new Error("Failed to fetch profile");
         }
       } catch (error) {
-        console.error("프로필 정보를 불러오는데 실패했습니다:", error);
+        console.error("Error fetching profile:", error);
         navigate(`${config.API_URL}/api/login`);
       }
     };
 
     fetchProfile();
+    fetchMonthEmotions(new Date().getFullYear(), new Date().getMonth() + 1);
   }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    const createGradient = (id: string, colors: string[]) => {
+      const svgNS = "http://www.w3.org/2000/svg";
+      const grad = document.createElementNS(svgNS, "linearGradient");
+      grad.setAttribute("id", id);
+      grad.setAttribute("x1", "0%");
+      grad.setAttribute("y1", "0%");
+      grad.setAttribute("x2", "100%");
+      grad.setAttribute("y2", "100%");
+      colors.forEach((color, index) => {
+        const stop = document.createElementNS(svgNS, "stop");
+        stop.setAttribute("offset", `${(index / (colors.length - 1)) * 100}%`);
+        stop.setAttribute("stop-color", color);
+        grad.appendChild(stop);
+      });
+      return grad;
+    };
+
+    const gradients = {
+      HAPPY: createGradient("happyGradient", ["#96fbc4", "#f9f586"]),
+      ANGER: createGradient("angerGradient", ["#ff9a9e", "#fad0c4"]),
+      SADNESS: createGradient("sadnessGradient", ["#a1c4fd", "#c2e9fb"]),
+      ANXIETY: createGradient("anxietyGradient", ["#f6d365", "#fda085"]),
+      HURT: createGradient("hurtGradient", ["#667eea", "#764ba2"])
+    };
+
+    const legendColors = ["#96fbc4", "#ff9a9e", "#a1c4fd", "#f6d365", "#667eea"];
+
+    if (!chartRef.current) {
+      const options = {
+        series: Object.values(chartData),
+        chart: {
+          width: '80%',
+          type: 'pie',
+          events: {
+            mounted: (chartContext: any, config: any) => {
+              const svgElement = chartContext.el.querySelector('svg');
+              const defs = svgElement.querySelector('defs') || document.createElementNS("http://www.w3.org/2000/svg", "defs");
+              Object.values(gradients).forEach(gradient => defs.appendChild(gradient));
+              svgElement.insertBefore(defs, svgElement.firstChild);
+            }
+          }
+        },
+        labels: ["행복", "분노", "슬픔", "상처", "불안"], // 한국어 라벨
+        colors: [
+          "url(#happyGradient)",
+          "url(#angerGradient)",
+          "url(#sadnessGradient)",
+          "url(#anxietyGradient)",
+          "url(#hurtGradient)"
+        ],
+        theme: {
+          monochrome: {
+            enabled: false
+          }
+        },
+        plotOptions: {
+          pie: {
+            dataLabels: {
+              offset: -30,
+              style: {
+                textShadow: 'none' // 데이터 라벨의 텍스트 그림자를 제거합니다.
+              }
+            }
+          }
+        },
+        title: {
+          style: {
+            fontSize: '18px',
+            color: '#000',
+            textShadow: 'none'
+          }
+        },
+        dataLabels: {
+          style: {
+            textShadow: 'none'
+          },
+          formatter: (val: number, opts: any): [string, string] => {
+            const name = opts.w.globals.labels[opts.seriesIndex];
+            return [name, val.toFixed(1) + '%'];
+          }
+        },
+        legend: {
+          show: true,
+          markers: {
+            fillColors: legendColors,
+            useSeriesColors: false 
+          }
+        }
+      };
+
+      const chartElement = document.querySelector("#chart");
+      if (chartElement) {
+        chartRef.current = new ApexCharts(chartElement, options);
+        chartRef.current.render();
+      } else {
+        console.error("Chart element not found");
+      }
+    }
+
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
+    };
+  }, [chartData]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -265,6 +421,9 @@ const MyPage = () => {
         <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       </Sidebar>
       <MainContent>
+      <SectionTitle>감정 통계</SectionTitle>
+       <ChartContainer id="chart" />
+       
         <SectionTitle>MY</SectionTitle>
         <InteractiveBox onClick={() => navigate("/scrapPage")}>
           <InteractiveText>스크랩 목록</InteractiveText>
@@ -277,6 +436,7 @@ const MyPage = () => {
         <InteractiveBox onClick={() => navigate("/deleteAccount")}>
           <InteractiveText>회원 탈퇴</InteractiveText>
         </InteractiveBox>
+      
       </MainContent>
     </PageContainer>
   );
