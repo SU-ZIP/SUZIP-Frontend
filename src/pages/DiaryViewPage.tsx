@@ -45,7 +45,7 @@ const DiaryTitle = styled.div`
   width: 100%;
   padding: 8px;
   margin-left: -5px;
-  margin-bottom: 12px;
+  margin-bottom: 1vh;
   border: none;
   font-family: "Pretendard";
   font-weight: 600;
@@ -71,10 +71,11 @@ const ContentTextarea = styled.div`
   width: 100%;
   height: auto;
   padding: 8px;
-  line-height: 25px;
+  line-height: 1.35em;
   font-size: 18px;
   color: #2d2d2d;
   white-space: pre-wrap;
+  margin-top: 1vh;
 `;
 
 const SaveButtonContainer = styled.div`

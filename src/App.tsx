@@ -62,7 +62,7 @@ function App() {
 function HeaderWithConditionalRendering() {
   const { pathname } = useLocation();
 
-  const hideHeaderPaths = ['/deleteAccount', '/suzip'];
+  const hideHeaderPaths = ["/deleteAccount", "/suzip"];
 
   if (hideHeaderPaths.includes(pathname)) {
     return null;

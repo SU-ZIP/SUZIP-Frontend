@@ -112,6 +112,7 @@ const ContentTextarea = styled.textarea`
   border: none;
   margin-top: 3vh;
   font-size: 20px;
+  line-height: 1.35em;
   ::placeholder {
     color: #e1e1e0;
   }
