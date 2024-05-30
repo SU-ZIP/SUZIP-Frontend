@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import frame2 from "../assets/images/frame2.png";
 import shuffle from "../assets/images/shuffle.png";
+import backButton from "../assets/images/left_white.png";
 import config from "../assets/path/config";
 
 const PageContainer = styled.div`
@@ -15,14 +17,20 @@ const Frame1Container = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  height: 70px;
+  height: 6vh;
+  padding-left: 2vw;
   background-color: black;
   display: flex;
-  justify-content: center;
   align-items: center;
   text-align: center;
   color: white;
   z-index: 2;
+`;
+
+const BackButton = styled.img`
+  width: 1.2vw;
+  height: auto;
+  cursor: pointer;
 `;
 
 const TitleContainer = styled.div`
@@ -77,7 +85,7 @@ const LightText = styled.span`
 
 const Frame2Container = styled.div<{ translateY: number }>`
   position: fixed;
-  bottom: 0;
+  top: 50%;
   width: 100%;
   background-image: url(${frame2});
   background-size: cover;
@@ -142,6 +150,7 @@ const SuzipPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [imageWidth, setImageWidth] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const fetchDiaryData = async () => {
     try {
@@ -210,7 +219,10 @@ const SuzipPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <Frame1Container />
+      <Frame1Container>
+        <BackButton src={backButton} onClick={() => navigate("/my")} />{" "}
+        {/* navigate 사용 */}
+      </Frame1Container>
       <TitleContainer>
         <MainTitle>
           Happy
@@ -226,11 +238,7 @@ const SuzipPage: React.FC = () => {
       <ContentContainer>
         {diaryImage ? (
           <>
-            <StyledImage
-              src={diaryImage}
-              alt="Diary Image"
-              ref={imageRef}
-            />
+            <StyledImage src={diaryImage} alt="Diary Image" ref={imageRef} />
             <TitleDateContainer imageWidth={imageWidth}>
               <Title>{diaryTitle}</Title>
               <DateText>{diaryDate}</DateText>
