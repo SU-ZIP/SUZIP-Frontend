@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import frame2 from '../assets/images/frame2.png';
-import config from '../assets/path/config';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import frame2 from "../assets/images/frame2.png";
+import shuffle from "../assets/images/shuffle.png";
+import config from "../assets/path/config";
 
 const PageContainer = styled.div`
-  height: 200vh; /* 스크롤을 위해 페이지 높이를 크게 설정 */
-  background-color: #f0f0f0;
+  height: 300vh; /* 스크롤을 위해 페이지 높이를 크게 설정 */
+  background-color: #fff;
   position: relative;
 `;
 
@@ -20,7 +21,7 @@ const Frame1Container = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: black;
+  color: white;
   z-index: 2;
 `;
 
@@ -43,6 +44,16 @@ const MainTitle = styled.h1`
   font-weight: bold;
   text-align: left;
   margin-left: 8vw;
+  display: flex;
+  align-items: center;
+`;
+
+const ShuffleButton = styled.img`
+  width: 35px;
+  height: 35px;
+  margin-top: 1px;
+  margin-left: 20px;
+  cursor: pointer;
 `;
 
 const SubTitle = styled.div`
@@ -80,30 +91,36 @@ const Frame2Container = styled.div<{ translateY: number }>`
 
 const ContentContainer = styled.div`
   position: fixed;
-  top: 150vh; /* Frame1과 Frame2 사이에 위치 */
-  width: 80%;
-  margin: 0 auto;
-  background-color: white;
-  padding: 200px;
+  top: 60%; /* 화면 중앙에 위치 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  padding: 20px;
   z-index: 1;
-  transform: translateY(-50%);
 `;
 
 const Image = styled.img`
   width: 100%;
-  height: auto;
+  max-height: 80vh;
+  object-fit: contain; /* 비율을 유지하면서 컨테이너에 맞추기 */
 `;
 
-const Title = styled.h1`
-  text-align: center;
-  font-size: 2em;
-  margin-top: 20px;
+const TitleDateContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+`;
+
+const Title = styled.p`
+  font-family: "Pretendard";
+  font-size: 1.2em;
+  margin: 0;
 `;
 
 const DateText = styled.p`
-  text-align: right;
-  font-size: 1em;
-  margin-top: 10px;
+  font-family: "Pretendard";
+  font-size: 1.1em;
+  margin: 0;
 `;
 
 const NoImageText = styled.div`
@@ -113,58 +130,68 @@ const NoImageText = styled.div`
 `;
 
 const SuzipPage: React.FC = () => {
-  const [diaryImage, setDiaryImage] = useState('');
-  const [diaryDate, setDiaryDate] = useState('');
-  const [diaryTitle, setDiaryTitle] = useState('');
+  const [diaryImage, setDiaryImage] = useState("");
+  const [diaryDate, setDiaryDate] = useState("");
+  const [diaryTitle, setDiaryTitle] = useState("");
   const [scrollY, setScrollY] = useState(0);
 
-  useEffect(() => {
-    const fetchDiaryData = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        if (!accessToken) {
-          throw new Error('No access token found');
-        }
-        const response = await axios.get(`${config.API_URL}/api/emotions/happy`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const diary = response.data.result; // 단일 일기 객체로 접근
-        if (diary) {
-          setDiaryImage(diary.image || '');
-          setDiaryDate(diary.date);
-          setDiaryTitle(diary.title);
-        } else {
-          setDiaryImage('');
-          setDiaryDate('No diary available');
-          setDiaryTitle('No title available');
-        }
-      } catch (error) {
-        console.error('Error fetching diary data', error);
-        setDiaryImage('');
-        setDiaryDate('Error fetching data');
-        setDiaryTitle('Error fetching data');
+  const fetchDiaryData = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        throw new Error("No access token found");
       }
-    };
+      const response = await axios.get(`${config.API_URL}/api/emotions/happy`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const diary = response.data.result; // 단일 일기 객체로 접근
+      console.log("Fetched diary:", diary);
+      if (diary) {
+        setDiaryImage(diary.image || "");
+        setDiaryDate(diary.date);
+        setDiaryTitle(diary.title);
+      } else {
+        setDiaryImage("");
+        setDiaryDate("No diary available");
+        setDiaryTitle("No title available");
+      }
+    } catch (error) {
+      console.error("Error fetching diary data", error);
+      setDiaryImage("");
+      setDiaryDate("Error fetching data");
+      setDiaryTitle("Error fetching data");
+    }
+  };
 
+  useEffect(() => {
     fetchDiaryData();
   }, []);
+
+  useEffect(() => {
+    console.log("diaryImage:", diaryImage);
+    console.log("diaryDate:", diaryDate);
+    console.log("diaryTitle:", diaryTitle);
+  }, [diaryImage, diaryDate, diaryTitle]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <PageContainer>
       <Frame1Container />
       <TitleContainer>
-        <MainTitle>Happy</MainTitle>
+        <MainTitle>
+          Happy
+          <ShuffleButton src={shuffle} alt="Shuffle" onClick={fetchDiaryData} />
+        </MainTitle>
         <SubTitle>
           <BoldText>Collection</BoldText>
           <LightText>&nbsp;of&nbsp;</LightText>
@@ -174,12 +201,16 @@ const SuzipPage: React.FC = () => {
       <Frame2Container translateY={scrollY / 2} />
       <ContentContainer>
         {diaryImage ? (
-          <Image src={diaryImage} alt="Diary Image" />
+          <>
+            <Image src={diaryImage} alt="Diary Image" />
+            <TitleDateContainer>
+              <Title>{diaryTitle}</Title>
+              <DateText>{diaryDate}</DateText>
+            </TitleDateContainer>
+          </>
         ) : (
           <NoImageText>No Image</NoImageText>
         )}
-        <Title>{diaryTitle}</Title>
-        <DateText>{diaryDate}</DateText>
       </ContentContainer>
     </PageContainer>
   );
