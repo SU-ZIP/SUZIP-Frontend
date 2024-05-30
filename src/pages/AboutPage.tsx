@@ -79,6 +79,7 @@ const SignUpLink = styled(Link)<{ disabled: boolean }>`
   margin-left: 0.4vw;
   text-align: center;
   color: #333333;
+  pointer: pointer;
   pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 `;
 
@@ -230,7 +231,10 @@ export default function AboutPage() {
         </div>
         <SignUpText>
           이미 계정이 있다면?
-          <SignUpLink to="/login" disabled={isLoggedIn}>
+          <SignUpLink
+            to="http://localhost:8080/api/login"
+            disabled={isLoggedIn}
+          >
             로그인하기
           </SignUpLink>
         </SignUpText>
