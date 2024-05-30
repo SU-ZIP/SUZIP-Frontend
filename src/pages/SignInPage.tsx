@@ -5,6 +5,7 @@ import Google from "../components/social/GoogleLogin";
 import Naver from "../components/social/NaverLogin";
 import Kakao from "../components/social/KakaoLogin";
 import App from "../App";
+import config from "../assets/path/config";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -66,7 +67,9 @@ function SignInPage() {
           <Kakao />
           <SignUpText>
             수집이 처음이신가요?
-            <SignUpLink to="/signup">가입하기</SignUpLink>
+            <SignUpLink to={`${config.API_URL}/api/signup`}>
+              가입하기
+            </SignUpLink>
           </SignUpText>
         </ButtonsContainer>
       </LoginBox>
