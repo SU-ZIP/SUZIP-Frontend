@@ -68,7 +68,7 @@ function RecordDescription() {
         수집은 사용자의 일기를 바탕으로 하루동안의 마음을 색으로 표현합니다
       </SmallText>
       <SmallText>
-        미처 알아차리지 못했던 마음들을 돌아보고, 나만의 컬러풀한 매일을
+        미처 알아차리지 못했던 마음들을 돌아보고, 나만의 다채로운 매일을
         기록하세요
       </SmallText>
     </DescriptionContainer>

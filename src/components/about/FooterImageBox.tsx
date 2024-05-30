@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import imageLogo from "../../assets/images/imageLogo.png";
+import CollectImage from "../../assets/images/aboutCollection.png";
 
 const BoxContainer = styled.div`
   display: flex;
@@ -10,9 +11,9 @@ const BoxContainer = styled.div`
   margin: 10vw;
 `;
 
-const BackImage = styled.div`
-  width: 70vw;
-  height: 50vh;
+const BackImage = styled.img`
+  width: 90%;
+  height: auto;
   background: blue;
   border-radius: 1vw 1vw 0 0;
   z-index: 1;
@@ -35,7 +36,7 @@ const LogoImage = styled.img`
 function FooterImageBox() {
   return (
     <BoxContainer>
-      <BackImage />
+      <BackImage src={CollectImage} />
       <LogoImage src={imageLogo} />
     </BoxContainer>
   );

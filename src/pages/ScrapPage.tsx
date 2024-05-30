@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import axios from "axios";
 
 import Pagination from "../assets/pagination/Pagination";
-import config from '../assets/path/config';
+import config from "../assets/path/config";
 
 const PageContainer = styled.div`
   padding: 20px;
   padding-bottom: 50px;
-  max-width: 1600px; 
+  max-width: 1600px;
   margin: auto;
 `;
 
@@ -41,7 +41,7 @@ const NavButton = styled.button<{ isActive: boolean }>`
   border: none;
   font-family: "PPMonumentExtended";
   font-size: 16px;
-  color: ${({ isActive }) => (isActive ? '#33333' : '#9D9D9D')};
+  color: ${({ isActive }) => (isActive ? "#33333" : "#9D9D9D")};
   cursor: pointer;
   font-weight: 200;
   &:focus {
@@ -65,33 +65,41 @@ const Grid = styled.div`
 const Item = styled.div`
   position: relative;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   width: 502px;
   height: 340px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   overflow: hidden;
-  
+
   &:hover .overlay {
     display: flex;
   }
 `;
 
-const Image = styled.img<{ category: 'Book' | 'Movie' | 'Music' }>`
+const Image = styled.img<{ category: "Book" | "Movie" | "Music" }>`
   width: ${({ category }) => {
     switch (category) {
-      case 'Book': return '199px';
-      case 'Movie': return '200px';
-      case 'Music': return '242px';
-      default: return '199px'; 
+      case "Book":
+        return "199px";
+      case "Movie":
+        return "200px";
+      case "Music":
+        return "242px";
+      default:
+        return "199px";
     }
   }};
   height: ${({ category }) => {
     switch (category) {
-      case 'Book': return '280px';
-      case 'Movie': return '300px';
-      case 'Music': return '242px';
-      default: return '280px'; 
+      case "Book":
+        return "280px";
+      case "Movie":
+        return "300px";
+      case "Music":
+        return "242px";
+      default:
+        return "280px";
     }
   }};
   object-fit: cover;
@@ -105,7 +113,7 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: #f2f2f2;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -115,16 +123,16 @@ const Overlay = styled.div`
 `;
 
 interface ScrapItem {
-    id: number;
-    category: 'Book' | 'Movie' | 'Music';
-    imageUrl: string;
+  id: number;
+  category: "Book" | "Movie" | "Music";
+  imageUrl: string;
 }
 
-const categories = ['Book', 'Movie', 'Music'];
+const categories = ["Book", "Movie", "Music"];
 const itemsPerPage = 9;
 
 const ScrapPage: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Book');
+  const [selectedCategory, setSelectedCategory] = useState<string>("Book");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [scrapItems, setScrapItems] = useState<ScrapItem[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -132,17 +140,22 @@ const ScrapPage: React.FC = () => {
   useEffect(() => {
     const fetchScrapItems = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-        const response = await axios.get(`${config.API_URL}/api/scrap/${selectedCategory.toLowerCase()}s`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page: currentPage - 1,
-          },
-        });
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          `${config.API_URL}/api/scrap/${selectedCategory.toLowerCase()}s`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              page: currentPage - 1,
+            },
+          }
+        );
         if (response.data.isSuccess) {
-          const items = response.data.result[`${selectedCategory.toLowerCase()}List`].map((item: any) => ({
+          const items = response.data.result[
+            `${selectedCategory.toLowerCase()}List`
+          ].map((item: any) => ({
             id: item[`${selectedCategory.toLowerCase()}Id`],
             category: selectedCategory,
             imageUrl: item.image,
@@ -150,10 +163,10 @@ const ScrapPage: React.FC = () => {
           setScrapItems(items);
           setTotalPages(response.data.result.totalPage);
         } else {
-          console.error('Failed to fetch scrap items:', response.data.message);
+          console.error("Failed to fetch scrap items:", response.data.message);
         }
       } catch (error) {
-        console.error('Error fetching scrap items:', error);
+        console.error("Error fetching scrap items:", error);
       }
     };
 
@@ -166,19 +179,22 @@ const ScrapPage: React.FC = () => {
 
   const handleCancelScrap = async (itemId: number) => {
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.delete(`${config.API_URL}/api/scrap/${itemId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.delete(
+        `${config.API_URL}/api/scrap/${itemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.data.isSuccess) {
-        setScrapItems(scrapItems.filter(item => item.id !== itemId));
+        setScrapItems(scrapItems.filter((item) => item.id !== itemId));
       } else {
-        console.error('Failed to cancel scrap:', response.data.message);
+        console.error("Failed to cancel scrap:", response.data.message);
       }
     } catch (error) {
-      console.error('Error canceling scrap:', error);
+      console.error("Error canceling scrap:", error);
     }
   };
 
@@ -198,7 +214,9 @@ const ScrapPage: React.FC = () => {
             >
               {category}
             </NavButton>
-            {index < categories.length - 1 && <span style={{ margin: '0 10px' }}>|</span>}
+            {index < categories.length - 1 && (
+              <span style={{ margin: "0 10px" }}>|</span>
+            )}
           </>
         ))}
       </Header>
@@ -207,13 +225,13 @@ const ScrapPage: React.FC = () => {
         <Grid>
           {scrapItems.map((item) => (
             <Item key={item.id}>
-              <Image 
-                src={item.imageUrl} 
-                alt={`${item.category} cover`} 
-                category={item.category as 'Book' | 'Movie' | 'Music'} 
+              <Image
+                src={item.imageUrl}
+                alt={`${item.category} cover`}
+                category={item.category as "Book" | "Movie" | "Music"}
               />
-              <Overlay 
-                className="overlay" 
+              <Overlay
+                className="overlay"
                 onClick={() => handleCancelScrap(item.id)}
               >
                 스크랩 취소

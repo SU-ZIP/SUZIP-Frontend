@@ -1,8 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
-import { AuthProvider, useAuth } from './components/auth/AuthContext';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./components/auth/AuthContext";
 import Header from "./components/header/Header";
-import HomePage from "./pages/HomePage"; 
+import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -33,14 +38,19 @@ function App() {
             <Route path="/write" element={<WritePage />} />
             <Route path="/write/diary/:diaryId" element={<WritePage />} />
             <Route path="/write/date/:date" element={<WritePage />} />
-            <Route path="/analyze/:diaryId" element={<AnalyzePage />} /> {/* No need to pass diaryData here */}
+            <Route path="/analyze/:diaryId" element={<AnalyzePage />} />{" "}
+            {/* No need to pass diaryData here */}
             <Route path="/diary" element={<DiaryPage />} />
             <Route path="/diary/:diaryId" element={<DiaryViewPage />} />
             <Route path="/deleteAccount" element={<DeleteAccount />} />
             <Route path="/scrapPage" element={<ScrapPage />} />
+            <Route path="/collectPage" element={<ScrapPage />} />
             <Route path="/my" element={<MyPage />} />
             <Route path="/editProfile" element={<EditProfile />} />
-            <Route path="/login/oauth2/code/kakao" element={<KakaoCallback />} />
+            <Route
+              path="/login/oauth2/code/kakao"
+              element={<KakaoCallback />}
+            />
             <Route path="/suzip" element={<SuzipPage />} />
           </Routes>
         </div>
