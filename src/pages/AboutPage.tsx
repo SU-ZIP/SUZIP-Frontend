@@ -9,10 +9,10 @@ import AnalyzeDescription from "../components/about/AnalyzeDescription";
 import CalendarDescription from "../components/about/CalendarDescription";
 import Slider2 from "../components/about/Slider2";
 import EmotionBox from "../components/about/EmotionBox";
-import ServiceImageBox from "../components/about/ServiceImageBox";
 import FooterImageBox from "../components/about/FooterImageBox";
 import LeftPopText from "../components/about/LeftPopText";
 import RightPopText from "../components/about/RightPopText";
+import AboutRecord from "../assets/images/aboutRecord.png";
 
 const AboutPageContainer = styled.div`
   width: 100%;
@@ -79,6 +79,7 @@ const SignUpLink = styled(Link)<{ disabled: boolean }>`
   margin-left: 0.4vw;
   text-align: center;
   color: #333333;
+  pointer: pointer;
   pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 `;
 
@@ -87,6 +88,11 @@ const VerticalLine = styled.div`
   height: 25vh;
   border-left: 0.1vw solid #535353;
   margin: 4vh 0;
+`;
+
+const RecordImage = styled.img`
+  width: 75%;
+  border-radius: 1vw;
 `;
 
 const debounce = (func: (...args: any[]) => void, wait: number) => {
@@ -205,7 +211,7 @@ export default function AboutPage() {
         <TitleTypo />
         <VerticalLine />
         <RecordDescription />
-        <ServiceImageBox />
+        <RecordImage src={AboutRecord} />
         <AnalyzeDescription />
         <EmotionBox />
         <CalendarDescription />
@@ -230,7 +236,10 @@ export default function AboutPage() {
         </div>
         <SignUpText>
           이미 계정이 있다면?
-          <SignUpLink to="/login" disabled={isLoggedIn}>
+          <SignUpLink
+            to="http://localhost:8080/api/login"
+            disabled={isLoggedIn}
+          >
             로그인하기
           </SignUpLink>
         </SignUpText>
