@@ -21,7 +21,7 @@ const emotionTextMap: { [key: string]: string } = {
   HAPPY: "기쁨",
   ANGER: "분노",
   SADNESS: "슬픔",
-  NERVOUS: "긴장",
+  ANXIETY: "긴장",
   HURT: "상처",
 };
 
@@ -29,7 +29,7 @@ const emotionColorMap: { [key: string]: string } = {
   HAPPY: "linear-gradient(45deg, #96fbc4 0%, #f9f586 100%)",
   ANGER: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
   SADNESS: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
-  NERVOUS: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+  ANXIETY: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
   HURT: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 };
 
