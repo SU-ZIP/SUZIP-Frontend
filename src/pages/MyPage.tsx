@@ -25,7 +25,7 @@ const Sidebar = styled.div`
   flex-direction: column;
   align-items: center;
   margin-left: 10vw;
-  height: 70vh;
+  height: 93%;
 `;
 
 const ProfileImage = styled.img`
