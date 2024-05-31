@@ -110,7 +110,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 15vh;
+  margin-top: 10vh;
 `;
 
 const StyledImage = styled.img`
@@ -119,23 +119,28 @@ const StyledImage = styled.img`
   object-fit: contain;
 `;
 
-const TitleDateContainer = styled.div<{ imageWidth: number }>`
+const TitleDateContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   margin-top: 10px;
-  width: ${(props) => props.imageWidth}px;
+  width: 100%;
+  margin-bottom: 2vh;
 `;
 
 const Title = styled.p`
   font-family: "Pretendard";
-  font-size: 1.2em;
+  font-size: 1.3em;
   margin: 0;
+  text-align: center;
+  font-weight: 500;
 `;
 
 const DateText = styled.p`
   font-family: "Pretendard";
   font-size: 1.1em;
   margin: 0;
+  text-align: center;
 `;
 
 const NoImageText = styled.div`
@@ -149,8 +154,6 @@ const SuzipPage: React.FC = () => {
   const [diaryDate, setDiaryDate] = useState("");
   const [diaryTitle, setDiaryTitle] = useState("");
   const [scrollY, setScrollY] = useState(0);
-  const [imageWidth, setImageWidth] = useState(0);
-  const imageRef = useRef<HTMLImageElement>(null);
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const fetchDiaryData = async () => {
@@ -202,22 +205,6 @@ const SuzipPage: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (imageRef.current) {
-      const handleResize = () => {
-        if (imageRef.current) {
-          const width = imageRef.current.getBoundingClientRect().width;
-          setImageWidth(width);
-          console.log("Image width:", width);
-        }
-      };
-
-      handleResize(); // Initial call to set the width
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, [diaryImage]);
-
   return (
     <PageContainer>
       <Frame1Container>
@@ -239,16 +226,16 @@ const SuzipPage: React.FC = () => {
       <ContentContainer>
         {diaryImage ? (
           <>
-            <StyledImage src={diaryImage} alt="Diary Image" ref={imageRef} />
-            <TitleDateContainer imageWidth={imageWidth}>
+            <TitleDateContainer>
               <Title>{diaryTitle}</Title>
               <DateText>{diaryDate}</DateText>
             </TitleDateContainer>
+            <StyledImage src={diaryImage} alt="Diary Image" />
           </>
         ) : (
           <>
             <NoImageText>No Image</NoImageText>
-            <TitleDateContainer imageWidth={imageWidth}>
+            <TitleDateContainer>
               <Title>{diaryTitle}</Title>
               <DateText>{diaryDate}</DateText>
             </TitleDateContainer>
