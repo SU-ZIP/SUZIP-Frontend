@@ -18,7 +18,7 @@ const Frame1Container = styled.div`
   top: 0;
   width: 100%;
   height: 6vh;
-  padding-left: 2vw;
+  padding-left: 1.2vw;
   background-color: black;
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@ const Frame1Container = styled.div`
 `;
 
 const BackButton = styled.img`
-  width: 1.2vw;
+  width: 1.1vw;
   height: auto;
   cursor: pointer;
 `;
