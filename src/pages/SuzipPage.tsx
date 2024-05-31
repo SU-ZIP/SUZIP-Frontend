@@ -110,10 +110,11 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 15vh;
 `;
 
 const StyledImage = styled.img`
-  max-width: 100%;
+  width: 100%;
   max-height: 60vh;
   object-fit: contain;
 `;
